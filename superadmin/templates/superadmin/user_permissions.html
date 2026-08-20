@@ -1,0 +1,1626 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}User Permissions{% endblock %}
+{% block page_title %}User Permissions{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/user_permissions.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="permissions-page"
+    id="permissionsPage"
+    data-user-id="{{ selected_user.id|default:'' }}"
+    data-save-url="{% url 'superadmin:update_user_permissions' selected_user.id %}"
+>
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div class="header-content">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+
+            <div class="header-text">
+
+                <div class="breadcrumb-text">
+                    Access Control / User Permissions
+                </div>
+
+                <h2>Permission Management</h2>
+
+                <p>
+                    Manage roles and granular system permissions
+                    for laboratory users.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="resetPermissionsBtn"
+            >
+                <i class="fa-solid fa-rotate-left"></i>
+                Reset
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="savePermissionsBtn"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         USER INFORMATION
+    ====================================================== -->
+
+    <section class="user-card">
+
+        <div class="user-main">
+
+            <div class="user-avatar">
+
+                {% if selected_user %}
+                    {{ selected_user.username|first|upper }}
+                {% else %}
+                    U
+                {% endif %}
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-name-row">
+
+                    <h3>
+                        {% if selected_user %}
+                            {{ selected_user.get_full_name|default:selected_user.username }}
+                        {% else %}
+                            Select User
+                        {% endif %}
+                    </h3>
+
+
+                    <span class="user-status active">
+
+                        <span></span>
+
+                        Active
+
+                    </span>
+
+                </div>
+
+
+                <p>
+
+                    <i class="fa-regular fa-envelope"></i>
+
+                    {% if selected_user and selected_user.email %}
+                        {{ selected_user.email }}
+                    {% else %}
+                        No email available
+                    {% endif %}
+
+                </p>
+
+
+                <small>
+
+                    User ID:
+
+                    <strong>
+                        {% if selected_user %}
+                            {{ selected_user.id }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-meta">
+
+            <div class="meta-item">
+
+                <span>Role</span>
+
+                <strong id="currentRole">
+
+                    {% if selected_role %}
+                        {{ selected_role.name }}
+                    {% elif selected_user.role %}
+                        {{ selected_user.role }}
+                    {% else %}
+                        User
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span>Permissions</span>
+
+                <strong id="permissionCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span>Last Updated</span>
+
+                <strong id="lastUpdated">
+
+                    {% if permission_updated_at %}
+                        {{ permission_updated_at|date:"d M Y, h:i A" }}
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ROLE ASSIGNMENT
+    ====================================================== -->
+
+    <section class="section-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h3>
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    Role Assignment
+
+                </h3>
+
+
+                <p>
+                    Assign a predefined role to this user.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="role-grid">
+
+
+            <!-- ADMINISTRATOR -->
+
+            <label class="role-option">
+
+                <input
+                    type="radio"
+                    name="userRole"
+                    value="admin"
+                    data-role="Administrator"
+
+                    {% if selected_role.name|lower == "administrator" %}
+                        checked
+                    {% elif selected_user.role|lower == "admin" %}
+                        checked
+                    {% endif %}
+                >
+
+
+                <span class="role-content">
+
+                    <span class="role-icon admin">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+
+
+                    <span class="role-details">
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <small>
+                            Full administrative access
+                        </small>
+
+                    </span>
+
+                </span>
+
+            </label>
+
+
+            <!-- MANAGER -->
+
+            <label class="role-option">
+
+                <input
+                    type="radio"
+                    name="userRole"
+                    value="manager"
+                    data-role="Manager"
+
+                    {% if selected_role.name|lower == "manager" %}
+                        checked
+                    {% elif selected_user.role|lower == "manager" %}
+                        checked
+                    {% endif %}
+                >
+
+
+                <span class="role-content">
+
+                    <span class="role-icon manager">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </span>
+
+
+                    <span class="role-details">
+
+                        <strong>
+                            Manager
+                        </strong>
+
+                        <small>
+                            Operational management access
+                        </small>
+
+                    </span>
+
+                </span>
+
+            </label>
+
+
+            <!-- STAFF -->
+
+            <label class="role-option">
+
+                <input
+                    type="radio"
+                    name="userRole"
+                    value="staff"
+                    data-role="Staff"
+
+                    {% if selected_role.name|lower == "staff" %}
+                        checked
+                    {% elif selected_user.role|lower == "staff" %}
+                        checked
+                    {% endif %}
+                >
+
+
+                <span class="role-content">
+
+                    <span class="role-icon staff">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+
+
+                    <span class="role-details">
+
+                        <strong>
+                            Staff
+                        </strong>
+
+                        <small>
+                            Standard operational access
+                        </small>
+
+                    </span>
+
+                </span>
+
+            </label>
+
+
+            <!-- VIEWER -->
+
+            <label class="role-option">
+
+                <input
+                    type="radio"
+                    name="userRole"
+                    value="viewer"
+                    data-role="Viewer"
+
+                    {% if selected_role.name|lower == "viewer" %}
+                        checked
+                    {% elif selected_user.role|lower == "viewer" %}
+                        checked
+                    {% endif %}
+                >
+
+
+                <span class="role-content">
+
+                    <span class="role-icon viewer">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+
+
+                    <span class="role-details">
+
+                        <strong>
+                            Viewer
+                        </strong>
+
+                        <small>
+                            Read-only access
+                        </small>
+
+                    </span>
+
+                </span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PERMISSION TOOLBAR
+    ====================================================== -->
+
+    <section class="permissions-toolbar">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="search"
+                id="permissionSearch"
+                placeholder="Search permissions..."
+                autocomplete="off"
+                aria-label="Search permissions"
+            >
+
+        </div>
+
+
+        <div class="toolbar-actions">
+
+            <button
+                type="button"
+                class="toolbar-btn"
+                id="selectAllBtn"
+            >
+
+                <i class="fa-solid fa-check-double"></i>
+
+                Select All
+
+            </button>
+
+
+            <button
+                type="button"
+                class="toolbar-btn"
+                id="clearAllBtn"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+                Clear All
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PERMISSION SUMMARY
+    ====================================================== -->
+
+    <section class="permission-summary">
+
+        <div class="summary-item">
+
+            <span class="summary-icon total">
+                <i class="fa-solid fa-list-check"></i>
+            </span>
+
+            <div>
+
+                <small>
+                    Total Permissions
+                </small>
+
+                <strong id="totalPermissions">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-icon granted">
+                <i class="fa-solid fa-circle-check"></i>
+            </span>
+
+            <div>
+
+                <small>
+                    Granted
+                </small>
+
+                <strong id="grantedPermissions">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-icon denied">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </span>
+
+            <div>
+
+                <small>
+                    Not Granted
+                </small>
+
+                <strong id="deniedPermissions">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PERMISSION MODULES
+    ====================================================== -->
+
+    <section class="permission-modules">
+
+
+        <!-- =================================================
+             PATIENT MANAGEMENT
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="patients"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-hospital-user"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Patient Management
+                        </h3>
+
+                        <small>
+                            Manage patient records and information
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="patients"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="patients"
+                        data-permission="view"
+
+                        {% if "patients.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Patients
+                        </strong>
+
+                        <small>
+                            View patient records
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="patients"
+                        data-permission="create"
+
+                        {% if "patients.create" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Create Patients
+                        </strong>
+
+                        <small>
+                            Add new patients
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="patients"
+                        data-permission="edit"
+
+                        {% if "patients.edit" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Edit Patients
+                        </strong>
+
+                        <small>
+                            Modify patient records
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="patients"
+                        data-permission="delete"
+
+                        {% if "patients.delete" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Delete Patients
+                        </strong>
+
+                        <small>
+                            Remove patient records
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LAB MANAGEMENT
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="lab"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-flask"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Laboratory Management
+                        </h3>
+
+                        <small>
+                            Manage tests and laboratory operations
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="lab"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="lab"
+                        data-permission="view"
+
+                        {% if "lab.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Tests
+                        </strong>
+
+                        <small>
+                            View laboratory tests
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="lab"
+                        data-permission="create"
+
+                        {% if "lab.create" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Create Tests
+                        </strong>
+
+                        <small>
+                            Create laboratory tests
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="lab"
+                        data-permission="edit"
+
+                        {% if "lab.edit" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Edit Tests
+                        </strong>
+
+                        <small>
+                            Modify test configuration
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="lab"
+                        data-permission="delete"
+
+                        {% if "lab.delete" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Delete Tests
+                        </strong>
+
+                        <small>
+                            Remove laboratory tests
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BILLING
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="billing"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Billing & Payments
+                        </h3>
+
+                        <small>
+                            Manage invoices and payments
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="billing"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="billing"
+                        data-permission="view"
+
+                        {% if "billing.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Billing
+                        </strong>
+
+                        <small>
+                            View billing information
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="billing"
+                        data-permission="create"
+
+                        {% if "billing.create" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Create Invoice
+                        </strong>
+
+                        <small>
+                            Create new invoices
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="billing"
+                        data-permission="edit"
+
+                        {% if "billing.edit" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Edit Invoice
+                        </strong>
+
+                        <small>
+                            Modify invoices
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="billing"
+                        data-permission="delete"
+
+                        {% if "billing.delete" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Delete Invoice
+                        </strong>
+
+                        <small>
+                            Delete invoices
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REPORTS
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="reports"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Reports & Analytics
+                        </h3>
+
+                        <small>
+                            Access reports and analytics
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="reports"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="reports"
+                        data-permission="view"
+
+                        {% if "reports.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Reports
+                        </strong>
+
+                        <small>
+                            Access system reports
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="reports"
+                        data-permission="export"
+
+                        {% if "reports.export" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Export Reports
+                        </strong>
+
+                        <small>
+                            Export report data
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             USER MANAGEMENT
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="users"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            User Management
+                        </h3>
+
+                        <small>
+                            Manage users and access
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="users"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="users"
+                        data-permission="view"
+
+                        {% if "users.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Users
+                        </strong>
+
+                        <small>
+                            View registered users
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="users"
+                        data-permission="create"
+
+                        {% if "users.create" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Create Users
+                        </strong>
+
+                        <small>
+                            Create new users
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="users"
+                        data-permission="edit"
+
+                        {% if "users.edit" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Edit Users
+                        </strong>
+
+                        <small>
+                            Modify user accounts
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="users"
+                        data-permission="delete"
+
+                        {% if "users.delete" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Delete Users
+                        </strong>
+
+                        <small>
+                            Remove user accounts
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SYSTEM SETTINGS
+        ================================================== -->
+
+        <div
+            class="permission-module"
+            data-module="settings"
+        >
+
+            <div class="module-header">
+
+                <div class="module-title">
+
+                    <span class="module-icon">
+                        <i class="fa-solid fa-gear"></i>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            System Settings
+                        </h3>
+
+                        <small>
+                            Manage system configuration
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label class="module-select-all">
+
+                    <input
+                        type="checkbox"
+                        class="module-checkbox"
+                        data-module="settings"
+                    >
+
+                    <span>
+                        Select All
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="permission-grid">
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="settings"
+                        data-permission="view"
+
+                        {% if "settings.view" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            View Settings
+                        </strong>
+
+                        <small>
+                            View system configuration
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="permission-item">
+
+                    <input
+                        type="checkbox"
+                        class="permission-checkbox"
+                        data-module="settings"
+                        data-permission="edit"
+
+                        {% if "settings.edit" in granted_permissions %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span>
+
+                        <strong>
+                            Edit Settings
+                        </strong>
+
+                        <small>
+                            Modify system configuration
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOTTOM ACTION BAR
+    ====================================================== -->
+
+    <div class="action-bar">
+
+        <div class="changes-status">
+
+            <span
+                class="status-indicator"
+                id="changesIndicator"
+            ></span>
+
+
+            <span id="changesText">
+                No unsaved changes
+            </span>
+
+        </div>
+
+
+        <div class="action-buttons">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelBtn"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="bottomSaveBtn"
+            >
+
+                <i class="fa-solid fa-check"></i>
+
+                Apply Permissions
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM PERMISSION MODAL
+========================================================== -->
+
+<div
+    class="modal-backdrop"
+    id="permissionModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="permissionModalTitle"
+    >
+
+        <button
+            type="button"
+            class="modal-close"
+            id="modalClose"
+            aria-label="Close"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="modal-icon">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+        </div>
+
+
+        <h3 id="permissionModalTitle">
+            Apply Permission Changes?
+        </h3>
+
+
+        <p>
+            The selected permissions will immediately be
+            applied to this user's account.
+        </p>
+
+
+        <div class="modal-summary">
+
+            <div>
+
+                <span>
+                    Role
+                </span>
+
+                <strong id="modalRole">
+                    User
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Permissions
+                </span>
+
+                <strong id="modalPermissionCount">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="modalCancel"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="modalConfirm"
+            >
+
+                <i class="fa-solid fa-check"></i>
+
+                Confirm & Save
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+    /*
+     * Django backend se user ID available
+     * rakha gaya hai taaki JS API request mein
+     * direct use kar sake.
+     */
+    window.USER_PERMISSIONS_CONFIG = {
+        userId: "{{ selected_user.id|default:'' }}",
+        saveUrl: "{% if selected_user %}{% url 'superadmin:update_user_permissions' selected_user.id %}{% endif %}"
+    };
+</script>
+
+<script
+    src="{% static 'superadmin/js/user_permissions.js' %}"
+    defer
+></script>
+
+{% endblock %}

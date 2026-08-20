@@ -1,0 +1,432 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Transactions{% endblock %}
+{% block page_title %}Transactions{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/transactions.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="transactions-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <div class="eyebrow">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                FINANCIAL MANAGEMENT
+            </div>
+
+            <h2>Transaction Management</h2>
+
+            <p>
+                Monitor payments, subscription transactions,
+                refunds and financial activity across all vendors.
+            </p>
+        </div>
+
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="refreshTransactions">
+                <i class="fa-solid fa-rotate"></i>
+                Refresh
+            </button>
+
+            <button class="btn btn-primary" id="exportTransactions">
+                <i class="fa-solid fa-file-export"></i>
+                Export
+            </button>
+        </div>
+    </div>
+
+
+    <!-- STAT CARDS -->
+    <div class="transaction-stats">
+
+        <div class="stat-card">
+            <div class="stat-icon revenue">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Total Revenue</span>
+                <strong id="totalRevenue">₹0</strong>
+                <small class="positive">
+                    <i class="fa-solid fa-arrow-up"></i>
+                    12.8% this month
+                </small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon success">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Successful</span>
+                <strong id="successfulTransactions">0</strong>
+                <small>Completed transactions</small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon pending">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Pending</span>
+                <strong id="pendingTransactions">0</strong>
+                <small>Awaiting confirmation</small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon failed">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Failed / Refunded</span>
+                <strong id="failedTransactions">0</strong>
+                <small>Requires attention</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FILTER PANEL -->
+    <div class="filter-panel">
+
+        <div class="filter-header">
+            <div>
+                <h3>
+                    <i class="fa-solid fa-filter"></i>
+                    Transaction Filters
+                </h3>
+
+                <span>
+                    Filter transactions by vendor, status, payment method and date.
+                </span>
+            </div>
+
+            <button class="clear-filter" id="clearFilters">
+                Clear Filters
+            </button>
+        </div>
+
+
+        <div class="filter-grid">
+
+            <div class="filter-group search-group">
+                <label>Search</label>
+
+                <div class="input-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        id="transactionSearch"
+                        placeholder="Transaction ID, vendor, invoice..."
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+
+            <div class="filter-group">
+                <label>Status</label>
+
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="success">Successful</option>
+                    <option value="pending">Pending</option>
+                    <option value="failed">Failed</option>
+                    <option value="refunded">Refunded</option>
+                </select>
+            </div>
+
+
+            <div class="filter-group">
+                <label>Payment Method</label>
+
+                <select id="methodFilter">
+                    <option value="all">All Methods</option>
+                    <option value="razorpay">Razorpay</option>
+                    <option value="stripe">Stripe</option>
+                    <option value="upi">UPI</option>
+                    <option value="card">Card</option>
+                    <option value="bank">Bank Transfer</option>
+                </select>
+            </div>
+
+
+            <div class="filter-group">
+                <label>Vendor</label>
+
+                <select id="vendorFilter">
+                    <option value="all">All Vendors</option>
+                </select>
+            </div>
+
+
+            <div class="filter-group">
+                <label>From Date</label>
+
+                <input
+                    type="date"
+                    id="fromDate"
+                >
+            </div>
+
+
+            <div class="filter-group">
+                <label>To Date</label>
+
+                <input
+                    type="date"
+                    id="toDate"
+                >
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRANSACTION TABLE -->
+    <div class="table-card">
+
+        <div class="table-toolbar">
+
+            <div class="table-title">
+                <h3>All Transactions</h3>
+
+                <span id="transactionCount">
+                    0 transactions
+                </span>
+            </div>
+
+            <div class="table-actions">
+
+                <select id="rowsPerPage">
+                    <option value="10">10 / page</option>
+                    <option value="25">25 / page</option>
+                    <option value="50">50 / page</option>
+                    <option value="100">100 / page</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="transactions-table">
+
+                <thead>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Vendor</th>
+                        <th>Invoice</th>
+                        <th>Payment Method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th class="action-column">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="transactionTableBody">
+                    <!-- JS DATA -->
+                </tbody>
+
+            </table>
+
+
+            <!-- EMPTY STATE -->
+            <div class="empty-state" id="emptyState">
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+
+                <h3>No transactions found</h3>
+
+                <p>
+                    No transactions match your current filters.
+                </p>
+
+                <button class="btn btn-secondary" id="emptyClearFilters">
+                    Clear Filters
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAGINATION -->
+        <div class="pagination-container">
+
+            <div class="pagination-info" id="paginationInfo">
+                Showing 0–0 of 0
+            </div>
+
+            <div class="pagination" id="pagination">
+                <!-- JS -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TRANSACTION DETAILS MODAL -->
+
+<div class="modal-overlay" id="transactionModal">
+
+    <div class="transaction-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-eyebrow">
+                    TRANSACTION DETAILS
+                </span>
+
+                <h3 id="modalTransactionId">
+                    TXN-000000
+                </h3>
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeTransactionModal"
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-status" id="modalStatus">
+            Successful
+        </div>
+
+
+        <div class="transaction-summary">
+
+            <div>
+                <span>Amount</span>
+                <strong id="modalAmount">₹0</strong>
+            </div>
+
+            <div>
+                <span>Vendor</span>
+                <strong id="modalVendor">-</strong>
+            </div>
+
+            <div>
+                <span>Payment Method</span>
+                <strong id="modalMethod">-</strong>
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+            <div class="detail-item">
+                <span>Transaction ID</span>
+                <strong id="detailTransactionId">-</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Invoice ID</span>
+                <strong id="detailInvoiceId">-</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Vendor</span>
+                <strong id="detailVendor">-</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Payment Gateway</span>
+                <strong id="detailGateway">-</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Transaction Date</span>
+                <strong id="detailDate">-</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Reference ID</span>
+                <strong id="detailReference">-</strong>
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                id="closeModalBtn"
+            >
+                Close
+            </button>
+
+            <button
+                class="btn btn-primary"
+                id="downloadReceipt"
+            >
+                <i class="fa-solid fa-download"></i>
+                Receipt
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="transactionToast">
+
+    <div class="toast-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <div>
+        <strong id="toastTitle">Success</strong>
+        <span id="toastMessage">Action completed.</span>
+    </div>
+
+    <button id="closeToast">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/transactions.js' %}"></script>
+{% endblock %}

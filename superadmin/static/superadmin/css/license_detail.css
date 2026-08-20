@@ -1,0 +1,1477 @@
+/* ============================================================
+   SITA PATH LAB
+   SUPER ADMIN - LICENSE DETAIL
+   Production UI
+============================================================ */
+
+:root {
+    --license-primary: #2563eb;
+    --license-primary-dark: #1d4ed8;
+
+    --license-success: #16a34a;
+    --license-warning: #d97706;
+    --license-danger: #dc2626;
+
+    --license-bg: #f6f8fc;
+    --license-card: #ffffff;
+
+    --license-border: #e7eaf0;
+
+    --license-text: #111827;
+    --license-muted: #6b7280;
+
+    --license-blue-soft: #eff6ff;
+    --license-green-soft: #ecfdf3;
+    --license-orange-soft: #fff7ed;
+    --license-purple-soft: #f5f3ff;
+
+    --license-radius: 16px;
+}
+
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.license-page {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.license-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.breadcrumb-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 10px;
+
+    font-size: 13px;
+    color: var(--license-muted);
+}
+
+.breadcrumb-row a {
+    color: var(--license-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-row i {
+    font-size: 9px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.title-row h2 {
+    margin: 0 0 6px;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--license-text);
+}
+
+.title-row p {
+    margin: 0;
+    color: var(--license-muted);
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.license-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 13px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.license-status.active {
+    background: var(--license-green-soft);
+    color: var(--license-success);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background: currentColor;
+
+    display: inline-block;
+}
+
+
+/* ============================================================
+   HEADER ACTIONS
+============================================================ */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    min-height: 42px;
+
+    border: 0;
+    border-radius: 10px;
+
+    padding: 0 15px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    color: #fff;
+    background: var(--license-primary);
+    box-shadow: 0 5px 14px rgba(37, 99, 235, .18);
+}
+
+.btn-primary:hover {
+    background: var(--license-primary-dark);
+}
+
+.btn-secondary {
+    background: #fff;
+    border: 1px solid var(--license-border);
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #f9fafb;
+}
+
+.btn-danger {
+    background: var(--license-danger);
+    color: #fff;
+}
+
+
+/* ============================================================
+   SUMMARY CARDS
+============================================================ */
+
+.license-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    background: var(--license-card);
+
+    border: 1px solid var(--license-border);
+
+    border-radius: var(--license-radius);
+
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, .025);
+}
+
+.summary-icon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 13px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 18px;
+}
+
+.summary-icon.blue {
+    color: var(--license-primary);
+    background: var(--license-blue-soft);
+}
+
+.summary-icon.purple {
+    color: #7c3aed;
+    background: var(--license-purple-soft);
+}
+
+.summary-icon.green {
+    color: var(--license-success);
+    background: var(--license-green-soft);
+}
+
+.summary-icon.orange {
+    color: var(--license-warning);
+    background: var(--license-orange-soft);
+}
+
+.summary-content {
+    min-width: 0;
+}
+
+.summary-content span {
+    display: block;
+
+    font-size: 11px;
+    text-transform: uppercase;
+
+    letter-spacing: .05em;
+
+    color: var(--license-muted);
+
+    margin-bottom: 5px;
+}
+
+.summary-content strong {
+    display: block;
+
+    font-size: 15px;
+
+    color: var(--license-text);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   MAIN GRID
+============================================================ */
+
+.license-main-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.7fr)
+        minmax(330px, .9fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+.license-left,
+.license-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ============================================================
+   PANEL
+============================================================ */
+
+.panel {
+    background: var(--license-card);
+
+    border: 1px solid var(--license-border);
+
+    border-radius: var(--license-radius);
+
+    padding: 22px;
+
+    box-shadow:
+        0 4px 16px rgba(15, 23, 42, .025);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.panel-header h3 {
+    margin: 0 0 5px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    color: var(--license-text);
+}
+
+.panel-header h3 i {
+    color: var(--license-primary);
+    font-size: 15px;
+}
+
+.panel-header p {
+    margin: 0;
+
+    color: var(--license-muted);
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   LICENSE KEY
+============================================================ */
+
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    color: var(--license-success);
+    background: var(--license-green-soft);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.license-key-box {
+    display: flex;
+    align-items: center;
+
+    min-height: 58px;
+
+    border: 1px solid #dbe1ea;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+.key-prefix {
+    align-self: stretch;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 14px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+
+    color: var(--license-primary);
+
+    background: var(--license-blue-soft);
+
+    border-right: 1px solid #dbe1ea;
+}
+
+.license-key-box input {
+    flex: 1;
+
+    min-width: 0;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    padding: 0 15px;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 13px;
+
+    color: #374151;
+
+    letter-spacing: .04em;
+}
+
+.key-action {
+    width: 42px;
+    height: 42px;
+
+    margin-right: 5px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    cursor: pointer;
+
+    transition: .18s ease;
+}
+
+.key-action:hover {
+    background: #eaf0f8;
+    color: var(--license-primary);
+}
+
+.key-note {
+    margin-top: 12px;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    color: var(--license-muted);
+}
+
+.key-note i {
+    color: var(--license-primary);
+    margin-top: 2px;
+}
+
+
+/* ============================================================
+   VENDOR
+============================================================ */
+
+.vendor-profile {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 15px;
+
+    background: #fafbfc;
+
+    border: 1px solid #eef0f4;
+
+    border-radius: 12px;
+
+    margin-bottom: 18px;
+}
+
+.vendor-avatar {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--license-blue-soft);
+
+    color: var(--license-primary);
+
+    font-weight: 800;
+    font-size: 17px;
+}
+
+.vendor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vendor-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.vendor-info h4 {
+    margin: 0 0 4px;
+
+    font-size: 14px;
+
+    color: var(--license-text);
+}
+
+.vendor-info span {
+    font-size: 11px;
+    color: var(--license-muted);
+}
+
+.vendor-status {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: var(--license-success);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.vendor-status .status-dot {
+    width: 6px;
+    height: 6px;
+}
+
+.info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.info-item {
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.info-item span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+
+    color: var(--license-muted);
+}
+
+.info-item strong {
+    display: block;
+
+    font-size: 13px;
+
+    color: var(--license-text);
+
+    word-break: break-word;
+}
+
+
+/* ============================================================
+   LINKS / BADGES
+============================================================ */
+
+.text-link {
+    color: var(--license-primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.text-link i {
+    margin-left: 4px;
+    font-size: 10px;
+}
+
+.plan-badge {
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    color: #7c3aed;
+
+    background: var(--license-purple-soft);
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   SUBSCRIPTION
+============================================================ */
+
+.subscription-card {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 16px;
+
+    background: #fafbff;
+
+    border: 1px solid #edf0f7;
+
+    border-radius: 12px;
+}
+
+.subscription-main {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.plan-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    color: #7c3aed;
+    background: var(--license-purple-soft);
+}
+
+.subscription-main h4 {
+    margin: 0 0 4px;
+
+    font-size: 14px;
+}
+
+.subscription-main p {
+    margin: 0;
+
+    color: var(--license-muted);
+
+    font-size: 11px;
+}
+
+.subscription-price {
+    text-align: right;
+}
+
+.subscription-price strong {
+    display: block;
+
+    font-size: 20px;
+
+    color: var(--license-text);
+}
+
+.subscription-price span {
+    font-size: 10px;
+
+    color: var(--license-muted);
+}
+
+.subscription-dates {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+.subscription-dates div {
+    padding: 12px;
+
+    border: 1px solid #eef0f4;
+
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+.subscription-dates span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--license-muted);
+
+    font-size: 10px;
+}
+
+.subscription-dates strong {
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   FEATURES
+============================================================ */
+
+.features-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.feature-item {
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.feature-item.enabled {
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+}
+
+.feature-item.enabled i {
+    color: var(--license-success);
+}
+
+.feature-item.disabled {
+    color: #9ca3af;
+    background: #f9fafb;
+    border: 1px solid #f0f1f3;
+}
+
+.feature-item.disabled i {
+    color: #9ca3af;
+}
+
+
+/* ============================================================
+   BIG STATUS
+============================================================ */
+
+.big-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+}
+
+.big-status.active {
+    color: #166534;
+    background: var(--license-green-soft);
+}
+
+.big-status-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: rgba(22, 163, 74, .12);
+
+    font-size: 18px;
+}
+
+.big-status strong {
+    display: block;
+
+    font-size: 14px;
+
+    margin-bottom: 3px;
+}
+
+.big-status span {
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   REMAINING
+============================================================ */
+
+.remaining-box {
+    margin-top: 14px;
+
+    padding: 15px;
+
+    border: 1px solid var(--license-border);
+
+    border-radius: 11px;
+
+    text-align: center;
+}
+
+.remaining-box span {
+    display: block;
+
+    color: var(--license-muted);
+
+    font-size: 11px;
+
+    margin-bottom: 5px;
+}
+
+.remaining-box strong {
+    font-size: 24px;
+
+    color: var(--license-text);
+}
+
+
+/* ============================================================
+   LICENSE PROGRESS
+============================================================ */
+
+.progress-container {
+    margin-top: 17px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    font-size: 10px;
+
+    color: var(--license-muted);
+}
+
+.progress-label strong {
+    color: var(--license-text);
+}
+
+.progress-bar {
+    height: 8px;
+
+    overflow: hidden;
+
+    border-radius: 99px;
+
+    background: #e9edf3;
+}
+
+.progress-fill {
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: var(--license-primary);
+
+    transition: width .6s ease;
+}
+
+
+/* ============================================================
+   USAGE
+============================================================ */
+
+.usage-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.usage-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    font-size: 11px;
+}
+
+.usage-top span {
+    color: var(--license-muted);
+}
+
+.usage-top strong {
+    color: var(--license-text);
+}
+
+.usage-progress {
+    height: 6px;
+
+    background: #edf0f4;
+
+    border-radius: 99px;
+
+    overflow: hidden;
+}
+
+.usage-progress span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: var(--license-primary);
+}
+
+
+/* ============================================================
+   SECURITY
+============================================================ */
+
+.security-list {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.security-row {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+
+    font-size: 11px;
+}
+
+.security-row:last-child {
+    border-bottom: 0;
+}
+
+.security-row span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--license-muted);
+}
+
+.security-row span i {
+    width: 16px;
+
+    color: var(--license-primary);
+}
+
+.security-row strong {
+    color: var(--license-text);
+
+    font-size: 11px;
+
+    text-align: right;
+
+    word-break: break-word;
+}
+
+.success-text {
+    color: var(--license-success) !important;
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.actions-panel {
+    padding-bottom: 14px;
+}
+
+.action-btn {
+    width: 100%;
+
+    min-height: 45px;
+
+    margin-bottom: 8px;
+
+    padding: 0 13px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid var(--license-border);
+
+    background: #fff;
+
+    border-radius: 10px;
+
+    color: #374151;
+
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: .18s ease;
+}
+
+.action-btn span {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.action-btn:hover {
+    background: #f8fafc;
+    transform: translateX(2px);
+}
+
+.action-btn.renew i:first-child {
+    color: var(--license-success);
+}
+
+.action-btn.suspend i:first-child {
+    color: var(--license-warning);
+}
+
+.action-btn.revoke i:first-child {
+    color: var(--license-danger);
+}
+
+
+/* ============================================================
+   TIMELINE
+============================================================ */
+
+.timeline {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.timeline-item {
+    display: flex;
+
+    gap: 11px;
+
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    left: 16px;
+    top: 34px;
+
+    width: 1px;
+    height: calc(100% + 2px);
+
+    background: #e5e7eb;
+}
+
+.timeline-icon {
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 32px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+
+    z-index: 1;
+}
+
+.timeline-icon.green {
+    color: var(--license-success);
+    background: var(--license-green-soft);
+}
+
+.timeline-icon.blue {
+    color: var(--license-primary);
+    background: var(--license-blue-soft);
+}
+
+.timeline-icon.purple {
+    color: #7c3aed;
+    background: var(--license-purple-soft);
+}
+
+.timeline-item strong {
+    display: block;
+
+    margin: 2px 0 4px;
+
+    color: var(--license-text);
+
+    font-size: 11px;
+}
+
+.timeline-item span {
+    display: block;
+
+    color: var(--license-muted);
+
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, .45);
+
+    backdrop-filter: blur(4px);
+
+    z-index: 9999;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.confirm-modal {
+    width: min(420px, 100%);
+
+    background: #fff;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+    position: relative;
+
+    box-shadow:
+        0 25px 70px rgba(15, 23, 42, .2);
+
+    text-align: center;
+}
+
+.modal-close {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+
+    color: #6b7280;
+
+    cursor: pointer;
+}
+
+.modal-icon {
+    width: 56px;
+    height: 56px;
+
+    margin: 0 auto 14px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    color: var(--license-warning);
+
+    background: var(--license-orange-soft);
+
+    font-size: 21px;
+}
+
+.confirm-modal h3 {
+    margin: 0 0 8px;
+
+    font-size: 18px;
+
+    color: var(--license-text);
+}
+
+.confirm-modal p {
+    margin: 0 auto 22px;
+
+    max-width: 320px;
+
+    color: var(--license-muted);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 9px;
+}
+
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+.toast-container {
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    z-index: 10000;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.toast {
+    min-width: 280px;
+
+    max-width: 360px;
+
+    padding: 13px 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    background: #fff;
+
+    border: 1px solid var(--license-border);
+
+    border-radius: 11px;
+
+    box-shadow:
+        0 12px 35px rgba(15, 23, 42, .13);
+
+    animation:
+        toastIn .25s ease;
+}
+
+.toast i {
+    color: var(--license-success);
+}
+
+.toast span {
+    font-size: 12px;
+    color: #374151;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 1200px) {
+
+    .license-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .license-main-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .license-right {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        align-items: start;
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .license-page-header {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .header-actions {
+        flex-wrap: wrap;
+    }
+
+    .license-right {
+        display: flex;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .license-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .subscription-price {
+        text-align: left;
+    }
+
+    .subscription-dates {
+        grid-template-columns: 1fr;
+    }
+
+    .license-key-box {
+        flex-wrap: wrap;
+    }
+
+    .key-prefix {
+        width: 100%;
+        min-height: 32px;
+    }
+
+    .license-key-box input {
+        min-height: 48px;
+    }
+
+    .header-actions .btn {
+        flex: 1;
+    }
+
+    .toast-container {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+    }
+
+    .toast {
+        min-width: 0;
+        width: 100%;
+    }
+
+}

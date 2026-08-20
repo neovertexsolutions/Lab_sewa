@@ -1,0 +1,1125 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Vendor Details | Super Admin{% endblock %}
+{% block page_title %}Vendor Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/vendor_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+loadVendor()
+<div
+    class="vendor-detail-page"
+    id="vendorDetailPage"
+    data-vendor-id="{{ vendor.id|default:'' }}"
+    data-vendor-url="{% url 'superadmin:vendor_detail' vendor.id %}"
+    data-vendors-url="{% url 'superadmin:vendors' %}"
+    data-edit-url="{% url 'superadmin:vendor_edit' vendor.id %}"
+    data-api-url="{% url 'superadmin:vendor_api' vendor.id %}"
+>
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="detail-header">
+
+        <div class="header-left">
+
+            <a
+                href="{% url 'superadmin:vendors' %}"
+                class="back-btn"
+                title="Back to Vendors"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+
+            <div class="header-avatar" id="headerAvatar">
+                V
+            </div>
+
+            <div class="header-info">
+
+                <div class="title-row">
+
+                    <h1 id="vendorName">
+                        {{ vendor.name|default:"Vendor" }}
+                    </h1>
+
+                    <span
+                        class="status-badge"
+                        id="vendorStatus"
+                    >
+                        <span class="status-dot"></span>
+                        <span id="vendorStatusText">
+                            Loading
+                        </span>
+                    </span>
+
+                </div>
+
+                <p id="vendorMeta">
+                    Vendor ID: {{ vendor.id|default:"—" }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'superadmin:vendor_edit' vendor.id %}"
+                class="btn btn-primary"
+                id="editVendorBtn"
+            >
+                <i class="fa-solid fa-pen"></i>
+                Edit Vendor
+            </a>
+
+            <button
+                type="button"
+                class="btn btn-danger-outline"
+                id="deleteVendorBtn"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ALERT
+    ========================================================== -->
+
+    <div
+        class="detail-alert"
+        id="detailAlert"
+        role="alert"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- =========================================================
+         LOADING
+    ========================================================== -->
+
+    <div
+        class="page-loading"
+        id="pageLoading"
+    >
+
+        <div class="loading-spinner"></div>
+
+        <span>
+            Loading vendor details...
+        </span>
+
+    </div>
+
+
+    <!-- =========================================================
+         CONTENT
+    ========================================================== -->
+
+    <div
+        class="detail-content"
+        id="detailContent"
+        hidden
+    >
+
+        <div class="detail-layout">
+
+            <!-- =================================================
+                 MAIN
+            ================================================== -->
+
+            <main class="detail-main">
+
+
+                <!-- =================================================
+                     OVERVIEW
+                ================================================== -->
+
+                <section class="detail-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon blue">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+
+                            <div>
+                                <h2>Vendor Information</h2>
+                                <p>
+                                    Basic laboratory and contact information.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Laboratory Name
+                            </span>
+
+                            <strong
+                                id="infoVendorName"
+                                class="info-value"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Owner / Contact Person
+                            </span>
+
+                            <strong
+                                id="infoOwnerName"
+                                class="info-value"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Business Email
+                            </span>
+
+                            <div class="value-with-action">
+
+                                <strong
+                                    id="infoEmail"
+                                    class="info-value"
+                                >
+                                    —
+                                </strong>
+
+                                <button
+                                    type="button"
+                                    class="copy-btn"
+                                    data-copy-target="infoEmail"
+                                    title="Copy email"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Phone Number
+                            </span>
+
+                            <div class="value-with-action">
+
+                                <strong
+                                    id="infoPhone"
+                                    class="info-value"
+                                >
+                                    —
+                                </strong>
+
+                                <button
+                                    type="button"
+                                    class="copy-btn"
+                                    data-copy-target="infoPhone"
+                                    title="Copy phone"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Alternate Phone
+                            </span>
+
+                            <strong
+                                id="infoAlternatePhone"
+                                class="info-value"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Account Username
+                            </span>
+
+                            <div class="value-with-action">
+
+                                <strong
+                                    id="infoUsername"
+                                    class="info-value"
+                                >
+                                    —
+                                </strong>
+
+                                <button
+                                    type="button"
+                                    class="copy-btn"
+                                    data-copy-target="infoUsername"
+                                    title="Copy username"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
+                <section class="detail-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon green">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                            <div>
+                                <h2>Laboratory Address</h2>
+                                <p>
+                                    Registered physical location.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="address-content">
+
+                        <div class="address-icon">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+
+                        <div>
+
+                            <strong id="addressText">
+                                —
+                            </strong>
+
+                            <div class="address-meta">
+
+                                <span id="cityText">
+                                    —
+                                </span>
+
+                                <span>•</span>
+
+                                <span id="stateText">
+                                    —
+                                </span>
+
+                                <span>•</span>
+
+                                <span id="pincodeText">
+                                    —
+                                </span>
+
+                                <span>•</span>
+
+                                <span id="countryText">
+                                    India
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SUBSCRIPTION
+                ================================================== -->
+
+                <section class="detail-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon purple">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+
+                            <div>
+                                <h2>Subscription</h2>
+                                <p>
+                                    Current vendor subscription details.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="small-status"
+                            id="subscriptionStatus"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="subscription-overview">
+
+                        <div class="subscription-plan">
+
+                            <div class="plan-icon">
+                                <i class="fa-solid fa-crown"></i>
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    Current Plan
+                                </span>
+
+                                <strong id="planName">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="subscription-price">
+
+                            <strong id="planPrice">
+                                ₹0
+                            </strong>
+
+                            <span>
+                                / billing period
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subscription-grid">
+
+                        <div class="subscription-item">
+
+                            <span>
+                                Start Date
+                            </span>
+
+                            <strong id="subscriptionStart">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="subscription-item">
+
+                            <span>
+                                Expiry Date
+                            </span>
+
+                            <strong id="subscriptionEnd">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="subscription-item">
+
+                            <span>
+                                Duration
+                            </span>
+
+                            <strong id="subscriptionDuration">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="subscription-item">
+
+                            <span>
+                                Days Remaining
+                            </span>
+
+                            <strong id="daysRemaining">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     LICENSE
+                ================================================== -->
+
+                <section class="detail-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon orange">
+                                <i class="fa-solid fa-key"></i>
+                            </div>
+
+                            <div>
+                                <h2>License</h2>
+                                <p>
+                                    Vendor license and activation status.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="license-status-badge"
+                            id="licenseStatus"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="license-content">
+
+                        <div class="license-key-box">
+
+                            <span>
+                                License Key
+                            </span>
+
+                            <div class="license-key-row">
+
+                                <code id="licenseKey">
+                                    —
+                                </code>
+
+                                <button
+                                    type="button"
+                                    class="copy-license-btn"
+                                    id="copyLicenseBtn"
+                                    title="Copy license key"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                    Copy
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="license-meta">
+
+                            <div>
+
+                                <span>
+                                    Issued
+                                </span>
+
+                                <strong id="licenseIssued">
+                                    —
+                                </strong>
+
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    Expires
+                                </span>
+
+                                <strong id="licenseExpires">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ACCOUNT
+                ================================================== -->
+
+                <section class="detail-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon slate">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+
+                            <div>
+                                <h2>Account Information</h2>
+                                <p>
+                                    Vendor administrator account status.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-grid">
+
+                        <div class="account-item">
+
+                            <span>
+                                Username
+                            </span>
+
+                            <strong id="accountUsername">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="account-item">
+
+                            <span>
+                                Account Status
+                            </span>
+
+                            <span
+                                class="account-status"
+                                id="accountStatus"
+                            >
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="account-item">
+
+                            <span>
+                                Created At
+                            </span>
+
+                            <strong id="createdAt">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="account-item">
+
+                            <span>
+                                Last Login
+                            </span>
+
+                            <strong id="lastLogin">
+                                Never
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="detail-sidebar">
+
+
+                <!-- =================================================
+                     QUICK STATUS
+                ================================================== -->
+
+                <div class="sidebar-card status-card">
+
+                    <div class="sidebar-card-header">
+
+                        <h3>
+                            Account Status
+                        </h3>
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    </div>
+
+
+                    <div class="current-status">
+
+                        <div
+                            class="big-status-dot"
+                            id="bigStatusDot"
+                        ></div>
+
+                        <div>
+
+                            <strong id="sidebarStatus">
+                                Loading
+                            </strong>
+
+                            <span>
+                                Vendor account
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-actions">
+
+                        <button
+                            type="button"
+                            class="status-action active"
+                            data-status="active"
+                        >
+                            <i class="fa-solid fa-check"></i>
+                            Activate
+                        </button>
+
+                        <button
+                            type="button"
+                            class="status-action"
+                            data-status="suspended"
+                        >
+                            <i class="fa-solid fa-ban"></i>
+                            Suspend
+                        </button>
+
+                        <button
+                            type="button"
+                            class="status-action"
+                            data-status="pending"
+                        >
+                            <i class="fa-solid fa-clock"></i>
+                            Pending
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     QUICK STATS
+                ================================================== -->
+
+                <div class="sidebar-card">
+
+                    <div class="sidebar-card-header">
+
+                        <h3>
+                            Quick Overview
+                        </h3>
+
+                        <i class="fa-solid fa-chart-simple"></i>
+
+                    </div>
+
+
+                    <div class="quick-stats">
+
+                        <div class="quick-stat">
+
+                            <div class="stat-icon blue">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+
+                            <div>
+
+                                <strong id="usersCount">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Users
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-stat">
+
+                            <div class="stat-icon green">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+
+                            <div>
+
+                                <strong id="reportsCount">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Reports
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-stat">
+
+                            <div class="stat-icon purple">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+
+                            <div>
+
+                                <strong id="appointmentsCount">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Appointments
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-stat">
+
+                            <div class="stat-icon orange">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+
+                            <div>
+
+                                <strong id="revenueCount">
+                                    ₹0
+                                </strong>
+
+                                <span>
+                                    Revenue
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TIMELINE
+                ================================================== -->
+
+                <div class="sidebar-card">
+
+                    <div class="sidebar-card-header">
+
+                        <h3>
+                            Vendor Timeline
+                        </h3>
+
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    </div>
+
+
+                    <div class="timeline">
+
+                        <div class="timeline-item">
+
+                            <span class="timeline-point blue"></span>
+
+                            <div>
+
+                                <strong>
+                                    Vendor Created
+                                </strong>
+
+                                <span id="timelineCreated">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <span class="timeline-point purple"></span>
+
+                            <div>
+
+                                <strong>
+                                    Subscription Started
+                                </strong>
+
+                                <span id="timelineSubscription">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <span class="timeline-point orange"></span>
+
+                            <div>
+
+                                <strong>
+                                    License Issued
+                                </strong>
+
+                                <span id="timelineLicense">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="sidebar-card action-sidebar">
+
+                    <a
+                        href="#"
+                        class="sidebar-action primary"
+                        id="sidebarEditBtn"
+                    >
+                        <i class="fa-solid fa-pen"></i>
+                        Edit Vendor
+                    </a>
+
+
+                    <button
+                        type="button"
+                        class="sidebar-action"
+                        id="refreshVendorBtn"
+                    >
+                        <i class="fa-solid fa-rotate"></i>
+                        Refresh Details
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="sidebar-action danger"
+                        id="sidebarDeleteBtn"
+                    >
+                        <i class="fa-solid fa-trash"></i>
+                        Delete Vendor
+                    </button>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     DELETE MODAL
+============================================================= -->
+
+<div
+    class="modal-overlay"
+    id="deleteModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deleteModalTitle"
+    >
+
+        <div class="confirm-icon danger">
+            <i class="fa-solid fa-trash"></i>
+        </div>
+
+        <h2 id="deleteModalTitle">
+            Delete Vendor?
+        </h2>
+
+        <p>
+            This action cannot be easily undone. The vendor,
+            subscription and related license data may be affected.
+        </p>
+
+        <div class="delete-vendor-name" id="deleteVendorName">
+            —
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-light"
+                id="cancelDeleteBtn"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmDeleteBtn"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete Vendor
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     STATUS MODAL
+============================================================= -->
+
+<div
+    class="modal-overlay"
+    id="statusModal"
+    aria-hidden="true"
+>
+
+    <div class="confirm-modal">
+
+        <div class="confirm-icon blue">
+            <i class="fa-solid fa-arrows-rotate"></i>
+        </div>
+
+        <h2>
+            Change Account Status?
+        </h2>
+
+        <p id="statusModalText">
+            Are you sure you want to change this vendor's status?
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-light"
+                id="cancelStatusBtn"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmStatusBtn"
+            >
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'superadmin/js/vendor_detail.js' %}"></script>
+
+{% endblock %}

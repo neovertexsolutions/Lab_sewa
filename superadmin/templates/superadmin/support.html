@@ -1,0 +1,506 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Support{% endblock %}
+{% block page_title %}Support Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/support.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="support-page">
+
+    <!-- ================= PAGE HEADER ================= -->
+    <div class="support-header">
+
+        <div>
+            <div class="eyebrow">
+                <i class="fa-solid fa-headset"></i>
+                SUPPORT MANAGEMENT
+            </div>
+
+            <h2>Vendor Support Center</h2>
+
+            <p>
+                Manage vendor tickets, technical issues, billing queries
+                and system support requests from one place.
+            </p>
+        </div>
+
+        <button class="btn-primary" id="createTicketBtn">
+            <i class="fa-solid fa-plus"></i>
+            Create Ticket
+        </button>
+
+    </div>
+
+
+    <!-- ================= STATISTICS ================= -->
+    <div class="support-stats">
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-ticket"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Total Tickets</span>
+                <strong id="totalTickets">0</strong>
+                <small>All support requests</small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Open Tickets</span>
+                <strong id="openTickets">0</strong>
+                <small>Waiting for resolution</small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>High Priority</span>
+                <strong id="highPriorityTickets">0</strong>
+                <small>Requires attention</small>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+                <span>Resolved</span>
+                <strong id="resolvedTickets">0</strong>
+                <small>Successfully closed</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOOLBAR ================= -->
+    <div class="support-panel">
+
+        <div class="panel-toolbar">
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="ticketSearch"
+                    placeholder="Search ticket, vendor, subject..."
+                    autocomplete="off"
+                >
+            </div>
+
+
+            <div class="filter-group">
+
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="open">Open</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+
+
+                <select id="priorityFilter">
+                    <option value="all">All Priority</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+
+
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="technical">Technical</option>
+                    <option value="billing">Billing</option>
+                    <option value="account">Account</option>
+                    <option value="license">License</option>
+                    <option value="subscription">Subscription</option>
+                    <option value="other">Other</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= TABLE ================= -->
+        <div class="table-wrapper">
+
+            <table class="support-table">
+
+                <thead>
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Vendor</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Assigned To</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ticketTableBody">
+                </tbody>
+
+            </table>
+
+
+            <!-- EMPTY STATE -->
+            <div class="empty-state" id="emptyState">
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+
+                <h3>No support tickets found</h3>
+
+                <p>
+                    There are no tickets matching your current filters.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PAGINATION ================= -->
+        <div class="table-footer">
+
+            <span id="resultCount">
+                Showing 0 tickets
+            </span>
+
+            <div class="pagination" id="pagination"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TICKET MODAL
+===================================================== -->
+
+<div class="modal-overlay" id="ticketModal">
+
+    <div class="support-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-label">
+                    SUPPORT TICKET
+                </span>
+
+                <h3 id="modalTicketTitle">
+                    Ticket Details
+                </h3>
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeTicketModal"
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="ticket-summary">
+
+                <div class="ticket-id-box">
+                    <span>Ticket ID</span>
+                    <strong id="modalTicketId">—</strong>
+                </div>
+
+                <div class="ticket-status-box">
+                    <span>Status</span>
+                    <strong id="modalTicketStatus">—</strong>
+                </div>
+
+                <div class="ticket-priority-box">
+                    <span>Priority</span>
+                    <strong id="modalTicketPriority">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="ticket-information">
+
+                <div class="info-row">
+                    <span>Vendor</span>
+                    <strong id="modalVendor">—</strong>
+                </div>
+
+                <div class="info-row">
+                    <span>Category</span>
+                    <strong id="modalCategory">—</strong>
+                </div>
+
+                <div class="info-row">
+                    <span>Created</span>
+                    <strong id="modalCreated">—</strong>
+                </div>
+
+                <div class="info-row">
+                    <span>Assigned To</span>
+                    <strong id="modalAssigned">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="ticket-description">
+
+                <label>Issue Description</label>
+
+                <div id="modalDescription">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="reply-section">
+
+                <label for="ticketReply">
+                    Admin Response
+                </label>
+
+                <textarea
+                    id="ticketReply"
+                    rows="5"
+                    placeholder="Write your response to the vendor..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn-secondary"
+                id="cancelTicketBtn"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn-primary"
+                id="sendReplyBtn"
+                type="button"
+            >
+                <i class="fa-solid fa-paper-plane"></i>
+                Send Reply
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CREATE TICKET MODAL
+===================================================== -->
+
+<div class="modal-overlay" id="createModal">
+
+    <div class="support-modal create-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-label">
+                    NEW SUPPORT REQUEST
+                </span>
+
+                <h3>Create Support Ticket</h3>
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeCreateModal"
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="createTicketForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="vendorName">
+                        Vendor
+                    </label>
+
+                    <select id="vendorName" required>
+                        <option value="">Select vendor</option>
+                        <option value="Sita Diagnostics">Sita Diagnostics</option>
+                        <option value="Apollo Lab">Apollo Lab</option>
+                        <option value="MediCare Pathology">MediCare Pathology</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="ticketCategory">
+                        Category
+                    </label>
+
+                    <select id="ticketCategory" required>
+                        <option value="">Select category</option>
+                        <option value="technical">Technical</option>
+                        <option value="billing">Billing</option>
+                        <option value="account">Account</option>
+                        <option value="license">License</option>
+                        <option value="subscription">Subscription</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="ticketPriority">
+                        Priority
+                    </label>
+
+                    <select id="ticketPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="ticketAssignee">
+                        Assign To
+                    </label>
+
+                    <select id="ticketAssignee">
+                        <option value="admin">Super Admin</option>
+                        <option value="support">Support Team</option>
+                        <option value="technical">Technical Team</option>
+                        <option value="billing">Billing Team</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="ticketSubject">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="ticketSubject"
+                    placeholder="Enter support ticket subject"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="ticketDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="ticketDescription"
+                    rows="6"
+                    placeholder="Describe the issue..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    id="cancelCreateBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    <i class="fa-solid fa-ticket"></i>
+                    Create Ticket
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/support.js' %}"></script>
+{% endblock %}

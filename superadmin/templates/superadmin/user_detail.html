@@ -1,0 +1,1533 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}User Details{% endblock %}
+{% block page_title %}User Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{% static 'superadmin/css/user_detail.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="user-detail-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div class="header-left">
+
+            <a href="{% url 'superadmin:users' %}"
+               class="back-link">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Users
+
+            </a>
+
+
+            <div class="header-title">
+
+                <div class="large-avatar"
+                     id="headerAvatar">
+
+                    {{ selected_user.get_full_name|default:selected_user.username|default:"U"|first|upper }}
+
+                </div>
+
+
+                <div>
+
+                    <div class="title-row">
+
+                        <h2 id="headerName">
+
+                            {{ selected_user.get_full_name|default:selected_user.username|default:"User" }}
+
+                        </h2>
+
+
+                        <span class="status-badge active"
+                              id="headerStatus">
+
+                            <span></span>
+
+                            Active
+
+                        </span>
+
+                    </div>
+
+
+                    <p id="headerEmail">
+
+                        {{ selected_user.email|default:"No email available" }}
+
+                    </p>
+
+
+                    <small>
+
+                        User ID:
+
+                        <strong id="headerUserId">
+
+                            {{ selected_user.id|default:"—" }}
+
+                        </strong>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HEADER ACTIONS -->
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="toggleUserStatus">
+
+                <i class="fa-solid fa-ban"></i>
+
+                Suspend User
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="editUserBtn">
+
+                <i class="fa-solid fa-pen"></i>
+
+                Edit User
+
+            </button>
+
+
+            <button
+                type="button"
+                class="more-btn"
+                id="moreActionsBtn"
+                aria-label="More actions">
+
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+            </button>
+
+
+            <!-- MORE MENU -->
+
+            <div class="more-menu"
+                 id="moreMenu">
+
+                <button
+                    type="button"
+                    id="resetPasswordBtn">
+
+                    <i class="fa-solid fa-key"></i>
+
+                    Reset Password
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="sendVerificationBtn">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    Send Verification
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="deleteUserBtn"
+                    class="danger">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete User
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACCOUNT OVERVIEW
+    ====================================================== -->
+
+    <div class="overview-grid">
+
+
+        <!-- JOINED -->
+
+        <div class="overview-card">
+
+            <div class="overview-icon blue">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+            <div>
+
+                <span>Joined</span>
+
+                <strong id="joinedDate">
+
+                    {{ selected_user.date_joined|date:"d M Y"|default:"—" }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- LAST LOGIN -->
+
+        <div class="overview-card">
+
+            <div class="overview-icon green">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+            </div>
+
+            <div>
+
+                <span>Last Login</span>
+
+                <strong id="lastLogin">
+
+                    {{ selected_user.last_login|date:"d M Y, h:i A"|default:"Never" }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- VENDOR -->
+
+        <div class="overview-card">
+
+            <div class="overview-icon purple">
+
+                <i class="fa-solid fa-building"></i>
+
+            </div>
+
+            <div>
+
+                <span>Vendor</span>
+
+                <strong id="vendorName">
+
+                    {{ selected_user.vendor.name|default:"Not Assigned" }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="overview-card">
+
+            <div class="overview-icon orange">
+
+                <i class="fa-solid fa-user-shield"></i>
+
+            </div>
+
+            <div>
+
+                <span>Role</span>
+
+                <strong id="roleName">
+
+                    {{ selected_user.role|default:"User" }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT GRID
+    ====================================================== -->
+
+    <div class="content-grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div class="main-column">
+
+
+            <!-- =================================================
+                 PROFILE INFORMATION
+            ================================================== -->
+
+            <section class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-user"></i>
+
+                            Profile Information
+
+                        </h3>
+
+                        <p>
+                            Basic account and contact information.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="small-action"
+                        id="editProfileBtn">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Edit
+
+                    </button>
+
+                </div>
+
+
+                <div class="profile-grid">
+
+
+                    <div class="profile-field">
+
+                        <span>Full Name</span>
+
+                        <strong id="profileName">
+
+                            {{ selected_user.get_full_name|default:selected_user.username|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <span>Username</span>
+
+                        <strong id="profileUsername">
+
+                            {{ selected_user.username|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <span>Email Address</span>
+
+                        <strong id="profileEmail">
+
+                            {{ selected_user.email|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <span>Phone Number</span>
+
+                        <strong id="profilePhone">
+
+                            {{ selected_user.phone|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <span>Department</span>
+
+                        <strong id="profileDepartment">
+
+                            {{ selected_user.department|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <span>Designation</span>
+
+                        <strong id="profileDesignation">
+
+                            {{ selected_user.designation|default:"—" }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ACCESS & PERMISSIONS
+            ================================================== -->
+
+            <section class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-user-lock"></i>
+
+                            Access & Permissions
+
+                        </h3>
+
+                        <p>
+                            User role and application access.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="small-action"
+                        id="managePermissionsBtn">
+
+                        <i class="fa-solid fa-sliders"></i>
+
+                        Manage
+
+                    </button>
+
+                </div>
+
+
+                <div class="access-summary">
+
+
+                    <div class="role-box">
+
+                        <div class="role-icon">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Assigned Role</span>
+
+                            <strong id="assignedRole">
+
+                                {{ selected_user.role|default:"User" }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="permission-count">
+
+                        <strong id="permissionCount">
+
+                            {{ permission_count|default:"0" }}
+
+                        </strong>
+
+                        <span>
+                            Active Permissions
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="permission-list"
+                     id="permissionList">
+
+                    {% if permissions %}
+
+                        {% for permission in permissions %}
+
+                            <div class="permission-item
+                                        {% if permission.granted %}
+                                            allowed
+                                        {% else %}
+                                            denied
+                                        {% endif %}">
+
+                                {% if permission.granted %}
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                {% else %}
+
+                                    <i class="fa-solid fa-xmark"></i>
+
+                                {% endif %}
+
+                                {{ permission.name }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="permission-item allowed">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Patient Management
+
+                        </div>
+
+
+                        <div class="permission-item allowed">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Laboratory Management
+
+                        </div>
+
+
+                        <div class="permission-item allowed">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Billing & Payments
+
+                        </div>
+
+
+                        <div class="permission-item allowed">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Reports & Analytics
+
+                        </div>
+
+
+                        <div class="permission-item denied">
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                            System Settings
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SECURITY
+            ================================================== -->
+
+            <section class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            Security
+
+                        </h3>
+
+                        <p>
+                            Account security and authentication settings.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-list">
+
+
+                    <!-- EMAIL -->
+
+                    <div class="security-row">
+
+                        <div class="security-info">
+
+                            <div class="security-icon success">
+
+                                <i class="fa-solid fa-envelope-circle-check"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Email Verification
+                                </strong>
+
+                                <span>
+                                    {% if selected_user.email_verified %}
+                                        Email address has been verified.
+                                    {% else %}
+                                        Email address has not been verified.
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if selected_user.email_verified %}
+
+                            <span class="security-status verified">
+                                Verified
+                            </span>
+
+                        {% else %}
+
+                            <span class="security-status">
+                                Not Verified
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="security-row">
+
+                        <div class="security-info">
+
+                            <div class="security-icon success">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>Password</strong>
+
+                                <span>
+                                    Password security settings.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="security-action"
+                            id="changePasswordBtn">
+
+                            Change
+
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- 2FA -->
+
+                    <div class="security-row">
+
+                        <div class="security-info">
+
+                            <div class="security-icon warning">
+
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Two-Factor Authentication
+                                </strong>
+
+                                <span>
+                                    Additional security layer is disabled.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="toggle-switch"
+                            id="twoFactorToggle"
+                            aria-label="Toggle two factor authentication">
+
+                            <span></span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LOGIN ACTIVITY
+            ================================================== -->
+
+            <section class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+
+                            Recent Login Activity
+
+                        </h3>
+
+                        <p>
+                            Latest authentication activity for this user.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="small-action"
+                        id="viewLoginLogs">
+
+                        View All
+
+                    </button>
+
+                </div>
+
+
+                <div class="activity-list"
+                     id="loginActivityList">
+
+                    {% if login_activities %}
+
+                        {% for activity in login_activities %}
+
+                            <div class="activity-row">
+
+                                <div class="activity-icon
+                                    {% if activity.success %}
+                                        success
+                                    {% else %}
+                                        failed
+                                    {% endif %}">
+
+                                    {% if activity.success %}
+
+                                        <i class="fa-solid fa-right-to-bracket"></i>
+
+                                    {% else %}
+
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="activity-details">
+
+                                    <strong>
+                                        {{ activity.action|default:"Login Activity" }}
+                                    </strong>
+
+                                    <span>
+                                        {{ activity.device|default:"Unknown Device" }}
+                                    </span>
+
+                                    <small>
+                                        {{ activity.created_at|date:"d M Y · h:i A" }}
+                                    </small>
+
+                                </div>
+
+
+                                <span class="activity-location">
+
+                                    {{ activity.location|default:"Unknown" }}
+
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="activity-row">
+
+                            <div class="activity-icon success">
+
+                                <i class="fa-solid fa-right-to-bracket"></i>
+
+                            </div>
+
+
+                            <div class="activity-details">
+
+                                <strong>
+                                    Successful Login
+                                </strong>
+
+                                <span>
+                                    Chrome · Windows
+                                </span>
+
+                                <small>
+                                    No recent activity available
+                                </small>
+
+                            </div>
+
+
+                            <span class="activity-location">
+                                —
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <aside class="side-column">
+
+
+            <!-- =================================================
+                 ACCOUNT STATUS
+            ================================================== -->
+
+            <section class="side-card">
+
+                <div class="side-card-header">
+
+                    <h3>
+                        Account Status
+                    </h3>
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                </div>
+
+
+                <div class="account-status">
+
+                    <div class="status-large active">
+
+                        <span></span>
+
+                        <strong id="accountStatus">
+                            Active
+                        </strong>
+
+                    </div>
+
+
+                    <p id="statusDescription">
+
+                        User currently has full access
+                        according to assigned permissions.
+
+                    </p>
+
+                </div>
+
+
+                <div class="status-meta">
+
+                    <div>
+
+                        <span>Created</span>
+
+                        <strong>
+                            {{ selected_user.date_joined|date:"d M Y"|default:"—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Updated</span>
+
+                        <strong>
+                            {{ selected_user.updated_at|date:"d M Y"|default:"—" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 VENDOR
+            ================================================== -->
+
+            <section class="side-card">
+
+                <div class="side-card-header">
+
+                    <h3>
+                        Vendor Association
+                    </h3>
+
+                </div>
+
+
+                <div class="vendor-box">
+
+                    <div class="vendor-logo">
+
+                        {{ selected_user.vendor.name|default:"Vendor"|first|upper }}
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ selected_user.vendor.name|default:"Not Assigned" }}
+                        </strong>
+
+                        <span>
+
+                            Vendor ID:
+
+                            {{ selected_user.vendor.id|default:"—" }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="full-width-btn"
+                    id="viewVendorBtn">
+
+                    View Vendor
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SUBSCRIPTION
+            ================================================== -->
+
+            <section class="side-card">
+
+                <div class="side-card-header">
+
+                    <h3>
+                        Subscription Access
+                    </h3>
+
+                    <span class="plan-badge">
+                        {{ selected_user.plan|default:"PRO" }}
+                    </span>
+
+                </div>
+
+
+                <div class="subscription-info">
+
+                    <strong>
+                        {{ selected_user.plan_name|default:"Professional Plan" }}
+                    </strong>
+
+                    <span>
+
+                        Valid until
+
+                        <b>
+                            {{ selected_user.plan_expiry|date:"d M Y"|default:"—" }}
+                        </b>
+
+                    </span>
+
+                </div>
+
+
+                <div class="progress-wrapper">
+
+                    <div class="progress-label">
+
+                        <span>
+                            Usage Period
+                        </span>
+
+                        <strong>
+                            {{ subscription_usage|default:"0" }}%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress">
+
+                        <span
+                            style="width: {{ subscription_usage|default:0 }}%;">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <section class="side-card">
+
+                <div class="side-card-header">
+
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <button
+                        type="button"
+                        id="quickResetPassword">
+
+                        <i class="fa-solid fa-key"></i>
+
+                        Reset Password
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="quickSendEmail">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        Send Email
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="quickAuditLog">
+
+                        <i class="fa-solid fa-list-check"></i>
+
+                        View Audit Logs
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     RESET PASSWORD MODAL
+========================================================== -->
+
+<div class="modal-overlay"
+     id="passwordModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="passwordModalTitle">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span>SECURITY</span>
+
+                <h3 id="passwordModalTitle">
+                    Reset User Password
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closePasswordModal"
+                aria-label="Close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <p class="modal-description">
+
+                Create a new temporary password for this user.
+                The user should change it after their next login.
+
+            </p>
+
+
+            <div class="form-group">
+
+                <label for="newPassword">
+                    New Temporary Password
+                </label>
+
+
+                <div class="password-input">
+
+                    <input
+                        type="password"
+                        id="newPassword"
+                        autocomplete="new-password"
+                        placeholder="Enter temporary password"
+                    >
+
+
+                    <button
+                        type="button"
+                        id="togglePassword"
+                        aria-label="Show password">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="password-strength">
+
+                <div class="strength-bar">
+
+                    <span id="strengthBar"></span>
+
+                </div>
+
+
+                <span id="strengthText">
+                    Password strength
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelPassword">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmPasswordReset">
+
+                <i class="fa-solid fa-key"></i>
+
+                Reset Password
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     EDIT USER MODAL
+========================================================== -->
+
+<div class="modal-overlay"
+     id="editUserModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="editUserModalTitle">
+
+    <div class="modal large">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span>USER MANAGEMENT</span>
+
+                <h3 id="editUserModalTitle">
+                    Edit User
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeEditModal"
+                aria-label="Close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label for="editName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editName"
+                        value="{{ selected_user.get_full_name|default:selected_user.username|default:'' }}"
+                        autocomplete="name"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editUsername">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editUsername"
+                        value="{{ selected_user.username|default:'' }}"
+                        autocomplete="username"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="editEmail"
+                        value="{{ selected_user.email|default:'' }}"
+                        autocomplete="email"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editPhone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="editPhone"
+                        value="{{ selected_user.phone|default:'' }}"
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editRole">
+                        Role
+                    </label>
+
+                    <select id="editRole">
+
+                        <option value="Lab Manager">
+                            Lab Manager
+                        </option>
+
+                        <option value="Lab Technician">
+                            Lab Technician
+                        </option>
+
+                        <option value="Receptionist">
+                            Receptionist
+                        </option>
+
+                        <option value="Accountant">
+                            Accountant
+                        </option>
+
+                        <option value="Doctor">
+                            Doctor
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editDepartment">
+                        Department
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editDepartment"
+                        value="{{ selected_user.department|default:'' }}"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelEdit">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="saveUserChanges">
+
+                <i class="fa-solid fa-check"></i>
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================== -->
+
+<div class="toast"
+     id="userToast"
+     role="status"
+     aria-live="polite">
+
+    <div class="toast-icon">
+
+        <i class="fa-solid fa-check"></i>
+
+    </div>
+
+
+    <div>
+
+        <strong id="toastTitle">
+            Success
+        </strong>
+
+        <span id="toastMessage">
+            Action completed successfully.
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="closeToast"
+        aria-label="Close notification">
+
+        <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+    /*
+     * User ID available for future Django API integration.
+     */
+    window.USER_ID = "{{ selected_user.id|default:'' }}";
+</script>
+
+<script src="{% static 'superadmin/js/user_detail.js' %}"></script>
+
+{% endblock %}

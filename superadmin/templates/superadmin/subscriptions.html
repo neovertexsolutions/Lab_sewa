@@ -1,0 +1,1460 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Subscriptions & Billing{% endblock %}
+
+{% block breadcrumb %}
+Subscriptions
+{% endblock %}
+
+{% block page_title %}
+Subscription & Billing
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/subscriptions.css' %}"
+>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div
+    class="subscription-page"
+    id="subscriptionPage"
+    data-page="subscriptions"
+>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="subscription-intro">
+
+        <div class="subscription-intro-content">
+
+            <span class="subscription-eyebrow">
+                BILLING & SUBSCRIPTION
+            </span>
+
+            <h2>
+                Subscription Management
+            </h2>
+
+            <p>
+                Manage plans, billing cycles, usage limits,
+                payments and subscription settings from one place.
+            </p>
+
+        </div>
+
+
+        <div class="subscription-actions">
+
+            <button
+                type="button"
+                class="subscription-btn secondary"
+                id="refreshSubscriptionBtn"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="subscription-btn primary"
+                id="manageBillingBtn"
+            >
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Manage Billing</span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CURRENT SUBSCRIPTION
+    ====================================================== -->
+
+    <section
+        class="current-subscription-card"
+        aria-labelledby="currentSubscriptionTitle"
+    >
+
+        <div class="current-plan-main">
+
+            <div
+                class="current-plan-icon"
+                aria-hidden="true"
+            >
+                <i class="fa-solid fa-crown"></i>
+            </div>
+
+
+            <div class="current-plan-content">
+
+                <div class="current-plan-heading">
+
+                    <span class="current-label">
+                        CURRENT PLAN
+                    </span>
+
+
+                    <span
+                        class="subscription-status active"
+                        id="subscriptionStatus"
+                    >
+                        <i class="fa-solid fa-circle"></i>
+                        <span id="subscriptionStatusText">
+                            Active
+                        </span>
+                    </span>
+
+                </div>
+
+
+                <h2 id="currentSubscriptionTitle">
+                    <span id="currentPlanName">
+                        Professional
+                    </span>
+                </h2>
+
+
+                <p id="currentPlanDescription">
+                    Advanced tools and infrastructure
+                    for growing pathology laboratories.
+                </p>
+
+
+                <div class="subscription-meta">
+
+
+                    <!-- BILLING -->
+
+                    <div class="subscription-meta-item">
+
+                        <span>
+                            Billing Cycle
+                        </span>
+
+                        <strong id="currentBilling">
+                            Monthly
+                        </strong>
+
+                    </div>
+
+
+                    <!-- NEXT BILLING -->
+
+                    <div class="subscription-meta-item">
+
+                        <span>
+                            Next Billing
+                        </span>
+
+                        <strong id="nextBillingDate">
+                            Sep 12, 2026
+                        </strong>
+
+                    </div>
+
+
+                    <!-- AMOUNT -->
+
+                    <div class="subscription-meta-item">
+
+                        <span>
+                            Amount
+                        </span>
+
+                        <strong id="currentAmount">
+                            ₹2,499 / month
+                        </strong>
+
+                    </div>
+
+
+                    <!-- SUBSCRIPTION ID -->
+
+                    <div class="subscription-meta-item">
+
+                        <span>
+                            Subscription ID
+                        </span>
+
+                        <strong id="subscriptionId">
+                            SUB-2026-00124
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="current-plan-actions">
+
+            <button
+                type="button"
+                class="subscription-btn secondary"
+                id="changePlanBtn"
+            >
+                <i class="fa-solid fa-arrow-up-right-dots"></i>
+                <span>Change Plan</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="subscription-btn danger-outline"
+                id="cancelSubscriptionBtn"
+            >
+                <i class="fa-solid fa-ban"></i>
+                <span>Cancel Plan</span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PLANS
+    ====================================================== -->
+
+    <section class="subscription-section">
+
+        <div class="subscription-section-header">
+
+            <div>
+
+                <span class="subscription-section-label">
+                    PLANS
+                </span>
+
+                <h2>
+                    Choose the right plan for your laboratory
+                </h2>
+
+                <p>
+                    Compare plans and upgrade or downgrade
+                    your subscription whenever required.
+                </p>
+
+            </div>
+
+
+            <!-- BILLING SWITCH -->
+
+            <div class="billing-control">
+
+                <span
+                    id="monthlyLabel"
+                    class="billing-label active"
+                >
+                    Monthly
+                </span>
+
+
+                <label
+                    class="billing-switch"
+                    for="billingToggle"
+                >
+
+                    <input
+                        type="checkbox"
+                        id="billingToggle"
+                        aria-label="Switch between monthly and yearly billing"
+                    >
+
+                    <span class="billing-slider"></span>
+
+                </label>
+
+
+                <span
+                    id="yearlyLabel"
+                    class="billing-label"
+                >
+                    Yearly
+                </span>
+
+
+                <span class="save-badge">
+                    SAVE 20%
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PLANS GRID
+        ================================================== -->
+
+        <div class="plans-grid">
+
+
+            <!-- =================================================
+                 BASIC
+            ================================================== -->
+
+            <article
+                class="plan-card"
+                data-plan="basic"
+                data-monthly="999"
+                data-yearly="9590"
+            >
+
+                <div class="plan-card-top">
+
+                    <div class="plan-icon basic">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+
+                    <span class="plan-tag">
+                        STARTER
+                    </span>
+
+                </div>
+
+
+                <h3>
+                    Basic
+                </h3>
+
+
+                <p class="plan-description">
+                    Essential features for small
+                    pathology laboratories.
+                </p>
+
+
+                <div class="plan-price">
+
+                    <span>₹</span>
+
+                    <strong
+                        class="price-value"
+                        data-monthly="999"
+                        data-yearly="799"
+                    >
+                        999
+                    </strong>
+
+                    <small class="price-period">
+                        /month
+                    </small>
+
+                </div>
+
+
+                <p
+                    class="billing-note yearly-note"
+                    data-monthly-note="Billed monthly"
+                    data-yearly-note="Billed annually"
+                >
+                    Billed monthly
+                </p>
+
+
+                <button
+                    type="button"
+                    class="plan-btn"
+                    data-plan="basic"
+                    data-action="upgrade"
+                >
+                    Choose Basic
+                </button>
+
+
+                <div class="features-heading">
+                    Includes
+                </div>
+
+
+                <ul class="feature-list">
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Up to 500 patients
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Patient management
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Basic reports
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Email support
+                    </li>
+
+                    <li class="disabled">
+                        <i class="fa-solid fa-xmark"></i>
+                        Advanced analytics
+                    </li>
+
+                    <li class="disabled">
+                        <i class="fa-solid fa-xmark"></i>
+                        Priority support
+                    </li>
+
+                </ul>
+
+            </article>
+
+
+
+            <!-- =================================================
+                 PROFESSIONAL
+            ================================================== -->
+
+            <article
+                class="plan-card featured"
+                data-plan="professional"
+                data-monthly="2499"
+                data-yearly="23990"
+            >
+
+                <div class="popular-badge">
+                    MOST POPULAR
+                </div>
+
+
+                <div class="plan-card-top">
+
+                    <div class="plan-icon professional">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <span class="plan-tag">
+                        PROFESSIONAL
+                    </span>
+
+                </div>
+
+
+                <h3>
+                    Professional
+                </h3>
+
+
+                <p class="plan-description">
+                    Advanced tools for growing
+                    pathology laboratories.
+                </p>
+
+
+                <div class="plan-price">
+
+                    <span>₹</span>
+
+                    <strong
+                        class="price-value"
+                        data-monthly="2499"
+                        data-yearly="1999"
+                    >
+                        2,499
+                    </strong>
+
+                    <small class="price-period">
+                        /month
+                    </small>
+
+                </div>
+
+
+                <p
+                    class="billing-note yearly-note"
+                    data-monthly-note="Billed monthly"
+                    data-yearly-note="Billed annually"
+                >
+                    Billed monthly
+                </p>
+
+
+                <button
+                    type="button"
+                    class="plan-btn current"
+                    data-plan="professional"
+                    data-action="current"
+                >
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Current Plan</span>
+                </button>
+
+
+                <div class="features-heading">
+                    Everything in Basic, plus
+                </div>
+
+
+                <ul class="feature-list">
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Unlimited patients
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Advanced analytics
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Invoice management
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Staff management
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Priority support
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Automated reports
+                    </li>
+
+                </ul>
+
+            </article>
+
+
+
+            <!-- =================================================
+                 ENTERPRISE
+            ================================================== -->
+
+            <article
+                class="plan-card"
+                data-plan="enterprise"
+                data-monthly="5999"
+                data-yearly="57590"
+            >
+
+                <div class="plan-card-top">
+
+                    <div class="plan-icon enterprise">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+
+                    <span class="plan-tag">
+                        ENTERPRISE
+                    </span>
+
+                </div>
+
+
+                <h3>
+                    Enterprise
+                </h3>
+
+
+                <p class="plan-description">
+                    Complete infrastructure for large
+                    organizations and multi-branch labs.
+                </p>
+
+
+                <div class="plan-price">
+
+                    <span>₹</span>
+
+                    <strong
+                        class="price-value"
+                        data-monthly="5999"
+                        data-yearly="4799"
+                    >
+                        5,999
+                    </strong>
+
+                    <small class="price-period">
+                        /month
+                    </small>
+
+                </div>
+
+
+                <p
+                    class="billing-note yearly-note"
+                    data-monthly-note="Billed monthly"
+                    data-yearly-note="Billed annually"
+                >
+                    Billed monthly
+                </p>
+
+
+                <button
+                    type="button"
+                    class="plan-btn"
+                    data-plan="enterprise"
+                    data-action="upgrade"
+                >
+                    Choose Enterprise
+                </button>
+
+
+                <div class="features-heading">
+                    Everything in Professional, plus
+                </div>
+
+
+                <ul class="feature-list">
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Multiple branches
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Advanced permissions
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        API access
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Dedicated support
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Custom integrations
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        SLA & onboarding
+                    </li>
+
+                </ul>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         USAGE
+    ====================================================== -->
+
+    <section class="subscription-section usage-section">
+
+        <div class="subscription-section-header">
+
+            <div>
+
+                <span class="subscription-section-label">
+                    PLAN USAGE
+                </span>
+
+                <h2>
+                    Resource utilization
+                </h2>
+
+                <p>
+                    Monitor how your current subscription
+                    resources are being consumed.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="usage-grid">
+
+
+            <!-- PATIENTS -->
+
+            <div class="usage-card">
+
+                <div class="usage-header">
+
+                    <div>
+
+                        <span>
+                            Patients
+                        </span>
+
+                        <strong>
+
+                            <span id="patientUsage">
+                                7,240
+                            </span>
+
+                            /
+
+                            <span id="patientLimit">
+                                Unlimited
+                            </span>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="usage-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        id="patientProgress"
+                        style="width:64%"
+                    ></div>
+
+                </div>
+
+
+                <small id="patientUsageText">
+                    64% of recommended capacity
+                </small>
+
+            </div>
+
+
+
+            <!-- STORAGE -->
+
+            <div class="usage-card">
+
+                <div class="usage-header">
+
+                    <div>
+
+                        <span>
+                            Storage
+                        </span>
+
+                        <strong>
+                            <span id="storageUsed">
+                                68.4 GB
+                            </span>
+                            /
+                            <span id="storageLimit">
+                                100 GB
+                            </span>
+                        </strong>
+
+                    </div>
+
+
+                    <div class="usage-icon warning">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill warning"
+                        id="storageProgress"
+                        style="width:68.4%"
+                    ></div>
+
+                </div>
+
+
+                <small id="storageUsageText">
+                    31.6 GB remaining
+                </small>
+
+            </div>
+
+
+
+            <!-- REPORTS -->
+
+            <div class="usage-card">
+
+                <div class="usage-header">
+
+                    <div>
+
+                        <span>
+                            Reports
+                        </span>
+
+                        <strong>
+                            <span id="reportsUsed">
+                                1,842
+                            </span>
+                            /
+                            <span id="reportsLimit">
+                                Unlimited
+                            </span>
+                        </strong>
+
+                    </div>
+
+
+                    <div class="usage-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        id="reportsProgress"
+                        style="width:38%"
+                    ></div>
+
+                </div>
+
+
+                <small id="reportsUsageText">
+                    Monthly report usage
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PAYMENT HISTORY
+    ====================================================== -->
+
+    <section class="subscription-section payment-section">
+
+        <div class="subscription-section-header">
+
+            <div>
+
+                <span class="subscription-section-label">
+                    BILLING HISTORY
+                </span>
+
+                <h2>
+                    Payment history
+                </h2>
+
+                <p>
+                    Review subscription payments and invoices.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="subscription-btn secondary"
+                id="viewAllPaymentsBtn"
+            >
+                <i class="fa-solid fa-list"></i>
+                <span>View All</span>
+            </button>
+
+        </div>
+
+
+        <div class="payment-table-wrapper">
+
+            <table class="payment-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Invoice</th>
+                        <th>Date</th>
+                        <th>Plan</th>
+                        <th>Payment Method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="paymentTableBody">
+
+
+                    <!-- PAYMENT 1 -->
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                INV-2026-082
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            Aug 12, 2026
+                        </td>
+
+
+                        <td>
+                            Professional
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-method">
+
+                                <i class="fa-brands fa-cc-visa"></i>
+
+                                •••• 4242
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                ₹2,499
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-status paid">
+
+                                <i class="fa-solid fa-check"></i>
+
+                                Paid
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="invoice-btn"
+                                data-invoice="INV-2026-082"
+                                aria-label="Download invoice INV-2026-082"
+                            >
+
+                                <i class="fa-solid fa-download"></i>
+
+                                <span>Download</span>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- PAYMENT 2 -->
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                INV-2026-081
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            Jul 12, 2026
+                        </td>
+
+
+                        <td>
+                            Professional
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-method">
+
+                                <i class="fa-brands fa-cc-visa"></i>
+
+                                •••• 4242
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                ₹2,499
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-status paid">
+
+                                <i class="fa-solid fa-check"></i>
+
+                                Paid
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="invoice-btn"
+                                data-invoice="INV-2026-081"
+                                aria-label="Download invoice INV-2026-081"
+                            >
+
+                                <i class="fa-solid fa-download"></i>
+
+                                <span>Download</span>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- PAYMENT 3 -->
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                INV-2026-080
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            Jun 12, 2026
+                        </td>
+
+
+                        <td>
+                            Professional
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-method">
+
+                                <i class="fa-brands fa-cc-visa"></i>
+
+                                •••• 4242
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                ₹2,499
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="payment-status paid">
+
+                                <i class="fa-solid fa-check"></i>
+
+                                Paid
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="invoice-btn"
+                                data-invoice="INV-2026-080"
+                                aria-label="Download invoice INV-2026-080"
+                            >
+
+                                <i class="fa-solid fa-download"></i>
+
+                                <span>Download</span>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     PLAN CHANGE MODAL
+========================================================== -->
+
+<div
+    class="subscription-modal-overlay"
+    id="planModal"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="subscription-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="planModalTitle"
+        aria-describedby="planModalDescription"
+    >
+
+
+        <button
+            type="button"
+            class="modal-close"
+            id="closePlanModal"
+            aria-label="Close plan change dialog"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="modal-icon">
+
+            <i class="fa-solid fa-arrow-up-right-dots"></i>
+
+        </div>
+
+
+        <span class="modal-label">
+            CHANGE PLAN
+        </span>
+
+
+        <h3 id="planModalTitle">
+            Change your subscription?
+        </h3>
+
+
+        <p id="planModalDescription">
+            Review the selected plan before confirming.
+        </p>
+
+
+        <div class="modal-summary">
+
+
+            <div>
+
+                <span>
+                    Selected Plan
+                </span>
+
+                <strong id="modalPlanName">
+                    Professional
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Billing
+                </span>
+
+                <strong id="modalBilling">
+                    Monthly
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Price
+                </span>
+
+                <strong id="modalPrice">
+                    ₹2,499 / month
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                type="button"
+                class="subscription-btn secondary"
+                id="cancelPlanModal"
+            >
+                <span>Cancel</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="subscription-btn primary"
+                id="confirmPlanBtn"
+            >
+                <i class="fa-solid fa-check"></i>
+                <span>Confirm Change</span>
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     CANCEL SUBSCRIPTION MODAL
+========================================================== -->
+
+<div
+    class="subscription-modal-overlay"
+    id="cancelModal"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="subscription-modal danger"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cancelModalTitle"
+        aria-describedby="cancelModalDescription"
+    >
+
+
+        <!-- CLOSE -->
+
+        <button
+            type="button"
+            class="modal-close"
+            id="closeCancelModal"
+            aria-label="Close cancellation dialog"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+
+        <!-- ICON -->
+
+        <div class="modal-icon danger">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+
+
+        <!-- LABEL -->
+
+        <span class="modal-label danger">
+            CANCEL SUBSCRIPTION
+        </span>
+
+
+
+        <!-- TITLE -->
+
+        <h3 id="cancelModalTitle">
+            Cancel your subscription?
+        </h3>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <p id="cancelModalDescription">
+
+            Your current plan will remain active until
+            the end of the current billing period.
+
+        </p>
+
+
+
+        <!-- WARNING -->
+
+        <div class="cancel-warning">
+
+            <span>
+                Access continues until
+            </span>
+
+            <strong id="cancelEndDate">
+                Sep 12, 2026
+            </strong>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="modal-actions cancel-actions">
+
+
+            <!-- KEEP -->
+
+            <button
+                type="button"
+                class="subscription-btn secondary"
+                id="keepSubscriptionBtn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                <span>
+                    Keep Subscription
+                </span>
+
+            </button>
+
+
+
+            <!-- CANCEL -->
+
+            <button
+                type="button"
+                class="subscription-btn danger"
+                id="confirmCancelBtn"
+            >
+
+                <i class="fa-solid fa-ban"></i>
+
+                <span>
+                    Cancel Subscription
+                </span>
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST CONTAINER
+========================================================== -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'superadmin/js/subscriptions.js' %}"
+    defer
+></script>
+
+{% endblock %}

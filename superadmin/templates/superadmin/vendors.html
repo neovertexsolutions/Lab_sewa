@@ -1,0 +1,587 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Vendors | Super Admin{% endblock %}
+{% block page_title %}Vendors{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/vendors.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="vendors-page"
+    id="vendorsPage"
+
+    data-api-url="{% url 'superadmin:vendors_api' %}"
+    data-create-url="{% url 'superadmin:vendor_create' %}"
+    data-detail-url-template="{% url 'superadmin:vendor_detail' '00000000-0000-0000-0000-000000000000' %}"
+    data-edit-url-template="{% url 'superadmin:vendor_edit' '00000000-0000-0000-0000-000000000000' %}"
+>
+
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="page-header">
+
+        <div class="header-content">
+
+            <div class="header-left">
+
+                <div class="page-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+
+                <div>
+
+                    <h1>Vendors</h1>
+
+                    <p>
+                        Manage laboratories, vendor accounts,
+                        subscriptions and access.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="refreshVendorsBtn"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>Refresh</span>
+                </button>
+
+
+                <a
+                    href="{% url 'superadmin:vendor_create' %}"
+                    class="btn btn-primary"
+                    id="createVendorBtn"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Create Vendor</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ALERT
+    ========================================================== -->
+
+    <div
+        id="vendorsAlert"
+        class="vendors-alert"
+        role="alert"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- =========================================================
+         STATISTICS
+    ========================================================== -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-building"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Vendors</span>
+
+                <strong id="totalVendors">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Active</span>
+
+                <strong id="activeVendors">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Pending</span>
+
+                <strong id="pendingVendors">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon red">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Suspended</span>
+
+                <strong id="suspendedVendors">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         TOOLBAR
+    ========================================================== -->
+
+    <section class="toolbar-card">
+
+        <div class="toolbar-main">
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="vendorSearch"
+                    placeholder="Search vendor, code, email, phone..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    id="clearSearch"
+                    class="clear-search"
+                    aria-label="Clear search"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="filter-control">
+
+                <label for="statusFilter">
+                    Status
+                </label>
+
+                <select id="statusFilter">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="suspended">
+                        Suspended
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PLAN -->
+
+            <div class="filter-control">
+
+                <label for="planFilter">
+                    Plan
+                </label>
+
+                <select id="planFilter">
+
+                    <option value="">
+                        All Plans
+                    </option>
+
+                    <option value="basic">
+                        Basic
+                    </option>
+
+                    <option value="professional">
+                        Professional
+                    </option>
+
+                    <option value="enterprise">
+                        Enterprise
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- RESET -->
+
+            <button
+                type="button"
+                class="btn btn-light filter-reset"
+                id="resetFiltersBtn"
+            >
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+                Reset
+            </button>
+
+        </div>
+
+
+        <!-- BULK ACTIONS -->
+
+        <div
+            class="bulk-actions"
+            id="bulkActions"
+            hidden
+        >
+
+            <span id="selectedCount">
+                0 selected
+            </span>
+
+            <button
+                type="button"
+                class="bulk-delete-btn"
+                id="bulkDeleteBtn"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete Selected
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         TABLE CARD
+    ========================================================== -->
+
+    <section class="vendors-card">
+
+
+        <!-- TABLE HEADER -->
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+                    Vendor Directory
+                </h2>
+
+                <p id="resultsInfo">
+                    Loading vendors...
+                </p>
+
+            </div>
+
+
+            <div class="table-tools">
+
+                <button
+                    type="button"
+                    class="icon-btn"
+                    id="tableRefreshBtn"
+                    title="Refresh vendors"
+                    aria-label="Refresh vendors"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-wrapper">
+
+            <table class="vendors-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th class="checkbox-column">
+
+                            <input
+                                type="checkbox"
+                                id="selectAllVendors"
+                                aria-label="Select all vendors"
+                            >
+
+                        </th>
+
+                        <th>Vendor</th>
+
+                        <th>Contact</th>
+
+                        <th>Location</th>
+
+                        <th>Plan</th>
+
+                        <th>Subscription</th>
+
+                        <th>Status</th>
+
+                        <th class="actions-column">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="vendorsTableBody">
+
+                    <!-- JS -->
+
+                </tbody>
+
+            </table>
+
+
+            <!-- LOADING -->
+
+            <div
+                class="table-state"
+                id="vendorsLoading"
+            >
+
+                <div class="loading-spinner"></div>
+
+                <strong>
+                    Loading vendors...
+                </strong>
+
+                <span>
+                    Please wait while vendor data is fetched.
+                </span>
+
+            </div>
+
+
+            <!-- EMPTY -->
+
+            <div
+                class="table-state empty-state"
+                id="vendorsEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-building-circle-xmark"></i>
+                </div>
+
+                <strong>
+                    No vendors found
+                </strong>
+
+                <span>
+                    No vendor matches your current search or filters.
+                </span>
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    id="emptyResetBtn"
+                >
+                    Reset Filters
+                </button>
+
+            </div>
+
+
+            <!-- ERROR -->
+
+            <div
+                class="table-state error-state"
+                id="vendorsError"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <strong>
+                    Unable to load vendors
+                </strong>
+
+                <span id="vendorsErrorMessage">
+                    Something went wrong while loading vendor data.
+                </span>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="retryVendorsBtn"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                    Try Again
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAGINATION
+        ====================================================== -->
+
+        <div class="pagination-wrapper">
+
+            <div
+                class="pagination-info"
+                id="paginationInfo"
+            >
+                Showing 0 of 0
+            </div>
+
+
+            <div
+                class="pagination"
+                id="pagination"
+            ></div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =============================================================
+     DELETE MODAL
+============================================================= -->
+
+<div
+    class="modal-overlay"
+    id="deleteModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deleteModalTitle"
+    >
+
+        <div class="confirm-icon danger">
+            <i class="fa-solid fa-trash"></i>
+        </div>
+
+        <h2 id="deleteModalTitle">
+            Delete Vendor?
+        </h2>
+
+        <p id="deleteModalMessage">
+            This action cannot be undone.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-light"
+                id="cancelDeleteBtn"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmDeleteBtn"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'superadmin/js/vendors.js' %}"
+    defer
+></script>
+
+{% endblock %}

@@ -1,0 +1,999 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}License Details{% endblock %}
+
+{% block page_title %}License Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/license_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="license-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="license-page-header">
+
+        <div class="header-left">
+
+            <div class="breadcrumb-row">
+                <a href="{% url 'superadmin:licenses' %}">
+                    Licenses
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <span>License Details</span>
+            </div>
+
+            <div class="title-row">
+
+                <div>
+                    <h2>License Details</h2>
+
+                    <p>
+                        Manage license access, subscription status and
+                        vendor authorization.
+                    </p>
+                </div>
+
+                <div class="license-status active" id="licenseStatus">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Active</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'superadmin:licenses' %}"
+                class="btn btn-secondary"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </a>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="copyLicenseBtn"
+            >
+                <i class="fa-regular fa-copy"></i>
+                Copy Key
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="renewLicenseBtn"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                Renew License
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         LICENSE SUMMARY
+    ========================================================== -->
+
+    <div class="license-summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <span>License Type</span>
+
+                <strong>
+                    {{ license.license_type|default:"Subscription" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon purple">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <span>Plan</span>
+
+                <strong>
+                    {{ license.plan.name|default:"Professional" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon green">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <span>Issued On</span>
+
+                <strong>
+                    {{ license.start_date|date:"d M Y"|default:"-" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon orange">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <span>Expires On</span>
+
+                <strong id="expiryDate">
+                    {{ license.expiry_date|date:"d M Y"|default:"-" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MAIN GRID
+    ========================================================== -->
+
+    <div class="license-main-grid">
+
+        <!-- =====================================================
+             LEFT COLUMN
+        ====================================================== -->
+
+        <div class="license-left">
+
+
+            <!-- LICENSE KEY -->
+            <section class="panel license-key-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>
+                            <i class="fa-solid fa-key"></i>
+                            License Key
+                        </h3>
+
+                        <p>
+                            Unique authorization key assigned to this vendor.
+                        </p>
+                    </div>
+
+                    <span class="security-badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Secured
+                    </span>
+
+                </div>
+
+
+                <div class="license-key-box">
+
+                    <div class="key-prefix">
+                        LICENSE
+                    </div>
+
+                    <input
+                        type="password"
+                        id="licenseKey"
+                        value="{{ license.key|default:'SPL-XXXX-XXXX-XXXX-XXXX' }}"
+                        readonly
+                    >
+
+                    <button
+                        type="button"
+                        class="key-action"
+                        id="toggleKeyBtn"
+                        title="Show / Hide License Key"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="key-action"
+                        id="copyKeyIconBtn"
+                        title="Copy License Key"
+                    >
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+
+                </div>
+
+                <div class="key-note">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <span>
+                        Keep this license key private. It is linked to
+                        the vendor account and subscription.
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- VENDOR INFORMATION -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>
+                            <i class="fa-solid fa-building"></i>
+                            Vendor Information
+                        </h3>
+
+                        <p>
+                            Organization associated with this license.
+                        </p>
+                    </div>
+
+                    <a
+                        href="{% url 'superadmin:vendor_detail' license.vendor.id %}"
+                        class="text-link"
+                    >
+                        View Vendor
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+
+                </div>
+
+
+                <div class="vendor-profile">
+
+                    <div class="vendor-avatar">
+
+                        {% if license.vendor.logo %}
+                            <img
+                                src="{{ license.vendor.logo.url }}"
+                                alt="{{ license.vendor.name }}"
+                            >
+                        {% else %}
+                            {{ license.vendor.name|default:"V"|first|upper }}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="vendor-info">
+
+                        <h4>
+                            {{ license.vendor.name|default:"Demo Pathology Lab" }}
+                        </h4>
+
+                        <span>
+                            Vendor ID:
+                            {{ license.vendor.vendor_id|default:"VEN-0001" }}
+                        </span>
+
+                    </div>
+
+                    <div class="vendor-status">
+                        <span class="status-dot"></span>
+                        Active
+                    </div>
+
+                </div>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+
+                        <span>Email</span>
+
+                        <strong>
+                            {{ license.vendor.email|default:"vendor@example.com" }}
+                        </strong>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span>Phone</span>
+
+                        <strong>
+                            {{ license.vendor.phone|default:"+91 00000 00000" }}
+                        </strong>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span>Username</span>
+
+                        <strong>
+                            {{ license.vendor.username|default:"vendor_admin" }}
+                        </strong>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span>Created</span>
+
+                        <strong>
+                            {{ license.vendor.created_at|date:"d M Y"|default:"-" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SUBSCRIPTION -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>
+                            <i class="fa-solid fa-credit-card"></i>
+                            Subscription
+                        </h3>
+
+                        <p>
+                            Current subscription and billing information.
+                        </p>
+                    </div>
+
+                    <span class="plan-badge">
+                        {{ license.plan.name|default:"Professional" }}
+                    </span>
+
+                </div>
+
+
+                <div class="subscription-card">
+
+                    <div class="subscription-main">
+
+                        <div class="plan-icon">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                {{ license.plan.name|default:"Professional Plan" }}
+                            </h4>
+
+                            <p>
+                                {{ license.plan.description|default:"Advanced laboratory management features." }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subscription-price">
+
+                        <strong>
+                            ₹{{ license.plan.price|default:"0" }}
+                        </strong>
+
+                        <span>
+                            / {{ license.plan.billing_cycle|default:"month" }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subscription-dates">
+
+                    <div>
+
+                        <span>Start Date</span>
+
+                        <strong>
+                            {{ license.start_date|date:"d M Y"|default:"-" }}
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Expiry Date</span>
+
+                        <strong id="subscriptionExpiry">
+                            {{ license.expiry_date|date:"d M Y"|default:"-" }}
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Auto Renewal</span>
+
+                        <strong>
+                            {% if license.auto_renew %}
+                                Enabled
+                            {% else %}
+                                Disabled
+                            {% endif %}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FEATURES -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            <i class="fa-solid fa-layer-group"></i>
+                            Enabled Features
+                        </h3>
+
+                        <p>
+                            Features available under this license.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="features-grid">
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Patient Management
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Test Management
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Reports
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Billing & Payments
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Inventory
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Staff Management
+                    </div>
+
+                    <div class="feature-item enabled">
+                        <i class="fa-solid fa-check"></i>
+                        Analytics
+                    </div>
+
+                    <div class="feature-item disabled">
+                        <i class="fa-solid fa-lock"></i>
+                        Advanced API
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- =====================================================
+             RIGHT COLUMN
+        ====================================================== -->
+
+        <div class="license-right">
+
+
+            <!-- LICENSE STATUS -->
+            <section class="panel status-panel">
+
+                <div class="panel-header">
+
+                    <h3>
+                        License Status
+                    </h3>
+
+                </div>
+
+
+                <div class="big-status active" id="bigStatus">
+
+                    <div class="big-status-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+
+                    <div>
+
+                        <strong id="bigStatusText">
+                            Active
+                        </strong>
+
+                        <span>
+                            License is currently valid
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="remaining-box">
+
+                    <span>Time Remaining</span>
+
+                    <strong id="daysRemaining">
+                        Calculating...
+                    </strong>
+
+                </div>
+
+
+                <div class="progress-container">
+
+                    <div class="progress-label">
+
+                        <span>
+                            License Period
+                        </span>
+
+                        <strong id="licenseProgressText">
+                            --
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            id="licenseProgress"
+                            style="width: 70%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- USAGE -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Usage Limits
+                        </h3>
+
+                        <p>
+                            Current vendor resource usage.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="usage-list">
+
+                    <div class="usage-item">
+
+                        <div class="usage-top">
+
+                            <span>Users</span>
+
+                            <strong>
+                                8 / 10
+                            </strong>
+
+                        </div>
+
+                        <div class="usage-progress">
+                            <span style="width:80%;"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="usage-item">
+
+                        <div class="usage-top">
+
+                            <span>Patients</span>
+
+                            <strong>
+                                842 / 1,000
+                            </strong>
+
+                        </div>
+
+                        <div class="usage-progress">
+                            <span style="width:84%;"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="usage-item">
+
+                        <div class="usage-top">
+
+                            <span>Storage</span>
+
+                            <strong>
+                                4.2 GB / 10 GB
+                            </strong>
+
+                        </div>
+
+                        <div class="usage-progress">
+                            <span style="width:42%;"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SECURITY -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <h3>
+                        Security
+                    </h3>
+
+                </div>
+
+
+                <div class="security-list">
+
+                    <div class="security-row">
+
+                        <span>
+                            <i class="fa-solid fa-fingerprint"></i>
+                            License Binding
+                        </span>
+
+                        <strong class="success-text">
+                            Bound
+                        </strong>
+
+                    </div>
+
+
+                    <div class="security-row">
+
+                        <span>
+                            <i class="fa-solid fa-server"></i>
+                            Last Activation
+                        </span>
+
+                        <strong>
+                            {{ license.last_activation|date:"d M Y, H:i"|default:"Never" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="security-row">
+
+                        <span>
+                            <i class="fa-solid fa-network-wired"></i>
+                            IP Address
+                        </span>
+
+                        <strong>
+                            {{ license.last_ip|default:"-" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="security-row">
+
+                        <span>
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Encryption
+                        </span>
+
+                        <strong class="success-text">
+                            Enabled
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK ACTIONS -->
+            <section class="panel actions-panel">
+
+                <div class="panel-header">
+
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="action-btn renew"
+                    id="quickRenewBtn"
+                >
+                    <span>
+                        <i class="fa-solid fa-rotate"></i>
+                        Renew License
+                    </span>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="action-btn suspend"
+                    id="suspendBtn"
+                >
+                    <span>
+                        <i class="fa-solid fa-pause"></i>
+                        Suspend License
+                    </span>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="action-btn revoke"
+                    id="revokeBtn"
+                >
+                    <span>
+                        <i class="fa-solid fa-ban"></i>
+                        Revoke License
+                    </span>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </section>
+
+
+            <!-- ACTIVITY -->
+            <section class="panel activity-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Recent Activity
+                        </h3>
+
+                        <p>
+                            License related events.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="timeline">
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon green">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                License activated
+                            </strong>
+
+                            <span>
+                                {{ license.start_date|date:"d M Y, H:i"|default:"Recently" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon blue">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                License key generated
+                            </strong>
+
+                            <span>
+                                System generated
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon purple">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Assigned to vendor
+                            </strong>
+
+                            <span>
+                                {{ license.vendor.name|default:"Vendor" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     CONFIRMATION MODAL
+============================================================== -->
+
+<div
+    class="modal-overlay"
+    id="actionModal"
+    aria-hidden="true"
+>
+
+    <div class="confirm-modal">
+
+        <button
+            type="button"
+            class="modal-close"
+            id="modalClose"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div
+            class="modal-icon"
+            id="modalIcon"
+        >
+            <i class="fa-solid fa-circle-question"></i>
+        </div>
+
+        <h3 id="modalTitle">
+            Confirm Action
+        </h3>
+
+        <p id="modalMessage">
+            Are you sure you want to continue?
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelAction"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmAction"
+            >
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     TOAST
+============================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/license_detail.js' %}"></script>
+{% endblock %}

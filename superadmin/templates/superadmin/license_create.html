@@ -1,0 +1,1232 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Create License{% endblock %}
+{% block page_title %}Create License{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/license_create.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="license-page">
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <div class="license-header">
+
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <div>
+                <div class="header-eyebrow">
+                    LICENSE MANAGEMENT
+                </div>
+
+                <h2>Create New License</h2>
+
+                <p>
+                    Provision a secure software license for a vendor.
+                    The license will be linked to the selected vendor and subscription.
+                </p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ALERT ================= -->
+
+    <div id="licenseAlert" class="license-alert" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="licenseAlertMessage"></span>
+        <button type="button" id="closeAlert">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+
+    <!-- ================= MAIN GRID ================= -->
+
+    <div class="license-layout">
+
+        <!-- ================================================= -->
+        <!-- LEFT : FORM -->
+        <!-- ================================================= -->
+
+        <div class="license-main-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h3>License Configuration</h3>
+                    <p>Configure the license and access limits.</p>
+                </div>
+
+                <span class="secure-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Secure
+                </span>
+
+            </div>
+
+
+            <form
+                id="licenseCreateForm"
+                method="POST"
+                action=""
+                autocomplete="off"
+            >
+
+                {% csrf_token %}
+
+                <!-- ================= VENDOR ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">01</span>
+
+                        <div>
+                            <h4>Vendor & Subscription</h4>
+                            <p>Assign this license to a vendor.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="vendor">
+                                Vendor
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-solid fa-building"></i>
+
+                                <select
+                                    id="vendor"
+                                    name="vendor"
+                                    required
+                                >
+                                    <option value="">
+                                        Select vendor
+                                    </option>
+
+                                    {% for vendor in vendors %}
+                                    <option
+                                        value="{{ vendor.id }}"
+                                        data-name="{{ vendor.name }}"
+                                    >
+                                        {{ vendor.name }}
+                                    </option>
+                                    {% empty %}
+                                    <option value="" disabled>
+                                        No vendors available
+                                    </option>
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <small class="field-help">
+                                The license will be permanently associated with this vendor.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="subscription">
+                                Subscription
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-solid fa-credit-card"></i>
+
+                                <select
+                                    id="subscription"
+                                    name="subscription"
+                                    required
+                                >
+                                    <option value="">
+                                        Select subscription
+                                    </option>
+
+                                    {% for subscription in subscriptions %}
+                                    <option
+                                        value="{{ subscription.id }}"
+                                        data-plan="{{ subscription.plan.name|default:'' }}"
+                                    >
+                                        {{ subscription.plan.name|default:"Subscription" }}
+                                        {% if subscription.vendor %}
+                                            — {{ subscription.vendor.name }}
+                                        {% endif %}
+                                    </option>
+                                    {% empty %}
+                                    <option value="" disabled>
+                                        No subscriptions available
+                                    </option>
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="plan">
+                                Plan
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-solid fa-layer-group"></i>
+
+                                <select
+                                    id="plan"
+                                    name="plan"
+                                >
+                                    <option value="">
+                                        Select plan
+                                    </option>
+
+                                    {% for plan in plans %}
+                                    <option
+                                        value="{{ plan.id }}"
+                                        data-duration="{{ plan.duration_days|default:30 }}"
+                                        data-users="{{ plan.max_users|default:5 }}"
+                                    >
+                                        {{ plan.name }}
+                                    </option>
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= LICENSE KEY ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">02</span>
+
+                        <div>
+                            <h4>License Identity</h4>
+                            <p>Generate a unique license credential.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="license-key-box">
+
+                        <div class="key-input-wrapper">
+
+                            <label for="licenseKey">
+                                License Key
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="key-input-row">
+
+                                <div class="key-input">
+
+                                    <i class="fa-solid fa-key"></i>
+
+                                    <input
+                                        type="text"
+                                        id="licenseKey"
+                                        name="license_key"
+                                        placeholder="Click Generate Key"
+                                        readonly
+                                        required
+                                    >
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    id="generateKeyBtn"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    Generate
+                                </button>
+
+                                <button
+                                    type="button"
+                                    id="copyKeyBtn"
+                                    class="icon-action"
+                                    title="Copy license key"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+
+                            </div>
+
+                            <small class="field-help">
+                                Use a cryptographically strong unique key. Never expose secret signing material in frontend code.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="licenseType">
+                                License Type
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-solid fa-certificate"></i>
+
+                                <select
+                                    id="licenseType"
+                                    name="license_type"
+                                >
+                                    <option value="subscription">
+                                        Subscription
+                                    </option>
+
+                                    <option value="trial">
+                                        Trial
+                                    </option>
+
+                                    <option value="enterprise">
+                                        Enterprise
+                                    </option>
+
+                                    <option value="lifetime">
+                                        Lifetime
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Initial Status
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                <select
+                                    id="status"
+                                    name="status"
+                                >
+                                    <option value="active">
+                                        Active
+                                    </option>
+
+                                    <option value="pending">
+                                        Pending
+                                    </option>
+
+                                    <option value="suspended">
+                                        Suspended
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= VALIDITY ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">03</span>
+
+                        <div>
+                            <h4>License Validity</h4>
+                            <p>Define when the license starts and expires.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-grid three-columns">
+
+                        <div class="form-group">
+
+                            <label for="startDate">
+                                Start Date
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+                                <i class="fa-regular fa-calendar"></i>
+
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    name="start_date"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="duration">
+                                Duration
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-solid fa-clock"></i>
+
+                                <select
+                                    id="duration"
+                                    name="duration"
+                                    required
+                                >
+                                    <option value="7">
+                                        7 Days
+                                    </option>
+
+                                    <option value="30" selected>
+                                        30 Days
+                                    </option>
+
+                                    <option value="90">
+                                        90 Days
+                                    </option>
+
+                                    <option value="180">
+                                        180 Days
+                                    </option>
+
+                                    <option value="365">
+                                        1 Year
+                                    </option>
+
+                                    <option value="730">
+                                        2 Years
+                                    </option>
+
+                                    <option value="custom">
+                                        Custom
+                                    </option>
+
+                                    <option value="lifetime">
+                                        Lifetime
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="expiryDate">
+                                Expiry Date
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-regular fa-calendar-xmark"></i>
+
+                                <input
+                                    type="date"
+                                    id="expiryDate"
+                                    name="expiry_date"
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="custom-duration"
+                        id="customDurationBox"
+                        hidden
+                    >
+
+                        <div class="form-group">
+
+                            <label for="customExpiryDate">
+                                Custom Expiry Date
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-regular fa-calendar-days"></i>
+
+                                <input
+                                    type="date"
+                                    id="customExpiryDate"
+                                    name="custom_expiry_date"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="validity-preview">
+
+                        <div class="preview-icon">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+
+                        <div>
+                            <span>License validity</span>
+                            <strong id="validityText">
+                                30 days
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= LIMITS ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">04</span>
+
+                        <div>
+                            <h4>Usage Limits</h4>
+                            <p>Control the resources available to this vendor.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="maxUsers">
+                                Maximum Users
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-solid fa-users"></i>
+
+                                <input
+                                    type="number"
+                                    id="maxUsers"
+                                    name="max_users"
+                                    value="5"
+                                    min="1"
+                                    max="10000"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="maxBranches">
+                                Maximum Branches
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-solid fa-code-branch"></i>
+
+                                <input
+                                    type="number"
+                                    id="maxBranches"
+                                    name="max_branches"
+                                    value="1"
+                                    min="1"
+                                    max="1000"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="storageLimit">
+                                Storage Limit
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-solid fa-hard-drive"></i>
+
+                                <input
+                                    type="number"
+                                    id="storageLimit"
+                                    name="storage_limit"
+                                    value="5"
+                                    min="1"
+                                >
+
+                            </div>
+
+                            <small class="input-suffix">
+                                GB
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="apiLimit">
+                                API Requests / Day
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="fa-solid fa-code"></i>
+
+                                <input
+                                    type="number"
+                                    id="apiLimit"
+                                    name="api_limit"
+                                    value="10000"
+                                    min="0"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= MODULES ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <span class="section-number">05</span>
+
+                        <div>
+                            <h4>Enabled Modules</h4>
+                            <p>Select the features available to this vendor.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="module-grid">
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="dashboard"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Dashboard</strong>
+                                <small>Business overview</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="patients"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Patients</strong>
+                                <small>Patient management</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="billing"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Billing</strong>
+                                <small>Invoices & payments</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="reports"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Reports</strong>
+                                <small>Lab reports</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="inventory"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Inventory</strong>
+                                <small>Stock management</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="analytics"
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Analytics</strong>
+                                <small>Advanced insights</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="appointments"
+                                checked
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Appointments</strong>
+                                <small>Schedule management</small>
+                            </span>
+                        </label>
+
+
+                        <label class="module-option">
+                            <input
+                                type="checkbox"
+                                name="modules"
+                                value="notifications"
+                            >
+
+                            <span class="module-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <span class="module-content">
+                                <strong>Notifications</strong>
+                                <small>Email & system alerts</small>
+                            </span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= NOTES ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <span class="section-number">06</span>
+
+                        <div>
+                            <h4>Additional Information</h4>
+                            <p>Add internal notes for administration.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="notes">
+                            Internal Notes
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="5"
+                            maxlength="1000"
+                            placeholder="Add internal notes about this license..."
+                        ></textarea>
+
+                        <div class="textarea-footer">
+                            <span>
+                                Internal use only
+                            </span>
+
+                            <span>
+                                <b id="noteCounter">0</b>/1000
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= FORM ACTIONS ================= -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="javascript:history.back()"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="button"
+                        id="previewBtn"
+                        class="btn btn-secondary"
+                    >
+                        <i class="fa-regular fa-eye"></i>
+                        Preview
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="createLicenseBtn"
+                        class="btn btn-primary btn-large"
+                    >
+                        <i class="fa-solid fa-key"></i>
+                        Create License
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RIGHT : PREVIEW -->
+        <!-- ================================================= -->
+
+        <aside class="license-sidebar">
+
+            <!-- ================= LICENSE PREVIEW ================= -->
+
+            <div class="preview-card">
+
+                <div class="preview-card-header">
+
+                    <div>
+                        <span>LICENSE PREVIEW</span>
+                        <h3>Provision Summary</h3>
+                    </div>
+
+                    <div class="preview-status" id="previewStatus">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+
+                <div class="license-visual">
+
+                    <div class="license-visual-icon">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+
+                    <span>LICENSE KEY</span>
+
+                    <strong id="previewKey">
+                        Not generated
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div class="summary-item">
+                        <span>
+                            <i class="fa-solid fa-building"></i>
+                            Vendor
+                        </span>
+
+                        <strong id="previewVendor">
+                            Not selected
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>
+                            <i class="fa-solid fa-layer-group"></i>
+                            Plan
+                        </span>
+
+                        <strong id="previewPlan">
+                            Not selected
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>
+                            <i class="fa-regular fa-calendar"></i>
+                            Start
+                        </span>
+
+                        <strong id="previewStart">
+                            —
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>
+                            <i class="fa-regular fa-calendar-xmark"></i>
+                            Expires
+                        </span>
+
+                        <strong id="previewExpiry">
+                            —
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>
+                            <i class="fa-solid fa-users"></i>
+                            Max Users
+                        </span>
+
+                        <strong id="previewUsers">
+                            5
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="preview-divider"></div>
+
+
+                <div class="module-summary">
+
+                    <div class="module-summary-header">
+                        <strong>Enabled Modules</strong>
+                        <span id="moduleCount">0</span>
+                    </div>
+
+                    <div
+                        class="module-tags"
+                        id="moduleTags"
+                    >
+                        <span class="empty-module">
+                            No modules selected
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SECURITY CARD ================= -->
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div>
+
+                    <h4>License Security</h4>
+
+                    <p>
+                        License activation and expiry must be validated
+                        on the Django backend for every authenticated request.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= CHECKLIST ================= -->
+
+            <div class="checklist-card">
+
+                <div class="checklist-header">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h4>Pre-creation Checklist</h4>
+                </div>
+
+
+                <div class="check-item" id="checkVendor">
+                    <span>
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+
+                    <div>
+                        <strong>Vendor selected</strong>
+                        <small>Assign license owner</small>
+                    </div>
+                </div>
+
+
+                <div class="check-item" id="checkKey">
+                    <span>
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+
+                    <div>
+                        <strong>License key generated</strong>
+                        <small>Unique license credential</small>
+                    </div>
+                </div>
+
+
+                <div class="check-item" id="checkValidity">
+                    <span>
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+
+                    <div>
+                        <strong>Validity configured</strong>
+                        <small>Start and expiry dates</small>
+                    </div>
+                </div>
+
+
+                <div class="check-item" id="checkModules">
+                    <span>
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+
+                    <div>
+                        <strong>Modules configured</strong>
+                        <small>Feature access</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PREVIEW MODAL ================= -->
+
+<div
+    class="modal-overlay"
+    id="previewModal"
+    hidden
+>
+
+    <div class="preview-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <span>LICENSE PREVIEW</span>
+                <h3>Review Before Creation</h3>
+            </div>
+
+            <button
+                type="button"
+                id="closePreviewModal"
+                class="modal-close"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="modal-license-key">
+                <span>License Key</span>
+                <strong id="modalLicenseKey">
+                    Not generated
+                </strong>
+            </div>
+
+
+            <div class="modal-summary-grid">
+
+                <div>
+                    <span>Vendor</span>
+                    <strong id="modalVendor">—</strong>
+                </div>
+
+                <div>
+                    <span>Subscription</span>
+                    <strong id="modalSubscription">—</strong>
+                </div>
+
+                <div>
+                    <span>Plan</span>
+                    <strong id="modalPlan">—</strong>
+                </div>
+
+                <div>
+                    <span>Status</span>
+                    <strong id="modalStatus">Active</strong>
+                </div>
+
+                <div>
+                    <span>Start Date</span>
+                    <strong id="modalStart">—</strong>
+                </div>
+
+                <div>
+                    <span>Expiry Date</span>
+                    <strong id="modalExpiry">—</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelPreview"
+            >
+                Close
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmPreview"
+            >
+                <i class="fa-solid fa-check"></i>
+                Looks Good
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/license_create.js' %}"></script>
+{% endblock %}

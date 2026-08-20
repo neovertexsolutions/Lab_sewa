@@ -1,0 +1,1301 @@
+{% extends 'superadmin/base.html' %}
+{% load static %}
+
+{% block title %}Security Settings{% endblock %}
+{% block page_title %}Security Settings{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/security_settings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="security-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="security-header">
+
+        <div class="header-content">
+
+            <div class="breadcrumb">
+                <span>Super Admin</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <strong>Security Settings</strong>
+            </div>
+
+            <h2>Security Settings</h2>
+
+            <p>
+                Manage authentication, access control, session security,
+                API protection and security policies across the platform.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <div class="security-status">
+                <span class="status-dot"></span>
+
+                <div>
+                    <strong>Security Status</strong>
+                    <small>Protected</small>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="saveSecurityBtn"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SECURITY SCORE
+    ====================================================== -->
+
+    <div class="security-overview">
+
+        <div class="security-score-card">
+
+            <div class="score-left">
+
+                <div class="score-circle">
+
+                    <svg viewBox="0 0 120 120">
+
+                        <circle
+                            class="score-track"
+                            cx="60"
+                            cy="60"
+                            r="52"
+                        ></circle>
+
+                        <circle
+                            class="score-progress"
+                            id="securityProgress"
+                            cx="60"
+                            cy="60"
+                            r="52"
+                        ></circle>
+
+                    </svg>
+
+                    <div class="score-value">
+                        <strong id="securityScore">92</strong>
+                        <span>/100</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="score-info">
+
+                <span class="eyebrow">
+                    PLATFORM SECURITY
+                </span>
+
+                <h3>Excellent Protection</h3>
+
+                <p>
+                    Your security configuration is strong.
+                    Review the recommendations below to improve
+                    your security posture further.
+                </p>
+
+                <div class="score-meta">
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Authentication protected
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Session security enabled
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Audit logging active
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="security-stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div>
+                <span>2FA Adoption</span>
+                <strong>84%</strong>
+                <small>+6.4% this month</small>
+            </div>
+
+        </div>
+
+
+        <div class="security-stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div>
+                <span>Failed Logins</span>
+                <strong>17</strong>
+                <small>Last 24 hours</small>
+            </div>
+
+        </div>
+
+
+        <div class="security-stat-card">
+
+            <div class="stat-icon green">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <span>Active Sessions</span>
+                <strong>38</strong>
+                <small>Across all vendors</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SETTINGS LAYOUT
+    ====================================================== -->
+
+    <div class="settings-layout">
+
+
+        <!-- =================================================
+             LEFT CONTENT
+        ================================================== -->
+
+        <div class="settings-content">
+
+
+            <!-- =================================================
+                 AUTHENTICATION
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon blue">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+
+                    <div>
+                        <h3>Authentication Security</h3>
+
+                        <p>
+                            Control how administrators and vendors
+                            authenticate with the platform.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-list">
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-title">
+                                <strong>Two-Factor Authentication</strong>
+
+                                <span class="badge success">
+                                    Recommended
+                                </span>
+                            </div>
+
+                            <p>
+                                Require an additional verification method
+                                during login.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="require_2fa"
+                                id="require2FA"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-title">
+                                <strong>Force 2FA for Super Admins</strong>
+                            </div>
+
+                            <p>
+                                Super administrators must configure
+                                two-factor authentication.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="force_admin_2fa"
+                                id="forceAdmin2FA"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-title">
+                                <strong>Email Verification</strong>
+                            </div>
+
+                            <p>
+                                Require email verification for new accounts.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="email_verification"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-title">
+                                <strong>Login Notification</strong>
+                            </div>
+
+                            <p>
+                                Notify users when a new login is detected.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="login_notification"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PASSWORD POLICY
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon purple">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+
+                    <div>
+                        <h3>Password Policy</h3>
+
+                        <p>
+                            Define password requirements for all accounts.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-body">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="minPasswordLength">
+                                Minimum Password Length
+                            </label>
+
+                            <input
+                                type="number"
+                                id="minPasswordLength"
+                                name="min_password_length"
+                                value="8"
+                                min="6"
+                                max="32"
+                            >
+
+                            <small>
+                                Recommended minimum is 8 characters.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="passwordExpiry">
+                                Password Expiry
+                            </label>
+
+                            <select
+                                id="passwordExpiry"
+                                name="password_expiry"
+                            >
+
+                                <option value="never">
+                                    Never
+                                </option>
+
+                                <option value="30">
+                                    Every 30 days
+                                </option>
+
+                                <option value="60">
+                                    Every 60 days
+                                </option>
+
+                                <option value="90" selected>
+                                    Every 90 days
+                                </option>
+
+                                <option value="180">
+                                    Every 180 days
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="password-rules">
+
+                        <label class="rule-item">
+
+                            <input
+                                type="checkbox"
+                                name="uppercase_required"
+                                checked
+                            >
+
+                            <span class="custom-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <div>
+                                <strong>Uppercase Letter</strong>
+                                <small>Require A-Z</small>
+                            </div>
+
+                        </label>
+
+
+                        <label class="rule-item">
+
+                            <input
+                                type="checkbox"
+                                name="lowercase_required"
+                                checked
+                            >
+
+                            <span class="custom-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <div>
+                                <strong>Lowercase Letter</strong>
+                                <small>Require a-z</small>
+                            </div>
+
+                        </label>
+
+
+                        <label class="rule-item">
+
+                            <input
+                                type="checkbox"
+                                name="number_required"
+                                checked
+                            >
+
+                            <span class="custom-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <div>
+                                <strong>Number</strong>
+                                <small>Require 0-9</small>
+                            </div>
+
+                        </label>
+
+
+                        <label class="rule-item">
+
+                            <input
+                                type="checkbox"
+                                name="special_required"
+                                checked
+                            >
+
+                            <span class="custom-check">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                            <div>
+                                <strong>Special Character</strong>
+                                <small>Require !@#$%</small>
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 LOGIN PROTECTION
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon orange">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </div>
+
+                    <div>
+                        <h3>Login Protection</h3>
+
+                        <p>
+                            Protect accounts against brute-force attacks.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-body">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="maxAttempts">
+                                Maximum Login Attempts
+                            </label>
+
+                            <input
+                                type="number"
+                                id="maxAttempts"
+                                name="max_login_attempts"
+                                value="5"
+                                min="3"
+                                max="20"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="lockoutDuration">
+                                Lockout Duration
+                            </label>
+
+                            <select
+                                id="lockoutDuration"
+                                name="lockout_duration"
+                            >
+
+                                <option value="5">
+                                    5 Minutes
+                                </option>
+
+                                <option value="15" selected>
+                                    15 Minutes
+                                </option>
+
+                                <option value="30">
+                                    30 Minutes
+                                </option>
+
+                                <option value="60">
+                                    1 Hour
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Block Suspicious IPs</strong>
+
+                            <p>
+                                Automatically block IP addresses
+                                with abnormal login activity.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="block_suspicious_ips"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>CAPTCHA After Failed Attempts</strong>
+
+                            <p>
+                                Require CAPTCHA verification after
+                                repeated failed login attempts.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="captcha_protection"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SESSION SECURITY
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon green">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+
+                    <div>
+                        <h3>Session Security</h3>
+
+                        <p>
+                            Control session lifetime and concurrent access.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-body">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="sessionTimeout">
+                                Session Timeout
+                            </label>
+
+                            <select
+                                id="sessionTimeout"
+                                name="session_timeout"
+                            >
+
+                                <option value="15">
+                                    15 Minutes
+                                </option>
+
+                                <option value="30">
+                                    30 Minutes
+                                </option>
+
+                                <option value="60" selected>
+                                    1 Hour
+                                </option>
+
+                                <option value="120">
+                                    2 Hours
+                                </option>
+
+                                <option value="480">
+                                    8 Hours
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="maxSessions">
+                                Maximum Concurrent Sessions
+                            </label>
+
+                            <input
+                                type="number"
+                                id="maxSessions"
+                                name="max_sessions"
+                                value="3"
+                                min="1"
+                                max="20"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Logout Other Sessions</strong>
+
+                            <p>
+                                Automatically invalidate previous sessions
+                                after a new login.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="logout_other_sessions"
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Secure Cookies</strong>
+
+                            <p>
+                                Protect authentication cookies using
+                                secure browser settings.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="secure_cookies"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 API SECURITY
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon cyan">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <div>
+                        <h3>API Security</h3>
+
+                        <p>
+                            Manage API authentication and access protection.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-body">
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>API Authentication Required</strong>
+
+                            <p>
+                                Require authentication for protected API endpoints.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="api_authentication"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>API Rate Limiting</strong>
+
+                            <p>
+                                Limit excessive API requests from clients.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="api_rate_limiting"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-grid api-limit">
+
+                        <div class="form-group">
+
+                            <label for="apiRequests">
+                                Requests Per Minute
+                            </label>
+
+                            <input
+                                type="number"
+                                id="apiRequests"
+                                name="api_requests_per_minute"
+                                value="100"
+                                min="10"
+                                max="10000"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 AUDIT & MONITORING
+            ================================================== -->
+
+            <section class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div class="section-icon red">
+                        <i class="fa-solid fa-file-shield"></i>
+                    </div>
+
+                    <div>
+                        <h3>Audit & Monitoring</h3>
+
+                        <p>
+                            Track sensitive administrative and security events.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-body">
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Security Audit Logs</strong>
+
+                            <p>
+                                Record authentication and security events.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="security_audit_logs"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Admin Activity Tracking</strong>
+
+                            <p>
+                                Track important actions performed by administrators.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="admin_activity_tracking"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row inline-row">
+
+                        <div class="setting-info">
+
+                            <strong>Critical Event Alerts</strong>
+
+                            <p>
+                                Notify Super Admin when critical security
+                                events occur.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                name="critical_event_alerts"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT SIDEBAR
+        ================================================== -->
+
+        <aside class="security-sidebar">
+
+
+            <!-- SECURITY RECOMMENDATIONS -->
+
+            <div class="side-card">
+
+                <div class="side-card-header">
+
+                    <div>
+                        <h3>Security Recommendations</h3>
+                        <p>Improve your security score.</p>
+                    </div>
+
+                    <i class="fa-solid fa-lightbulb"></i>
+
+                </div>
+
+
+                <div class="recommendation-list">
+
+                    <div class="recommendation complete">
+
+                        <div class="recommendation-icon">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <div>
+                            <strong>Enable 2FA</strong>
+                            <span>Completed</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="recommendation complete">
+
+                        <div class="recommendation-icon">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <div>
+                            <strong>Strong Password Policy</strong>
+                            <span>Completed</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="recommendation warning">
+
+                        <div class="recommendation-icon">
+                            <i class="fa-solid fa-exclamation"></i>
+                        </div>
+
+                        <div>
+                            <strong>IP Allowlisting</strong>
+                            <span>Not configured</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="recommendation complete">
+
+                        <div class="recommendation-icon">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <div>
+                            <strong>Audit Logging</strong>
+                            <span>Enabled</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="side-card">
+
+                <div class="side-card-header">
+
+                    <div>
+                        <h3>Security Actions</h3>
+                        <p>Quick security controls.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <button
+                        type="button"
+                        id="logoutAllSessions"
+                        class="quick-action"
+                    >
+
+                        <i class="fa-solid fa-right-from-bracket"></i>
+
+                        <span>
+                            <strong>Logout All Sessions</strong>
+                            <small>Invalidate active sessions</small>
+                        </span>
+
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="rotateApiKeys"
+                        class="quick-action"
+                    >
+
+                        <i class="fa-solid fa-arrows-rotate"></i>
+
+                        <span>
+                            <strong>Rotate API Keys</strong>
+                            <small>Regenerate system API keys</small>
+                        </span>
+
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="viewAuditLogs"
+                        class="quick-action"
+                    >
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                        <span>
+                            <strong>View Audit Logs</strong>
+                            <small>Review recent security activity</small>
+                        </span>
+
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LAST UPDATED -->
+
+            <div class="last-updated-card">
+
+                <i class="fa-regular fa-clock"></i>
+
+                <div>
+                    <span>Last security review</span>
+                    <strong id="lastUpdated">
+                        Just now
+                    </strong>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CONFIRMATION MODAL
+====================================================== -->
+
+<div
+    class="security-modal"
+    id="securityModal"
+>
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box">
+
+        <button
+            type="button"
+            class="modal-close"
+            id="modalClose"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-icon" id="modalIcon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <h3 id="modalTitle">
+            Confirm Security Action
+        </h3>
+
+        <p id="modalMessage">
+            Are you sure you want to continue?
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="modalCancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="modalConfirm"
+            >
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+    class="security-toast"
+    id="securityToast"
+>
+
+    <div class="toast-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <div>
+        <strong id="toastTitle">Success</strong>
+        <span id="toastMessage">
+            Security settings updated.
+        </span>
+    </div>
+
+    <button type="button" id="toastClose">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/security_settings.js' %}"></script>
+{% endblock %}

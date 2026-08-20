@@ -1,0 +1,928 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Edit Vendor | Super Admin{% endblock %}
+{% block page_title %}Edit Vendor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/vendor_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div
+    class="vendor-edit-page"
+    id="vendorEditPage"
+    data-vendor-id="{{ vendor.id }}"
+    data-update-url="{% url 'superadmin:vendor_edit' vendor.id %}"
+    data-detail-url="{% url 'superadmin:vendor_detail' vendor.id %}"
+    data-list-url="{% url 'superadmin:vendors' %}"
+>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="edit-header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+
+            <div>
+                <h1>Edit Vendor</h1>
+                <p>
+                    Update vendor information, administrator,
+                    subscription and account status.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'superadmin:vendor_detail' vendor.id %}"
+                class="btn btn-secondary"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Vendor
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ALERT
+    ========================================================== -->
+
+    <div
+        id="formAlert"
+        class="form-alert"
+        role="alert"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- =========================================================
+         FORM
+    ========================================================== -->
+
+    <form
+        id="vendorEditForm"
+        method="POST"
+        action="{% url 'superadmin:vendor_edit' vendor.id %}"
+        autocomplete="off"
+        novalidate
+    >
+
+        {% csrf_token %}
+
+        <div class="edit-layout">
+
+            <!-- =================================================
+                 MAIN
+            ================================================== -->
+
+            <main class="edit-main">
+
+
+                <!-- =================================================
+                     LABORATORY INFORMATION
+                ================================================== -->
+
+                <section class="edit-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+
+                            <div>
+                                <h2>Laboratory Information</h2>
+                                <p>
+                                    Update the registered laboratory
+                                    information.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+
+                            <label for="vendorName">
+                                Laboratory / Vendor Name
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-building"></i>
+
+                                <input
+                                    type="text"
+                                    id="vendorName"
+                                    name="vendor_name"
+                                    value="{{ vendor.name|default:'' }}"
+                                    maxlength="150"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="ownerName">
+                                Owner / Contact Person
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="ownerName"
+                                    name="owner_name"
+                                    value="{{ vendor.owner_name|default:'' }}"
+                                    maxlength="100"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Business Email
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ vendor.email|default:'' }}"
+                                    maxlength="150"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper phone-input">
+
+                                <span class="country-code">+91</span>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value="{{ vendor.phone|default:'' }}"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="alternatePhone">
+                                Alternate Phone
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input
+                                    type="tel"
+                                    id="alternatePhone"
+                                    name="alternate_phone"
+                                    value="{{ vendor.alternate_phone|default:'' }}"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
+                <section class="edit-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                            <div>
+                                <h2>Laboratory Address</h2>
+                                <p>
+                                    Update the laboratory's registered
+                                    address.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+
+                            <label for="address">
+                                Complete Address
+                                <span>*</span>
+                            </label>
+
+                            <div class="textarea-wrapper">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    rows="4"
+                                    required
+                                >{{ vendor.address|default:'' }}</textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="city">
+                                City
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-city"></i>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    value="{{ vendor.city|default:'' }}"
+                                    maxlength="100"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="state">
+                                State
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-map"></i>
+
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    value="{{ vendor.state|default:'' }}"
+                                    maxlength="100"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="pincode">
+                                PIN Code
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-map-pin"></i>
+
+                                <input
+                                    type="text"
+                                    id="pincode"
+                                    name="pincode"
+                                    value="{{ vendor.pincode|default:'' }}"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="country">
+                                Country
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-globe"></i>
+
+                                <input
+                                    type="text"
+                                    id="country"
+                                    name="country"
+                                    value="{{ vendor.country|default:'India' }}"
+                                    maxlength="100"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADMIN ACCOUNT
+                ================================================== -->
+
+                <section class="edit-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+
+                            <div>
+                                <h2>Vendor Administrator</h2>
+                                <p>
+                                    Manage the vendor administrator
+                                    account.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="credential-notice">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <div>
+                            <strong>Username</strong>
+                            <p>
+                                Username is displayed for reference and
+                                cannot be changed from this screen.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="username">
+                                Username
+                            </label>
+
+                            <div class="input-wrapper readonly">
+
+                                <i class="fa-solid fa-at"></i>
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value="{{ vendor.username|default:'' }}"
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Account Status
+                                <span>*</span>
+                            </label>
+
+                            <div class="select-wrapper">
+
+                                <select
+                                    id="status"
+                                    name="status"
+                                    required
+                                >
+
+                                    <option
+                                        value="active"
+                                        {% if vendor.status == "active" %}selected{% endif %}
+                                    >
+                                        Active
+                                    </option>
+
+                                    <option
+                                        value="pending"
+                                        {% if vendor.status == "pending" %}selected{% endif %}
+                                    >
+                                        Pending
+                                    </option>
+
+                                    <option
+                                        value="suspended"
+                                        {% if vendor.status == "suspended" %}selected{% endif %}
+                                    >
+                                        Suspended
+                                    </option>
+
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label for="password">
+                                New Password
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Leave blank to keep current password"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="password"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <small>
+                                Password is changed only when a new password
+                                is entered.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label for="confirmPassword">
+                                Confirm New Password
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirm_password"
+                                    placeholder="Confirm new password"
+                                    autocomplete="new-password"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="confirmPassword"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <small id="passwordMatch"></small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SUBSCRIPTION
+                ================================================== -->
+
+                <section class="edit-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon subscription-icon">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+
+                            <div>
+                                <h2>Subscription</h2>
+                                <p>
+                                    Current subscription information.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subscription-info">
+
+                        <div class="subscription-status">
+
+                            <span class="status-dot"></span>
+
+                            <div>
+                                <strong>
+                                    {{ subscription.plan.name|default:"No Plan" }}
+                                </strong>
+
+                                <span>
+                                    Current subscription
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="subscription-grid">
+
+                            <div>
+                                <span>Start Date</span>
+                                <strong>
+                                    {{ subscription.start_date|date:"d M Y"|default:"—" }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Expiry Date</span>
+                                <strong>
+                                    {{ subscription.end_date|date:"d M Y"|default:"—" }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Status</span>
+                                <strong>
+                                    {{ subscription.status|default:"—"|title }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="subscription-warning">
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        <span>
+                            Subscription and license lifecycle should be
+                            changed through the subscription/license
+                            management workflow.
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SAVE BAR
+                ================================================== -->
+
+                <div class="save-bar">
+
+                    <div class="save-info">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <span>
+                            Changes are saved directly to the database.
+                        </span>
+
+                    </div>
+
+                    <div class="save-actions">
+
+                        <a
+                            href="{% url 'superadmin:vendor_detail' vendor.id %}"
+                            class="btn btn-light"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="saveVendorBtn"
+                        >
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="edit-sidebar">
+
+
+                <!-- Vendor Preview -->
+
+                <div class="side-card">
+
+                    <div class="side-card-header">
+                        <strong>Vendor Preview</strong>
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+
+
+                    <div class="vendor-preview">
+
+                        <div
+                            class="vendor-avatar"
+                            id="vendorAvatar"
+                        >
+                            V
+                        </div>
+
+                        <div class="vendor-preview-info">
+
+                            <strong id="previewName">
+                                {{ vendor.name|default:"Vendor" }}
+                            </strong>
+
+                            <span id="previewEmail">
+                                {{ vendor.email|default:"—" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-list">
+
+                        <div>
+                            <span>Username</span>
+                            <strong id="previewUsername">
+                                {{ vendor.username|default:"—" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Status</span>
+                            <strong id="previewStatus">
+                                {{ vendor.status|default:"—"|title }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Vendor ID -->
+
+                <div class="side-card">
+
+                    <div class="side-card-header">
+                        <strong>Vendor Information</strong>
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+
+                    <div class="technical-info">
+
+                        <div>
+                            <span>Vendor ID</span>
+                            <strong>
+                                #{{ vendor.id }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Created</span>
+                            <strong>
+                                {{ vendor.created_at|date:"d M Y"|default:"—" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Updated</span>
+                            <strong>
+                                {{ vendor.updated_at|date:"d M Y"|default:"—" }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Security -->
+
+                <div class="side-card security-card">
+
+                    <div class="security-heading">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <strong>Security</strong>
+
+                    </div>
+
+                    <ul>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Password is securely hashed
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            CSRF protected request
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Server-side validation
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Database transaction protection
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =============================================================
+     CONFIRMATION MODAL
+============================================================= -->
+
+<div
+    class="modal-overlay"
+    id="saveConfirmModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="confirm-modal"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="confirm-icon">
+            <i class="fa-solid fa-floppy-disk"></i>
+        </div>
+
+        <h2>Save Vendor Changes?</h2>
+
+        <p>
+            The updated vendor information will be saved to the
+            database.
+        </p>
+
+        <div class="confirm-actions">
+
+            <button
+                type="button"
+                class="btn btn-light"
+                id="cancelSave"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmSave"
+            >
+                <i class="fa-solid fa-check"></i>
+                Confirm & Save
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'superadmin/js/vendor_edit.js' %}"></script>
+
+{% endblock %}

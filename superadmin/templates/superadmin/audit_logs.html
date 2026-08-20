@@ -1,0 +1,696 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Audit Logs | Sita Path Lab{% endblock %}
+{% block page_title %}Audit Logs{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/audit_logs.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="audit-page" id="auditPage">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="audit-page-header">
+
+        <div class="audit-header-content">
+
+            <div class="audit-header-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="audit-header-text">
+
+                <span class="audit-eyebrow">
+                    SECURITY & ACTIVITY
+                </span>
+
+                <h1>Audit Logs</h1>
+
+                <p>
+                    Monitor administrator activity, system events,
+                    security actions and data changes.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="audit-header-actions">
+
+            <button
+                type="button"
+                class="audit-btn audit-btn-secondary"
+                id="refreshAuditLogs"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+            <button
+                type="button"
+                class="audit-btn audit-btn-primary"
+                id="exportAuditLogs"
+            >
+                <i class="fa-solid fa-download"></i>
+                <span>Export</span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="audit-stats">
+
+        <article class="audit-stat-card">
+
+            <div class="audit-stat-icon total">
+                <i class="fa-solid fa-list"></i>
+            </div>
+
+            <div class="audit-stat-content">
+
+                <span>Total Events</span>
+
+                <strong id="totalAuditLogs">
+                    0
+                </strong>
+
+                <small>
+                    Recorded activities
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="audit-stat-card">
+
+            <div class="audit-stat-icon security">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="audit-stat-content">
+
+                <span>Security Events</span>
+
+                <strong id="securityAuditLogs">
+                    0
+                </strong>
+
+                <small>
+                    Security-related activity
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="audit-stat-card">
+
+            <div class="audit-stat-icon warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="audit-stat-content">
+
+                <span>Warnings</span>
+
+                <strong id="warningAuditLogs">
+                    0
+                </strong>
+
+                <small>
+                    Suspicious or warning events
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="audit-stat-card">
+
+            <div class="audit-stat-icon danger">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <div class="audit-stat-content">
+
+                <span>Failed Actions</span>
+
+                <strong id="failedAuditLogs">
+                    0
+                </strong>
+
+                <small>
+                    Failed operations
+                </small>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN AUDIT CARD
+    ====================================================== -->
+
+    <section class="audit-card">
+
+
+        <!-- =================================================
+             TOOLBAR
+        ================================================== -->
+
+        <div class="audit-toolbar">
+
+            <div class="audit-toolbar-left">
+
+                <div class="audit-search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        id="auditSearch"
+                        placeholder="Search user, action, IP address..."
+                        autocomplete="off"
+                        aria-label="Search audit logs"
+                    >
+
+                    <kbd>
+                        Ctrl K
+                    </kbd>
+
+                </div>
+
+            </div>
+
+
+            <div class="audit-toolbar-right">
+
+                <!-- ACTION FILTER -->
+
+                <div class="audit-filter">
+
+                    <select
+                        id="auditActionFilter"
+                        class="audit-filter-select"
+                    >
+
+                        <option value="">
+                            All Actions
+                        </option>
+
+                        <option value="login">
+                            Login
+                        </option>
+
+                        <option value="logout">
+                            Logout
+                        </option>
+
+                        <option value="create">
+                            Create
+                        </option>
+
+                        <option value="update">
+                            Update
+                        </option>
+
+                        <option value="delete">
+                            Delete
+                        </option>
+
+                        <option value="activate">
+                            Activate
+                        </option>
+
+                        <option value="suspend">
+                            Suspend
+                        </option>
+
+                        <option value="revoke">
+                            Revoke
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEVERITY -->
+
+                <div class="audit-filter">
+
+                    <select
+                        id="auditSeverityFilter"
+                        class="audit-filter-select"
+                    >
+
+                        <option value="">
+                            All Severity
+                        </option>
+
+                        <option value="info">
+                            Info
+                        </option>
+
+                        <option value="success">
+                            Success
+                        </option>
+
+                        <option value="warning">
+                            Warning
+                        </option>
+
+                        <option value="danger">
+                            Critical
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- USER -->
+
+                <div class="audit-filter">
+
+                    <select
+                        id="auditUserFilter"
+                        class="audit-filter-select"
+                    >
+
+                        <option value="">
+                            All Users
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- FILTER BUTTON -->
+
+                <button
+                    type="button"
+                    class="audit-filter-button"
+                    id="auditAdvancedFilterBtn"
+                >
+
+                    <i class="fa-solid fa-sliders"></i>
+
+                    <span>
+                        Filters
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ADVANCED FILTER PANEL
+        ================================================== -->
+
+        <div
+            class="audit-advanced-panel"
+            id="auditAdvancedPanel"
+            hidden
+        >
+
+            <div class="audit-advanced-header">
+
+                <div>
+
+                    <strong>
+                        Advanced Filters
+                    </strong>
+
+                    <span>
+                        Filter audit events by date and source.
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="closeAuditFilters"
+                    class="audit-filter-close"
+                    aria-label="Close filters"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+
+            <div class="audit-advanced-grid">
+
+                <div class="audit-form-group">
+
+                    <label for="auditDateFrom">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="auditDateFrom"
+                    >
+
+                </div>
+
+
+                <div class="audit-form-group">
+
+                    <label for="auditDateTo">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="auditDateTo"
+                    >
+
+                </div>
+
+
+                <div class="audit-form-group">
+
+                    <label for="auditIpFilter">
+                        IP Address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="auditIpFilter"
+                        placeholder="e.g. 192.168.1.10"
+                    >
+
+                </div>
+
+
+                <div class="audit-form-actions">
+
+                    <button
+                        type="button"
+                        class="audit-btn audit-btn-secondary"
+                        id="clearAuditFilters"
+                    >
+                        Clear
+                    </button>
+
+                    <button
+                        type="button"
+                        class="audit-btn audit-btn-primary"
+                        id="applyAuditFilters"
+                    >
+                        Apply Filters
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="audit-table-container">
+
+            <div class="audit-table-wrapper">
+
+                <table
+                    class="audit-table"
+                    id="auditTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                User
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                IP Address
+                            </th>
+
+                            <th>
+                                Date & Time
+                            </th>
+
+                            <th>
+                                Severity
+                            </th>
+
+                            <th class="audit-action-column">
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="auditTableBody">
+                    </tbody>
+
+                </table>
+
+
+                <!-- LOADING -->
+
+                <div
+                    id="auditLoading"
+                    class="audit-loading"
+                >
+
+                    <div class="audit-loading-icon">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    </div>
+
+                    <span>
+                        Loading audit logs...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMPTY -->
+
+            <div
+                id="auditEmpty"
+                class="audit-empty"
+                hidden
+            >
+
+                <div class="audit-empty-icon">
+                    <i class="fa-solid fa-file-shield"></i>
+                </div>
+
+                <h3>
+                    No audit logs found
+                </h3>
+
+                <p>
+                    No activity matches your current filters.
+                </p>
+
+                <button
+                    type="button"
+                    class="audit-btn audit-btn-secondary"
+                    id="clearEmptyFilters"
+                >
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                    Clear Filters
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="audit-table-footer">
+
+            <div class="audit-summary">
+
+                Showing
+
+                <strong id="auditVisibleCount">
+                    0
+                </strong>
+
+                of
+
+                <strong id="auditTotalCount">
+                    0
+                </strong>
+
+                events
+
+            </div>
+
+
+            <div
+                class="audit-pagination"
+                id="auditPagination"
+            ></div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     AUDIT DETAIL MODAL
+========================================================= -->
+
+<div
+    class="audit-modal"
+    id="auditDetailModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div
+        class="audit-modal-backdrop"
+        data-audit-modal-close
+    ></div>
+
+
+    <div class="audit-modal-dialog audit-modal-large">
+
+        <div class="audit-modal-header">
+
+            <div>
+
+                <span class="audit-modal-eyebrow">
+                    ACTIVITY DETAILS
+                </span>
+
+                <h3>
+                    Audit Event
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="audit-modal-close"
+                data-audit-modal-close
+                aria-label="Close"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            class="audit-modal-body"
+            id="auditDetailContent"
+        >
+
+            <div class="audit-detail-loading">
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                <span>
+                    Loading event...
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="audit-modal-footer">
+
+            <button
+                type="button"
+                class="audit-btn audit-btn-secondary"
+                data-audit-modal-close
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="auditToastContainer"
+    class="audit-toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'superadmin/js/audit_logs.js' %}"
+    defer
+></script>
+
+{% endblock %}

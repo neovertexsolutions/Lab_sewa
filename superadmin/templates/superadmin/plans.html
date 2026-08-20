@@ -1,0 +1,989 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+
+{% block title %}
+Plans Management
+{% endblock %}
+
+
+{% block page_title %}
+Subscription Plans
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static '/superadmin/css/plans.css' %}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="plans-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <header class="page-header">
+
+        <div class="header-left">
+
+            <div class="breadcrumb">
+
+                <a href="{% url 'superadmin:dashboard' %}">
+                    Super Admin
+                </a>
+
+                <i class="fas fa-chevron-right"></i>
+
+                <span>Plans</span>
+
+            </div>
+
+
+            <div class="page-title-wrapper">
+
+                <div class="page-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+
+                <div>
+
+                    <h1>
+                        Subscription Plans
+                    </h1>
+
+                    <p>
+                        Create, manage and monitor subscription plans
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="refreshPlans"
+            >
+                <i class="fas fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="createPlanBtn"
+            >
+                <i class="fas fa-plus"></i>
+                <span>Create Plan</span>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="stats-grid">
+
+        <article class="stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fas fa-layer-group"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Plans</span>
+
+                <strong id="totalPlans">
+                    0
+                </strong>
+
+                <small>
+                    All subscription plans
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-icon green">
+                <i class="fas fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Active Plans</span>
+
+                <strong id="activePlans">
+                    0
+                </strong>
+
+                <small>
+                    Currently available
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fas fa-pause-circle"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Inactive Plans</span>
+
+                <strong id="inactivePlans">
+                    0
+                </strong>
+
+                <small>
+                    Currently disabled
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-icon purple">
+                <i class="fas fa-users"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Subscribers</span>
+
+                <strong id="totalSubscribers">
+                    0
+                </strong>
+
+                <small>
+                    Across all plans
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-icon revenue">
+                <i class="fas fa-indian-rupee-sign"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Monthly Revenue</span>
+
+                <strong id="monthlyRevenue">
+                    ₹0
+                </strong>
+
+                <small>
+                    Active subscriptions
+                </small>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="plans-toolbar">
+
+        <div class="toolbar-left">
+
+            <div class="search-box">
+
+                <i class="fas fa-search"></i>
+
+                <input
+                    type="search"
+                    id="planSearch"
+                    placeholder="Search plans..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    class="search-clear"
+                    id="clearPlanSearch"
+                    aria-label="Clear search"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="toolbar-right">
+
+            <div class="filter-group">
+
+                <label for="planStatusFilter">
+                    Status
+                </label>
+
+                <select id="planStatusFilter">
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="billingCycleFilter">
+                    Billing
+                </label>
+
+                <select id="billingCycleFilter">
+
+                    <option value="all">
+                        All Cycles
+                    </option>
+
+                    <option value="monthly">
+                        Monthly
+                    </option>
+
+                    <option value="quarterly">
+                        Quarterly
+                    </option>
+
+                    <option value="yearly">
+                        Yearly
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="icon-btn"
+                id="exportPlans"
+                title="Export CSV"
+            >
+                <i class="fas fa-file-export"></i>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        class="error-state"
+        id="plansError"
+        hidden
+    >
+
+        <div class="error-icon">
+            <i class="fas fa-triangle-exclamation"></i>
+        </div>
+
+        <div>
+
+            <strong>
+                Unable to load plans
+            </strong>
+
+            <p data-error-message>
+                Something went wrong.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            id="retryPlans"
+        >
+            Retry
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         PLANS TABLE
+    ====================================================== -->
+
+    <section class="plans-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    All Plans
+                </h2>
+
+                <p>
+                    Manage your subscription packages
+                </p>
+
+            </div>
+
+
+            <div class="results-count">
+
+                <span id="plansResultCount">
+                    0
+                </span>
+
+                plans
+
+            </div>
+
+        </div>
+
+
+        <!-- Loading -->
+
+        <div
+            class="loading-state"
+            id="plansLoading"
+        >
+
+            <div class="spinner"></div>
+
+            <p>
+                Loading subscription plans...
+            </p>
+
+        </div>
+
+
+        <!-- Empty -->
+
+        <div
+            class="empty-state"
+            id="plansEmpty"
+            hidden
+        >
+
+            <div class="empty-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+
+            <h3>
+                No plans found
+            </h3>
+
+            <p>
+                No subscription plans match your current filters.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="emptyCreatePlan"
+            >
+                <i class="fas fa-plus"></i>
+                Create Plan
+            </button>
+
+        </div>
+
+
+        <!-- Table -->
+
+        <div class="table-wrapper">
+
+            <table class="plans-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Plan
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Billing
+                        </th>
+
+                        <th>
+                            Features
+                        </th>
+
+                        <th>
+                            Subscribers
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Created
+                        </th>
+
+                        <th class="actions-column">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="plansTableBody">
+                    <!-- JS generated -->
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div class="pagination-wrapper">
+
+            <div class="pagination-info">
+
+                Showing
+
+                <strong id="paginationFrom">
+                    0
+                </strong>
+
+                –
+
+                <strong id="paginationTo">
+                    0
+                </strong>
+
+                of
+
+                <strong id="paginationTotal">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div
+                class="pagination"
+                id="plansPagination"
+            >
+                <!-- JS generated -->
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     CREATE / EDIT PLAN MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="planModal"
+    hidden
+>
+
+    <div
+        class="plan-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="planModalTitle"
+    >
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-kicker">
+                    PLAN MANAGEMENT
+                </span>
+
+                <h2 id="planModalTitle">
+                    Create Subscription Plan
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closePlanModal"
+                aria-label="Close"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+
+        </div>
+
+
+        <form
+            id="planForm"
+            novalidate
+        >
+
+            <input
+                type="hidden"
+                id="planId"
+            >
+
+
+            <div class="form-grid">
+
+                <!-- Plan Name -->
+
+                <div class="form-group full">
+
+                    <label for="planName">
+
+                        Plan Name
+
+                        <span>*</span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="planName"
+                        name="name"
+                        placeholder="e.g. Professional"
+                        maxlength="100"
+                        required
+                    >
+
+                    <small class="field-error"></small>
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="form-group full">
+
+                    <label for="planDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="planDescription"
+                        name="description"
+                        rows="3"
+                        maxlength="500"
+                        placeholder="Describe this subscription plan..."
+                    ></textarea>
+
+                    <div class="character-count">
+
+                        <span id="descriptionCount">
+                            0
+                        </span>
+
+                        /500
+
+                    </div>
+
+                </div>
+
+
+                <!-- Price -->
+
+                <div class="form-group">
+
+                    <label for="planPrice">
+
+                        Price
+
+                        <span>*</span>
+
+                    </label>
+
+                    <div class="input-prefix">
+
+                        <span>₹</span>
+
+                        <input
+                            type="number"
+                            id="planPrice"
+                            name="price"
+                            min="0"
+                            step="0.01"
+                            placeholder="999"
+                            required
+                        >
+
+                    </div>
+
+                    <small class="field-error"></small>
+
+                </div>
+
+
+                <!-- Billing -->
+
+                <div class="form-group">
+
+                    <label for="planBilling">
+
+                        Billing Cycle
+
+                        <span>*</span>
+
+                    </label>
+
+                    <select
+                        id="planBilling"
+                        name="billing_cycle"
+                        required
+                    >
+
+                        <option value="">
+                            Select billing cycle
+                        </option>
+
+                        <option value="monthly">
+                            Monthly
+                        </option>
+
+                        <option value="quarterly">
+                            Quarterly
+                        </option>
+
+                        <option value="yearly">
+                            Yearly
+                        </option>
+
+                    </select>
+
+                    <small class="field-error"></small>
+
+                </div>
+
+
+                <!-- Trial -->
+
+                <div class="form-group">
+
+                    <label for="trialDays">
+                        Trial Period
+                    </label>
+
+                    <div class="input-suffix">
+
+                        <input
+                            type="number"
+                            id="trialDays"
+                            name="trial_days"
+                            min="0"
+                            max="365"
+                            value="0"
+                        >
+
+                        <span>
+                            days
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Subscriber Limit -->
+
+                <div class="form-group">
+
+                    <label for="maxSubscribers">
+                        Subscriber Limit
+                    </label>
+
+                    <div class="input-suffix">
+
+                        <input
+                            type="number"
+                            id="maxSubscribers"
+                            name="max_subscribers"
+                            min="0"
+                            placeholder="Unlimited"
+                        >
+
+                        <span>
+                            users
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="form-group">
+
+                    <label for="planStatus">
+                        Status
+                    </label>
+
+                    <select
+                        id="planStatus"
+                        name="is_active"
+                    >
+
+                        <option value="true">
+                            Active
+                        </option>
+
+                        <option value="false">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Featured -->
+
+                <div class="form-group">
+
+                    <label class="switch-label">
+
+                        <span>
+                            Featured Plan
+                        </span>
+
+                        <input
+                            type="checkbox"
+                            id="planFeatured"
+                            name="is_featured"
+                        >
+
+                        <span class="switch"></span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- Features -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Plan Features
+                    </label>
+
+
+                    <div
+                        class="features-list"
+                        id="featuresList"
+                    >
+
+                        <div class="feature-row">
+
+                            <input
+                                type="text"
+                                placeholder="e.g. Unlimited reports"
+                                class="feature-input"
+                            >
+
+                            <button
+                                type="button"
+                                class="remove-feature"
+                                title="Remove feature"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="add-feature"
+                        id="addFeature"
+                    >
+                        <i class="fas fa-plus"></i>
+                        Add Feature
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Modal Footer -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelPlan"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="savePlan"
+                >
+                    <i class="fas fa-check"></i>
+                    <span>
+                        Save Plan
+                    </span>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DELETE MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="deleteModal"
+    hidden
+>
+
+    <div class="confirm-modal">
+
+        <div class="confirm-icon danger">
+
+            <i class="fas fa-trash"></i>
+
+        </div>
+
+
+        <h3>
+            Delete Plan?
+        </h3>
+
+
+        <p>
+            This action cannot be undone.
+            All associated configuration data may be affected.
+        </p>
+
+
+        <div class="confirm-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelDelete"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmDelete"
+            >
+                Delete Plan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+    aria-live="polite"
+></div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'js/superadmin/plans.js' %}"
+    defer
+></script>
+
+{% endblock %}

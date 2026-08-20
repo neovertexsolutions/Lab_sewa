@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sita Path Lab - Appointments</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/appointments.css' %}"/>
+</head>
+<body class="bg-background text-on-surface">
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-btn lg:hidden" onclick="toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h1 class="topbar-brand">Sita Path Lab</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+        <span class="material-symbols-outlined">contrast</span>
+      </button>
+     
+      <div class="avatar">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4xscQ0fWQcMmdnQjFTFuTmngEChO39EE4n2qZ2g7VgZKNXJbipYNbArOVMPC5vtoHcjw-6-Pzc56tvT1U8EkO33TaW-arDJBiXpPy48uhoTd6YaGEwaomQDhlB4wGef_LhhMYq0bl9i_sIaw_UJHHYkO6wTSHhzwAcfQmTlMWu8I-euYSyX3leulrmyiSOb9S6PW93NqKvoI3Yq6Zh7LkgRjR7Ec8ZzPOH8xcOLU8dkjeECbp8EM1Eyjil_9LlyNER35qKATJeZw" alt="Profile"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== SIDENAV ===== -->
+  <nav class="sidenav" id="sidebar">
+      <a href="{% url 'index' %}" class="nav-link"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+      <a href="{% url 'patients' %}" class="nav-link"><span class="material-symbols-outlined">groups</span><span>Patients</span></a>
+      <a href="{% url 'register' %}" class="nav-link"><span class="material-symbols-outlined">person_add</span><span>Register</span></a>
+      <a href="#" class="nav-link"><span class="material-symbols-outlined">biotech</span><span>Results</span></a>
+      <a href="{% url 'reports' %}" class="nav-link"><span class="material-symbols-outlined">description</span><span>Reports</span></a>
+      <a href="{% url 'billing' %}" class="nav-link"><span class="material-symbols-outlined">payments</span><span>Billing</span></a>
+      <a href="{% url 'tests' %}" class="nav-link"><span class="material-symbols-outlined">science</span><span>Tests</span></a>
+      <a href="{% url 'appointments' %}" class="nav-link active"><span class="material-symbols-outlined">event</span><span>Appointments</span></a>
+      <a href="{% url 'inventory' %}" class="nav-link"><span class="material-symbols-outlined">inventory_2</span><span>Inventory</span></a>
+      <a href="{% url 'staff' %}" class="nav-link"><span class="material-symbols-outlined">badge</span><span>Staff</span></a>
+      <a href="{% url 'settings' %}" class="nav-link"><span class="material-symbols-outlined">settings</span><span>Settings</span></a>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+    <!-- Header Section -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Appointment Center</h2>
+        <p class="page-subtitle">Manage schedules and patient flow with clinical precision.</p>
+      </div>
+      <!-- Token Status Widget -->
+      <div class="token-widget">
+        <div class="token-icon">
+          <span class="material-symbols-outlined">confirmation_number</span>
+        </div>
+        <div class="token-info">
+          <div class="token-header">
+            <span class="token-label">ACTIVE TOKEN</span>
+            <span class="token-number" id="activeToken">#42</span>
+          </div>
+          <div class="token-progress">
+            <div class="token-bar" style="width: 66%"></div>
+          </div>
+          <div class="token-footer">
+            <span class="token-queue">Queue: <span id="queueCount">18</span> Pending</span>
+            <span class="token-wait">Est. Wait: <span id="waitTime">12</span> min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="appointments-grid">
+      <!-- LEFT COLUMN -->
+      <div class="left-column">
+        <!-- Calendar View -->
+        <section class="calendar-section">
+          <div class="calendar-header">
+            <div class="calendar-nav">
+              <h3 class="calendar-title" id="calendarTitle">September 2024</h3>
+              <div class="nav-buttons">
+                <button class="nav-btn" onclick="changeMonth(-1)">
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="nav-btn" onclick="changeMonth(1)">
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+            </div>
+            <div class="view-toggle">
+              <button class="view-btn active" onclick="setView('week')">WEEK</button>
+              <button class="view-btn" onclick="setView('month')">MONTH</button>
+            </div>
+          </div>
+          
+          <div class="calendar-body" id="calendarBody">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </section>
+
+        <!-- Today's Appointments -->
+        <section class="appointments-list">
+          <div class="list-header">
+            <h3 class="list-title">Today's Queue</h3>
+            <button class="view-all">View All</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="appointments-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Time</th>
+                  <th>Test Type</th>
+                  <th>Doctor</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsBody">
+                <!-- Rendered by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-column">
+        <!-- Quick Book Form -->
+        <section class="booking-form">
+          <div class="form-header">
+            <span class="material-symbols-outlined">add_circle</span>
+            <h3 class="form-title">Book Appointment</h3>
+          </div>
+          <form id="bookingForm" class="form-body">
+            <div class="form-group">
+              <label class="form-label">PATIENT NAME</label>
+              <input class="form-input" id="patientName" placeholder="Search or add patient..." type="text"/>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">DATE</label>
+                <input class="form-input" id="appointmentDate" type="date"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">TIME</label>
+                <input class="form-input" id="appointmentTime" type="time"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">SELECT TEST</label>
+              <select class="form-select" id="testType">
+                <option value="full-body">Full Body Checkup</option>
+                <option value="diabetes">Diabetes Profile</option>
+                <option value="cardiology">Cardiology Panel</option>
+                <option value="thyroid">Thyroid Profile</option>
+                <option value="cbc">Complete Blood Count</option>
+              </select>
+            </div>
+            <button class="btn-book" type="submit">CONFIRM BOOKING</button>
+          </form>
+        </section>
+
+        <!-- Specialists -->
+        <section class="specialists">
+          <div class="specialists-header">
+            <h3 class="specialists-title">Specialists</h3>
+            <span class="material-symbols-outlined filter-icon">filter_list</span>
+          </div>
+          <div class="specialists-list" id="specialistsList">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </section>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Today's Load</span>
+            <div class="stat-value">
+              <span id="todayLoad">84%</span>
+              <span class="material-symbols-outlined trend-up">trending_up</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Efficiency</span>
+            <div class="stat-value">
+              <span id="efficiency">92m</span>
+              <span class="material-symbols-outlined trend-down">trending_down</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== BOTTOM NAV (Mobile) ===== -->
+  <nav class="bottom-nav">
+    <a href="{% url 'index' %}" class="bottom-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Home</span>
+    </a>
+    <a href="{% url 'patients' %}" class="bottom-item">
+      <span class="material-symbols-outlined">groups</span>
+      <span>Patients</span>
+    </a>
+    <a href="{% url 'appointments' %}" class="bottom-item active">
+      <span class="material-symbols-outlined">event</span>
+      <span>Appts</span>
+    </a>
+    <a href="{% url 'reports' %}" class="bottom-item">
+      <span class="material-symbols-outlined">description</span>
+      <span>Reports</span>
+    </a>
+    <a href="{% url 'profile' %}" class="bottom-item">
+      <span class="material-symbols-outlined">account_circle</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- ===== FLOATING ACTION BUTTON ===== -->
+  <button class="fab" onclick="quickBook()">
+    <span class="material-symbols-outlined">add</span>
+    <span class="fab-tooltip">Quick Book</span>
+  </button>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="{% static 'js/appointments.js' %}"></script>
+</body>
+</html>
