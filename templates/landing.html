@@ -1,7 +1,3 @@
-Content is user-generated and unverified.
-
-
-Learn about artifacts
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +7,7 @@ Learn about artifacts
     <title>LabSewa — Lab management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet">
     <style>
       :root {
@@ -21,6 +17,8 @@ Learn about artifacts
         --blue-600: #2563eb;
         --blue-500: #3b82f6;
         --blue-400: #5b9bff;
+        --blue-deep: #0F2E8C;
+        --blue: #2454E8;
         --ink: #0b1f4d;
         --slate-500: #5b6b8c;
         --slate-200: #e3e8f3;
@@ -81,6 +79,11 @@ Learn about artifacts
       ::selection {
         background: var(--blue-500);
         color: #fff;
+      }
+
+      /* section scroll offset so the sticky navbar doesn't cover the heading */
+      section[id] {
+        scroll-margin-top: 100px;
       }
 
       /* ============ NAVBAR (unchanged) ============ */
@@ -145,6 +148,7 @@ Learn about artifacts
         cursor: pointer;
         letter-spacing: -0.01px;
         position: relative;
+        text-decoration: none;
       }
 
       .nav-trigger .chev {
@@ -230,6 +234,7 @@ Learn about artifacts
         white-space: nowrap;
         transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
         border: 1px solid transparent;
+        text-decoration: none;
       }
 
       .btn-ghost {
@@ -379,6 +384,7 @@ Learn about artifacts
         align-items: center;
         gap: 5px;
         cursor: pointer;
+        text-decoration: none;
       }
 
       .mega-footer-note {
@@ -1586,111 +1592,243 @@ Learn about artifacts
       }
 
       /* ============ FOOTER ============ */
-      footer {
-        background: var(--navy-950);
-        color: #93a4c9;
-        margin-top: 120px;
+      footer{
+        background:var(--ink);
+        color:#A7B0CC;
+        margin-top:120px;
+      }
+      .footer-wrap{
+        max-width:1440px;
+        margin:0 auto;
+        padding:0 8vw;
+      }
+      .footer-top{
+        padding:64px 0 48px;
+        display:grid;
+        grid-template-columns:1.15fr 0.85fr 0.85fr 0.85fr 1.3fr;
+        gap:32px;
       }
 
-      .footer-top {
-        padding: 72px 0 44px;
-        display: grid;
-        grid-template-columns: 1.5fr repeat(5, 1fr);
-        gap: 28px;
+      /* brand column */
+      .footer-brand img{height:52px;width:auto;display:block;margin-bottom:22px;}
+      .footer-brand .contact-label{
+        font-family:'Inter',sans-serif;
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:1.5px;
+        text-transform:uppercase;
+        color:#5C6688;
+        margin-bottom:12px;
+      }
+      .footer-brand .contact-line{
+        font-size:13.5px;
+        color:#C4CFEA;
+        line-height:1.6;
+        margin-bottom:6px;
+        text-decoration:none;
+        display:block;
+      }
+      .footer-brand .contact-line.addr{margin-bottom:22px;color:#8B96B8;}
+      .footer-socials{display:flex;gap:10px;margin-bottom:26px;}
+      .footer-socials a{
+        width:34px;height:34px;border-radius:50%;
+        background:rgba(255,255,255,0.08);
+        display:flex;align-items:center;justify-content:center;
+        transition:background .18s ease;
+      }
+      .footer-socials a:hover{background:var(--blue);}
+      .footer-socials svg{width:15px;height:15px;stroke:#fff;}
+      .footer-btn-row{display:flex;gap:10px;}
+      .footer-btn{
+        height:40px;padding:0 20px;border-radius:8px;
+        background:rgba(255,255,255,0.08);
+        color:#fff;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;
+        display:inline-flex;align-items:center;justify-content:center;
+        text-decoration:none;
+        transition:background .18s ease;
+      }
+      .footer-btn:hover{background:rgba(255,255,255,0.16);}
+
+      /* link columns */
+      .footer-col h4{
+        font-family:'Inter',sans-serif;
+        font-size:11px;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:1.5px;
+        color:#5C6688;
+        margin-bottom:18px;
+      }
+      .footer-col ul{list-style:none;padding:0;margin:0;}
+      .footer-col li{margin-bottom:12px;}
+      .footer-col a{
+        font-size:13.5px;
+        color:#C4CFEA;
+        opacity:0.85;
+        text-decoration:none;
+        transition:opacity .15s ease;
+      }
+      .footer-col a:hover{opacity:1;color:#fff;}
+      .footer-col a.strong{font-weight:700;color:#fff;opacity:1;}
+      .footer-col .subhead{
+        font-family:'Inter',sans-serif;
+        font-size:11px;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:1.5px;
+        color:#5C6688;
+        margin:22px 0 14px;
       }
 
-      @media (max-width:980px) {
-        .footer-top {
-          grid-template-columns: repeat(3, 1fr);
-        }
+      /* get in touch form */
+      .footer-get-in-touch .eyebrow-f{
+        font-family:'Inter',sans-serif;
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:1.5px;
+        text-transform:uppercase;
+        color:#5C6688;
+        margin-bottom:16px;
+      }
+      .vendor-form{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+      .vendor-form .row2{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+      }
+      .vendor-form input,
+      .vendor-form select,
+      .vendor-form textarea{
+        width:100%;
+        height:42px;
+        padding:0 14px;
+        border-radius:8px;
+        border:1px solid rgba(255,255,255,0.14);
+        background:rgba(255,255,255,0.05);
+        color:#fff;
+        font-family:'Inter',sans-serif;
+        font-size:13px;
+        outline:none;
+        transition:border-color .18s ease, background .18s ease;
+      }
+      .vendor-form textarea{
+        height:70px;
+        padding-top:10px;
+        resize:none;
+        font-family:'Inter',sans-serif;
+      }
+      .vendor-form select{
+        color:#B7C0DE;
+        appearance:none;
+        -webkit-appearance:none;
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%237C9BFF' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+        background-repeat:no-repeat;
+        background-position:right 14px center;
+      }
+      .vendor-form input::placeholder,
+      .vendor-form textarea::placeholder{color:#5C6688;}
+      .vendor-form input:focus,
+      .vendor-form select:focus,
+      .vendor-form textarea:focus{
+        border-color:var(--blue);
+        background:rgba(255,255,255,0.08);
+      }
+      .vendor-form .consent{
+        display:flex;
+        align-items:flex-start;
+        gap:10px;
+        margin-top:6px;
+      }
+      .vendor-form .consent input[type="checkbox"]{
+        width:16px;height:16px;flex-shrink:0;margin-top:2px;
+        accent-color:var(--blue);
+      }
+      .vendor-form .consent p{
+        font-size:11.5px;
+        line-height:1.55;
+        color:#7C86A8;
+        margin:0;
+      }
+      .vendor-form .consent a{color:#9FB2FF;text-decoration:underline;}
+      .vendor-form button{
+        height:44px;
+        margin-top:6px;
+        border:none;
+        border-radius:8px;
+        background:linear-gradient(135deg,var(--blue-deep),var(--blue));
+        color:#fff;
+        font-family:'Inter',sans-serif;
+        font-weight:700;
+        font-size:13.5px;
+        cursor:pointer;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        width:fit-content;
+        padding:0 24px;
+        transition:transform .18s ease, box-shadow .18s ease;
+      }
+      .vendor-form button:hover{
+        transform:translateY(-1px);
+        box-shadow:0 10px 22px -8px rgba(36,84,232,0.6);
       }
 
-      @media (max-width:640px) {
-        .footer-top {
-          grid-template-columns: repeat(2, 1fr);
-        }
+      /* legal sub-bar */
+      .footer-legal{
+        border-top:1px solid rgba(255,255,255,0.1);
+        background:rgba(255,255,255,0.03);
+      }
+      .footer-legal-inner{
+        max-width:1440px;
+        margin:0 auto;
+        padding:18px 8vw;
+        display:flex;
+        align-items:center;
+        gap:28px;
+        flex-wrap:wrap;
+      }
+      .footer-legal-inner a{
+        font-size:12.5px;
+        color:#9BA6C4;
+        text-decoration:none;
+        transition:color .15s ease;
+      }
+      .footer-legal-inner a:hover{color:#fff;}
+
+      .footer-bottom{
+        border-top:1px solid rgba(255,255,255,0.08);
+        padding:20px 0;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:14px;
+        font-size:12.5px;
+        color:#7C86A8;
+      }
+      .footer-bottom .status-pill{
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        font-family:'Inter',sans-serif;
+        font-size:11.5px;
+      }
+      .footer-bottom .status-pill .dot{
+        width:6px;height:6px;border-radius:50%;
+        background:#22c55e;
       }
 
-      .footer-brand p {
-        font-size: 13px;
-        line-height: 1.65;
-        max-width: 230px;
-        margin-top: 14px;
+      @media (max-width:1100px){
+        .footer-top{grid-template-columns:1fr 1fr;}
       }
-
-      .footer-brand .fbrand {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .footer-col h4 {
-        font-family: 'DM Mono', monospace;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        color: #5f74a3;
-        margin-bottom: 16px;
-      }
-
-      .footer-col ul {
-        list-style: none;
-      }
-
-      .footer-col li {
-        margin-bottom: 11px;
-      }
-
-      .footer-col a {
-        font-size: 13.5px;
-        color: #c4cfea;
-        opacity: .85;
-        transition: opacity .15s ease;
-      }
-
-      .footer-col a:hover {
-        opacity: 1;
-        color: #fff;
-      }
-
-      .footer-bottom {
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 24px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 14px;
-        font-size: 12.5px;
-      }
-
-      .footer-bottom .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        font-family: 'DM Mono', monospace;
-        font-size: 11.5px;
-      }
-
-      .footer-bottom .status-pill .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #22c55e;
-      }
-
-      .socials {
-        display: flex;
-        gap: 16px;
-      }
-
-      .socials a {
-        opacity: .6;
-        transition: opacity .15s ease;
-      }
-
-      .socials a:hover {
-        opacity: 1;
+      @media (max-width:640px){
+        .footer-top{grid-template-columns:1fr;}
+        .footer-legal-inner{gap:14px;}
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1708,7 +1846,7 @@ Learn about artifacts
     <!-- ============ NAVBAR ============ -->
     <div class="navwrap">
       <nav class="navbar">
-        <div class="brand">
+        <a class="brand" href="#top">
           <svg viewBox="0 0 430 78" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LabSewa logo">
             <defs>
               <linearGradient id="markBg" x1="0" y1="0" x2="1" y2="1">
@@ -1742,14 +1880,14 @@ Learn about artifacts
               letter-spacing="1.6" fill="#5b6b8c">YOUR HEALTH, OUR SERVICE</text>
             <line x1="331" y1="63" x2="347" y2="63" stroke="#0b1f4d" stroke-width="1" />
           </svg>
-        </div>
+        </a>
 
         <div class="nav-primary">
           <div class="nav-item">
-            <button class="nav-trigger">Product<span class="chev"></span><span class="nav-underline"></span></button>
+            <a class="nav-trigger" href="#product">Product<span class="chev"></span><span class="nav-underline"></span></a>
             <div class="mega mega-wide">
               <div class="mega-grid">
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M4 20h16M6 20V10M18 20V10M9 20V4h6v16" />
                     </svg></span>
@@ -1758,7 +1896,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">End-to-end LIMS for daily lab operations</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <circle cx="12" cy="8" r="4" />
                       <path d="M4 21v-1a8 8 0 0116 0v1" />
@@ -1768,7 +1906,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Records, history &amp; visit tracking</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M9 3v6l-5 9a2 2 0 002 3h12a2 2 0 002-3l-5-9V3M9 3h6" />
                     </svg></span>
@@ -1777,7 +1915,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Barcode-based intake &amp; tracking</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M9 11l3 3L22 4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11" />
                     </svg></span>
@@ -1786,7 +1924,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Panels, workflows &amp; TAT rules</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M3 3v18h18M7 15l4-4 3 3 5-6" />
                     </svg></span>
@@ -1795,7 +1933,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Validate, release &amp; e-sign reports</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M14 3v4a1 1 0 001 1h4M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                     </svg></span>
@@ -1804,7 +1942,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Branded PDF &amp; digital reports</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <rect x="2" y="6" width="20" height="12" rx="2" />
                       <path d="M2 10h20" />
@@ -1814,7 +1952,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Invoicing, insurance &amp; collections</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg></span>
@@ -1823,7 +1961,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Reagents, stock &amp; auto reorder</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <rect x="3" y="4" width="18" height="18" rx="2" />
                       <path d="M3 10h18M8 2v4M16 2v4" />
@@ -1833,7 +1971,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Scheduling &amp; home-collection slots</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path
                         d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
@@ -1843,7 +1981,7 @@ Learn about artifacts
                     <div class="mega-txt-sub">Roles, shifts &amp; permissions</div>
                   </div>
                 </a>
-                <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                <a class="mega-link" href="#product"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                       stroke-linecap="round">
                       <path d="M3 3v18h18M8 17V9m5 8V5m5 12v-6" />
                     </svg></span>
@@ -1853,54 +1991,54 @@ Learn about artifacts
                   </div>
                 </a>
               </div>
-              <div class="mega-footer"><span class="mega-footer-note">11 modules · one platform</span><span
-                  class="mega-footer-cta">See full product tour →</span></div>
+              <div class="mega-footer"><span class="mega-footer-note">11 modules · one platform</span><a href="#product"
+                  class="mega-footer-cta">See full product tour →</a></div>
             </div>
           </div>
 
           <div class="nav-item">
-            <button class="nav-trigger">Solution<span class="chev"></span><span class="nav-underline"></span></button>
+            <a class="nav-trigger" href="#solution">Solution<span class="chev"></span><span class="nav-underline"></span></a>
             <div class="mega mega-list">
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <path d="M9 3v6l-5 9a2 2 0 002 3h12a2 2 0 002-3l-5-9V3" />
                   </svg></span>
                 <div class="mega-txt-title">Diagnostic Labs</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 7v5l3 3" />
                   </svg></span>
                 <div class="mega-txt-title">Pathology Labs</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <path
                       d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5c2 0 3.5 1.2 5.5 3.5C14 6.2 15.5 5 17.5 5 21 5 23.5 8.5 21.5 12.5 19 16.65 12 21 12 21z" />
                   </svg></span>
                 <div class="mega-txt-title">Hospitals</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <path d="M12 2l9 4.5v6c0 5-3.8 8.7-9 9.5-5.2-.8-9-4.5-9-9.5v-6L12 2z" />
                   </svg></span>
                 <div class="mega-txt-title">Clinics</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <circle cx="12" cy="12" r="3" />
                     <path d="M4 12a8 8 0 0116 0M2 12a10 10 0 0120 0" />
                   </svg></span>
                 <div class="mega-txt-title">Research Labs</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <path d="M3 21V9l6-4 6 4v12M9 21v-6h6v6M15 9l6-4v16h-6" />
                   </svg></span>
                 <div class="mega-txt-title">Multi-Branch Labs</div>
               </a>
-              <a class="mega-link"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              <a class="mega-link" href="#solution"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
                     stroke-linecap="round">
                     <rect x="4" y="2" width="16" height="20" rx="2" />
                     <path d="M9 7h6M9 11h6M9 15h4" />
@@ -1911,84 +2049,84 @@ Learn about artifacts
           </div>
 
           <div class="nav-item">
-            <button class="nav-trigger">Packages<span class="chev"></span><span class="nav-underline"></span></button>
+            <a class="nav-trigger" href="#packages">Packages<span class="chev"></span><span class="nav-underline"></span></a>
             <div class="mega mega-simple">
-              <a class="mega-link">
+              <a class="mega-link" href="#packages">
                 <div class="mega-txt-title">Starter</div><span class="plan-badge">SOLO</span>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#packages">
                 <div class="mega-txt-title">Professional</div><span class="plan-badge">POPULAR</span>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#packages">
                 <div class="mega-txt-title">Enterprise</div><span class="plan-badge">SCALE</span>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#packages">
                 <div class="mega-txt-title">Multi-Branch</div><span class="plan-badge">CHAIN</span>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#packages">
                 <div class="mega-txt-title">Custom Plan</div><span class="plan-badge">TALK</span>
               </a>
             </div>
           </div>
 
           <div class="nav-item">
-            <button class="nav-trigger">Company<span class="chev"></span><span class="nav-underline"></span></button>
+            <a class="nav-trigger" href="#company">Company<span class="chev"></span><span class="nav-underline"></span></a>
             <div class="mega mega-list">
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">About LabSewa</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Why LabSewa</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Our Story</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Our Team</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Partners</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Certifications</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Careers</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#company">
                 <div class="mega-txt-title">Contact Us</div>
               </a>
             </div>
           </div>
 
           <div class="nav-item">
-            <button class="nav-trigger">Support<span class="chev"></span><span class="nav-underline"></span></button>
+            <a class="nav-trigger" href="#support">Support<span class="chev"></span><span class="nav-underline"></span></a>
             <div class="mega mega-list">
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Help Center</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Documentation</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">User Guides</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Getting Started</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Technical Support</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Training</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">FAQs</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Raise a Support Ticket</div>
               </a>
-              <a class="mega-link">
+              <a class="mega-link" href="#support">
                 <div class="mega-txt-title">Contact Support</div>
               </a>
             </div>
@@ -2014,7 +2152,7 @@ Learn about artifacts
     </div>
 
     <!-- ============ HERO ============ -->
-    <section class="hero">
+    <section class="hero" id="top">
       <div class="wrap hero-inner">
         <div>
           <span class="hero-pill"><span class="dot"></span> Register No. 04 is still running on Excel — this is for that
@@ -2461,88 +2599,134 @@ Learn about artifacts
 
     <!-- ============ FOOTER ============ -->
     <footer>
-      <div class="wrap footer-top">
+      <div class="footer-wrap footer-top">
+
         <div class="footer-brand">
-          <div class="fbrand">
-            <svg width="34" height="34" viewBox="0 0 65 78">
-              <rect x="1" y="7" width="64" height="64" rx="17" fill="#2563eb" />
-              <g transform="translate(20,20)">
-                <path d="M11 0 H17 V9 L25.5 27.5 A4 4 0 0 1 21.9 33 H6.1 A4 4 0 0 1 2.5 27.5 L11 9 Z" fill="none"
-                  stroke="#ffffff" stroke-width="2" stroke-linejoin="round" />
-                <path d="M5.6 22.3 H22.4 L21.6 27.6 A4 4 0 0 1 17.6 31 H10.4 A4 4 0 0 1 6.4 27.6 Z" fill="#eaf1ff" />
-              </g>
-            </svg>
-            <span style="font-weight:800; font-size:19px; color:#fff;">LabSewa</span>
+          <img src="images/labsewa-logo.jpeg" alt="LabSewa">
+          <div class="contact-label">Contact Us</div>
+          <a class="contact-line" href="mailto:info@labsewa.com">info@labsewa.com</a>
+          <span class="contact-line addr">LabSewa Technologies Pvt. Ltd.,<br>MG Road, Sector 14,<br>Gurugram, Haryana 122001, India</span>
+          <div class="footer-socials">
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 10v7M7 7.2v.1M12 17v-4.5c0-1.4 1-2.5 2.5-2.5S17 11.1 17 12.5V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9 1-3 1.2A4.5 4.5 0 0012 8c0 .4 0 .7.1 1-3.7-.2-7-2-9.2-4.6-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2 3.8-.7 0-1.4-.2-2-.5v.1c0 2.2 1.6 4 3.6 4.5-.4.1-.8.1-1.2.1-.3 0-.6 0-.8-.1.6 1.8 2.3 3.1 4.3 3.1A9 9 0 011 20.5 12.7 12.7 0 007.9 22c8.3 0 12.8-6.9 12.8-12.8v-.6c.9-.6 1.6-1.4 2.3-2.2z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.5"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor"/></svg></a>
           </div>
-          <p>Lab management for teams who can't afford to lose track of a sample.</p>
+          <div class="footer-btn-row">
+            <a class="footer-btn" href="#">Login</a>
+            <a class="footer-btn" href="#">Support</a>
+          </div>
         </div>
+
         <div class="footer-col">
           <h4>Product</h4>
           <ul>
-            <li><a href="#product">Laboratory Mgmt</a></li>
-            <li><a href="#product">Sample Registration</a></li>
-            <li><a href="#product">Results Mgmt</a></li>
-            <li><a href="#product">Billing &amp; Payments</a></li>
             <li><a href="#product">Dashboard &amp; Analytics</a></li>
+            <li><a href="#product">Sample Registration</a></li>
+            <li><a href="#product">Patient Management</a></li>
+            <li><a href="#product">Test Management</a></li>
+            <li><a href="#product">Results Management</a></li>
+            <li><a href="#product">Reports Management</a></li>
+            <li><a href="#product">Billing &amp; Payments</a></li>
+            <li><a href="#product">Inventory Management</a></li>
+            <li><a href="#product">Appointment Management</a></li>
+            <li><a href="#product">Staff Management</a></li>
           </ul>
         </div>
+
         <div class="footer-col">
-          <h4>Solution</h4>
+          <h4>Solutions</h4>
           <ul>
+            <li><a class="strong" href="#solution">Industries</a></li>
             <li><a href="#solution">Diagnostic Labs</a></li>
+            <li><a href="#solution">Pathology Labs</a></li>
             <li><a href="#solution">Hospitals</a></li>
             <li><a href="#solution">Clinics</a></li>
             <li><a href="#solution">Multi-Branch Labs</a></li>
             <li><a href="#solution">Enterprise Labs</a></li>
           </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Packages</h4>
+          <div class="subhead">Packages</div>
           <ul>
             <li><a href="#packages">Starter</a></li>
             <li><a href="#packages">Professional</a></li>
             <li><a href="#packages">Enterprise</a></li>
-            <li><a href="#packages">Custom Plan</a></li>
           </ul>
         </div>
+
         <div class="footer-col">
-          <h4>Company</h4>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Whitepapers</a></li>
+            <li><a href="#">Webinars</a></li>
+            <li><a href="#">Videos</a></li>
+          </ul>
+          <div class="subhead">Company</div>
           <ul>
             <li><a href="#company">About Us</a></li>
-            <li><a href="#company">Our Story</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#company">Careers</a></li>
+            <li><a href="#company">In the News</a></li>
+            <li><a href="#company">Partners</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="#support">Help Center</a></li>
-            <li><a href="#support">Documentation</a></li>
-            <li><a href="#support">Training</a></li>
-            <li><a href="#support">Raise a Ticket</a></li>
-          </ul>
+
+        <div class="footer-get-in-touch">
+          <div class="eyebrow-f">Get in Touch</div>
+          <form class="vendor-form">
+            <div class="row2">
+              <input type="text" placeholder="First name*" required>
+              <input type="text" placeholder="Last name*" required>
+            </div>
+            <input type="email" placeholder="Work Email*" required>
+            <div class="row2">
+              <select required>
+                <option value="" disabled selected>Position*</option>
+                <option>Lab Owner</option>
+                <option>Lab Admin</option>
+                <option>Pathologist</option>
+                <option>Technician</option>
+                <option>Other</option>
+              </select>
+              <input type="tel" placeholder="Phone number">
+            </div>
+            <div class="row2">
+              <select required>
+                <option value="" disabled selected>Industry*</option>
+                <option>Diagnostic Lab</option>
+                <option>Pathology Lab</option>
+                <option>Hospital</option>
+                <option>Clinic</option>
+                <option>Multi-Branch Chain</option>
+              </select>
+              <input type="text" placeholder="Company name">
+            </div>
+            <textarea placeholder="How can we help?"></textarea>
+            <label class="consent">
+              <input type="checkbox" required>
+              <p>I confirm that I have read the privacy policy and agree that my name and email address will be collected and used by LabSewa for the purposes of sending news, newsletters, offers and other communications. You can withdraw your consent at any time via <a href="#">privacy@labsewa.com</a>.</p>
+            </label>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="footer-legal">
+        <div class="footer-legal-inner">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Use of Cookies</a>
+          <a href="#">Cookie Settings</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Jobs</a>
+          <a href="#">Blog</a>
+          <a href="#">FAQ</a>
+          <a href="#">Glossary</a>
         </div>
       </div>
-      <div class="wrap footer-bottom">
+
+      <div class="footer-wrap footer-bottom">
         <span>© 2026 LabSewa Technologies Pvt. Ltd. All rights reserved.</span>
         <span class="status-pill"><span class="dot"></span> All systems operational</span>
-        <div class="socials">
-          <a href="#" aria-label="Twitter"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9 1-3 1.2A4.5 4.5 0 0012 8c0 .4 0 .7.1 1-3.7-.2-7-2-9.2-4.6-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2 3.8-.7 0-1.4-.2-2-.5v.1c0 2.2 1.6 4 3.6 4.5-.4.1-.8.1-1.2.1-.3 0-.6 0-.8-.1.6 1.8 2.3 3.1 4.3 3.1A9 9 0 011 20.5 12.7 12.7 0 007.9 22c8.3 0 12.8-6.9 12.8-12.8v-.6c.9-.6 1.6-1.4 2.3-2.2z" />
-            </svg></a>
-          <a href="#" aria-label="LinkedIn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-              <rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.5" />
-              <path d="M7 10v7M7 7.2v.1M12 17v-4.5c0-1.4 1-2.5 2.5-2.5S17 11.1 17 12.5V17" stroke="currentColor"
-                stroke-width="1.5" stroke-linecap="round" />
-            </svg></a>
-          <a href="#" aria-label="Instagram"><svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-              <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5" />
-              <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.5" />
-              <circle cx="17.4" cy="6.6" r="1" fill="currentColor" />
-            </svg></a>
-        </div>
       </div>
     </footer>
 
