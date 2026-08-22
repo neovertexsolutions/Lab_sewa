@@ -143,6 +143,8 @@ def register_view(request):
 def product_view(request):
     return render(request, "product.html")
 
+def package_view(request):
+    return render(request, "package.html")
 
 def results_view(request):
     return render(request, "results.html")
