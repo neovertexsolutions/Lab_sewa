@@ -17,6 +17,12 @@ urlpatterns = [
             views.product_view,
             name="product"
         ),
+    path(
+            "packages/",
+            views.packages_view,
+            name="packages"
+        ),
+
     path("/",
         views.home_view,
          name="index"
