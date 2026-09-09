@@ -1,0 +1,787 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Sita Path Lab</title>
+
+    <meta name="description" content="Manage your Sita Path Lab profile, account information and security settings.">
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+
+<body>
+
+<div class="profile-page">
+
+    <!-- =========================
+         TOP HEADER
+    ========================== -->
+    <header class="profile-header">
+
+        <div class="header-left">
+
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <div>
+                <span class="page-eyebrow">ACCOUNT</span>
+                <h1>My Profile</h1>
+                <p>Manage your personal information and account settings.</p>
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="icon-btn"
+                id="notificationBtn"
+                aria-label="Notifications"
+            >
+                <span>🔔</span>
+                <i class="notification-dot"></i>
+            </button>
+
+            <div class="header-user">
+
+                <div class="header-avatar" id="headerAvatar">
+                    <span id="headerAvatarText">AD</span>
+                </div>
+
+                <div class="header-user-info">
+                    <strong id="headerUserName">Admin User</strong>
+                    <span id="headerUserRole">Administrator</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+    <main class="profile-container">
+
+        <!-- =========================
+             PROFILE HERO
+        ========================== -->
+        <section class="profile-hero">
+
+            <div class="profile-identity">
+
+                <div class="profile-avatar-wrapper">
+
+                    <div class="profile-avatar" id="profileAvatar">
+                        <span id="profileAvatarText">AD</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avatar-edit-btn"
+                        id="avatarEditBtn"
+                        title="Change profile photo"
+                    >
+                        ✎
+                    </button>
+
+                    <input
+                        type="file"
+                        id="avatarInput"
+                        accept="image/png,image/jpeg,image/webp"
+                        hidden
+                    >
+
+                </div>
+
+                <div class="profile-basic">
+
+                    <div class="name-row">
+                        <h2 id="profileName">Admin User</h2>
+
+                        <span class="verified-badge">
+                            ✓ Verified
+                        </span>
+                    </div>
+
+                    <p id="profileEmail">
+                        admin@sitapathlab.com
+                    </p>
+
+                    <div class="profile-meta">
+
+                        <span>
+                            <strong>Role:</strong>
+                            <span id="profileRole">Administrator</span>
+                        </span>
+
+                        <span class="meta-separator">•</span>
+
+                        <span>
+                            Member since
+                            <span id="memberSince">2026</span>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="profile-status">
+
+                <span class="status-indicator active"></span>
+
+                <div>
+                    <strong>Account Active</strong>
+                    <small>Everything is working normally</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CONTENT GRID
+        ========================== -->
+        <section class="profile-grid">
+
+            <!-- =========================
+                 PERSONAL INFORMATION
+            ========================== -->
+            <div class="profile-card personal-card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+
+                        <div class="card-icon">
+                            👤
+                        </div>
+
+                        <div>
+                            <h3>Personal Information</h3>
+                            <p>Update your basic account information.</p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="edit-btn"
+                        id="editProfileBtn"
+                    >
+                        Edit
+                    </button>
+
+                </div>
+
+
+                <form id="profileForm" novalidate>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="firstName">
+                                First Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="firstName"
+                                name="first_name"
+                                placeholder="Enter first name"
+                                autocomplete="given-name"
+                                disabled
+                                required
+                            >
+
+                            <small class="field-error"></small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="lastName">
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lastName"
+                                name="last_name"
+                                placeholder="Enter last name"
+                                autocomplete="family-name"
+                                disabled
+                                required
+                            >
+
+                            <small class="field-error"></small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <div class="input-with-icon">
+
+                                <span>✉</span>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="name@example.com"
+                                    autocomplete="email"
+                                    disabled
+                                    required
+                                >
+
+                            </div>
+
+                            <small class="field-error"></small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                            </label>
+
+                            <div class="input-with-icon">
+
+                                <span>☎</span>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="+91 XXXXX XXXXX"
+                                    autocomplete="tel"
+                                    disabled
+                                >
+
+                            </div>
+
+                            <small class="field-error"></small>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="address">
+                                Address
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                rows="3"
+                                placeholder="Enter your address"
+                                autocomplete="street-address"
+                                disabled
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="form-actions"
+                        id="profileFormActions"
+                        hidden
+                    >
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="cancelProfileBtn"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="saveProfileBtn"
+                        >
+                            <span class="btn-text">Save Changes</span>
+                            <span class="btn-loader" hidden></span>
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- =========================
+                 ACCOUNT DETAILS
+            ========================== -->
+            <div class="profile-card account-card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+
+                        <div class="card-icon">
+                            🛡
+                        </div>
+
+                        <div>
+                            <h3>Account Details</h3>
+                            <p>Your account status and access level.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-list">
+
+                    <div class="account-item">
+
+                        <div class="account-item-icon">
+                            ID
+                        </div>
+
+                        <div class="account-item-content">
+                            <span>Account ID</span>
+                            <strong id="accountId">SP-ADMIN-001</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="copy-btn"
+                            data-copy-target="accountId"
+                            title="Copy Account ID"
+                        >
+                            ⧉
+                        </button>
+
+                    </div>
+
+
+                    <div class="account-item">
+
+                        <div class="account-item-icon">
+                            ●
+                        </div>
+
+                        <div class="account-item-content">
+                            <span>Status</span>
+
+                            <strong class="inline-status">
+                                <i class="status-dot"></i>
+                                Active
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-item">
+
+                        <div class="account-item-icon">
+                            ★
+                        </div>
+
+                        <div class="account-item-content">
+                            <span>Access Level</span>
+                            <strong>Super Administrator</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-item">
+
+                        <div class="account-item-icon">
+                            ◷
+                        </div>
+
+                        <div class="account-item-content">
+                            <span>Last Login</span>
+                            <strong id="lastLogin">Today, 10:42 AM</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 SECURITY
+            ========================== -->
+            <div class="profile-card security-card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+
+                        <div class="card-icon">
+                            🔐
+                        </div>
+
+                        <div>
+                            <h3>Security</h3>
+                            <p>Protect your account with security controls.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-list">
+
+                    <div class="security-item">
+
+                        <div class="security-info">
+
+                            <div class="security-icon">
+                                🔑
+                            </div>
+
+                            <div>
+                                <strong>Password</strong>
+                                <span>Last changed 30 days ago</span>
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="outline-btn"
+                            id="changePasswordBtn"
+                        >
+                            Change
+                        </button>
+
+                    </div>
+
+
+                    <div class="security-item">
+
+                        <div class="security-info">
+
+                            <div class="security-icon">
+                                ✓
+                            </div>
+
+                            <div>
+                                <strong>Two-Factor Authentication</strong>
+                                <span>Extra protection for your account</span>
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="twoFactorToggle"
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="security-item">
+
+                        <div class="security-info">
+
+                            <div class="security-icon">
+                                ◉
+                            </div>
+
+                            <div>
+                                <strong>Login Activity</strong>
+                                <span>Review recent account activity</span>
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="outline-btn"
+                            id="loginActivityBtn"
+                        >
+                            View
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 PREFERENCES
+            ========================== -->
+            <div class="profile-card preferences-card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+
+                        <div class="card-icon">
+                            ⚙
+                        </div>
+
+                        <div>
+                            <h3>Preferences</h3>
+                            <p>Customize your dashboard experience.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preference-list">
+
+                    <div class="preference-item">
+
+                        <div>
+                            <strong>Email Notifications</strong>
+                            <span>Receive important account notifications</span>
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="emailNotificationToggle"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="preference-item">
+
+                        <div>
+                            <strong>Activity Alerts</strong>
+                            <span>Get notified about important activities</span>
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="activityAlertToggle"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="preference-item">
+
+                        <div>
+                            <strong>Dark Mode</strong>
+                            <span>Use dark theme across the dashboard</span>
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="darkModeToggle"
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     PASSWORD MODAL
+========================== -->
+<div
+    class="modal-overlay"
+    id="passwordModal"
+    hidden
+>
+
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="passwordModalTitle"
+    >
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-eyebrow">SECURITY</span>
+                <h3 id="passwordModalTitle">
+                    Change Password
+                </h3>
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closePasswordModal"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="passwordForm">
+
+            <div class="form-group">
+
+                <label for="currentPassword">
+                    Current Password
+                </label>
+
+                <input
+                    type="password"
+                    id="currentPassword"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="newPassword">
+                    New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+
+                <div class="password-strength">
+                    <div id="passwordStrengthBar"></div>
+                </div>
+
+                <small id="passwordStrengthText">
+                    Minimum 8 characters
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelPasswordBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Update Password
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOAST
+========================== -->
+<div
+    class="toast-container"
+    id="toastContainer"
+    aria-live="polite"
+></div>
+
+
+<script src="{% static 'js/profile.js' %}"></script>
+
+</body>
+</html>

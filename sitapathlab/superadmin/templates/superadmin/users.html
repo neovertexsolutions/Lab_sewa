@@ -1,0 +1,919 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Users{% endblock %}
+{% block page_title %}Users{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/users.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div
+    class="users-page"
+    id="usersPage"
+
+    data-list-url="{% url 'superadmin:users_api' %}"
+    data-detail-url="{% url 'superadmin:user_detail' 0 %}"
+    data-activate-url="{% url 'superadmin:user_activate' 0 %}"
+    data-deactivate-url="{% url 'superadmin:user_deactivate' 0 %}"
+>
+
+
+    <!-- ======================================================
+         PAGE HEADER
+    ======================================================= -->
+
+    <div class="page-header">
+
+        <div class="page-header-left">
+
+            <div class="page-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div>
+
+                <h1>User Management</h1>
+
+                <p>
+                    Manage super admin and vendor users
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="page-header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="exportUsersBtn"
+            >
+                <i class="fa-solid fa-file-export"></i>
+                Export
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="addUserBtn"
+            >
+                <i class="fa-solid fa-user-plus"></i>
+                Add User
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         STAT CARDS
+    ======================================================= -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Users</span>
+
+                <strong id="totalUsers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Active</span>
+
+                <strong id="activeUsers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-clock"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Pending</span>
+
+                <strong id="pendingUsers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-slash"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Suspended</span>
+
+                <strong id="suspendedUsers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ======================================================
+         TOOLBAR
+    ======================================================= -->
+
+    <div class="users-toolbar">
+
+
+        <div class="toolbar-left">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="userSearch"
+                    placeholder="Search users..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    id="clearSearch"
+                    title="Clear search"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="filter-toggle"
+                id="filterToggle"
+            >
+
+                <i class="fa-solid fa-sliders"></i>
+
+                Filters
+
+                <span id="filterCount">
+                    0
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="toolbar-right">
+
+            <select
+                id="rowsPerPage"
+                class="rows-select"
+            >
+
+                <option value="10">
+                    10 / page
+                </option>
+
+                <option value="25">
+                    25 / page
+                </option>
+
+                <option value="50">
+                    50 / page
+                </option>
+
+                <option value="100">
+                    100 / page
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         FILTER PANEL
+    ======================================================= -->
+
+    <div
+        class="filters"
+        id="filtersPanel"
+    >
+
+        <div class="filter-group">
+
+            <label for="roleFilter">
+                Role
+            </label>
+
+            <select id="roleFilter">
+
+                <option value="">
+                    All Roles
+                </option>
+
+                <option value="super_admin">
+                    Super Admin
+                </option>
+
+                <option value="admin">
+                    Vendor Admin
+                </option>
+
+                <option value="manager">
+                    Manager
+                </option>
+
+                <option value="staff">
+                    Staff
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="statusFilter">
+                Status
+            </label>
+
+            <select id="statusFilter">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="active">
+                    Active
+                </option>
+
+                <option value="pending">
+                    Pending
+                </option>
+
+                <option value="suspended">
+                    Suspended
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="vendorFilter">
+                Vendor
+            </label>
+
+            <select id="vendorFilter">
+
+                <option value="">
+                    All Vendors
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            id="resetFilters"
+        >
+            <i class="fa-solid fa-rotate-left"></i>
+            Reset
+        </button>
+
+    </div>
+
+
+    <!-- ======================================================
+         BULK TOOLBAR
+    ======================================================= -->
+
+    <div
+        class="bulk-toolbar"
+        id="bulkToolbar"
+    >
+
+        <div class="bulk-info">
+
+            <i class="fa-solid fa-check-double"></i>
+
+            <strong id="selectedCount">
+                0
+            </strong>
+
+            users selected
+
+        </div>
+
+
+        <div class="bulk-actions">
+
+            <button
+                type="button"
+                id="bulkActivate"
+                class="bulk-btn"
+            >
+                <i class="fa-solid fa-user-check"></i>
+                Activate
+            </button>
+
+
+            <button
+                type="button"
+                id="bulkSuspend"
+                class="bulk-btn"
+            >
+                <i class="fa-solid fa-user-slash"></i>
+                Suspend
+            </button>
+
+
+            <button
+                type="button"
+                id="bulkDelete"
+                class="bulk-btn danger"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         TABLE CARD
+    ======================================================= -->
+
+    <div class="table-card">
+
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+                    Users
+                </h2>
+
+                <span id="resultSummary">
+                    Showing 0 users
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="users-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th class="checkbox-column">
+
+                            <input
+                                type="checkbox"
+                                id="selectAll"
+                            >
+
+                        </th>
+
+                        <th>
+                            User
+                        </th>
+
+                        <th>
+                            Vendor
+                        </th>
+
+                        <th>
+                            Role
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Last Login
+                        </th>
+
+                        <th>
+                            Created
+                        </th>
+
+                        <th class="action-column">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="usersTableBody">
+
+                    <tr id="usersLoadingRow">
+
+                        <td colspan="8">
+
+                            <div class="table-loader">
+
+                                <span></span>
+                                <span></span>
+                                <span></span>
+
+                                <p>
+                                    Loading users from database...
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+            <!-- ==================================================
+                 EMPTY STATE
+            =================================================== -->
+
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
+
+                <div class="empty-icon">
+
+                    <i class="fa-solid fa-users-slash"></i>
+
+                </div>
+
+                <h3>
+                    No Users Found
+                </h3>
+
+                <p>
+                    No users match your current filters.
+                </p>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="emptyReset"
+                >
+                    Reset Filters
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             PAGINATION
+        =================================================== -->
+
+        <div class="pagination">
+
+            <div
+                class="pagination-info"
+                id="paginationInfo"
+            >
+                Showing 0–0 of 0
+            </div>
+
+
+            <div class="pagination-controls">
+
+                <button
+                    type="button"
+                    id="prevPage"
+                    class="pagination-btn"
+                >
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+
+                <div id="pageNumbers"></div>
+
+
+                <button
+                    type="button"
+                    id="nextPage"
+                    class="pagination-btn"
+                >
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     ADD / EDIT USER MODAL
+=========================================================== -->
+
+<div
+    class="modal-overlay"
+    id="userModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="modalTitle">
+                    Add New User
+                </h2>
+
+                <p>
+                    Create or update a user account
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="closeUserModal"
+                class="modal-close"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form
+            id="userForm"
+            autocomplete="off"
+        >
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                id="userId"
+            >
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label for="firstName">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="firstName"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="lastName">
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lastName"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="vendor">
+                        Vendor
+                    </label>
+
+                    <select
+                        id="vendor"
+                        required
+                    >
+
+                        <option value="">
+                            Select Vendor
+                        </option>
+
+                        {% for vendor in vendors %}
+
+                        <option value="{{ vendor.id }}">
+                            {{ vendor.business_name|default:vendor.name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="role">
+                        Role
+                    </label>
+
+                    <select
+                        id="role"
+                        required
+                    >
+
+                        <option value="">
+                            Select Role
+                        </option>
+
+                        <option value="super_admin">
+                            Super Admin
+                        </option>
+
+                        <option value="admin">
+                            Vendor Admin
+                        </option>
+
+                        <option value="manager">
+                            Manager
+                        </option>
+
+                        <option value="staff">
+                            Staff
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select id="status">
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="suspended">
+                            Suspended
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            type="password"
+                            id="password"
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelUser"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveUser"
+                >
+                    <i class="fa-solid fa-user-plus"></i>
+                    Create User
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     CONFIRM MODAL
+=========================================================== -->
+
+<div
+    class="modal-overlay"
+    id="confirmModal"
+>
+
+    <div class="confirm-modal">
+
+        <div class="confirm-icon">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+
+        <h2 id="confirmTitle">
+            Confirm Action
+        </h2>
+
+
+        <p id="confirmMessage">
+            Are you sure?
+        </p>
+
+
+        <div class="confirm-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="confirmCancel"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmProceed"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     TOAST
+=========================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'superadmin/js/users.js' %}"
+    defer
+></script>
+
+{% endblock %}

@@ -1,0 +1,842 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Sita Path Lab Super Admin Login"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563eb"
+    >
+
+    <title>Super Admin Login | Sita Path Lab</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'superadmin/css/login.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="login-page">
+
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
+    <div class="login-background">
+
+        <div class="background-grid"></div>
+
+        <div class="background-glow background-glow-one"></div>
+
+        <div class="background-glow background-glow-two"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CONTAINER
+    ====================================================== -->
+
+    <main class="login-container">
+
+
+        <!-- =================================================
+             BRAND SECTION
+        ================================================== -->
+
+        <section class="login-brand">
+
+            <div class="brand-logo">
+
+                <span class="brand-logo-mark">
+
+                    <svg
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+
+                        <rect
+                            width="48"
+                            height="48"
+                            rx="14"
+                            fill="currentColor"
+                        />
+
+                        <path
+                            d="M14 17.5C14 15.567 15.567 14 17.5 14H30.5C32.433 14 34 15.567 34 17.5V30.5C34 32.433 32.433 34 30.5 34H17.5C15.567 34 14 32.433 14 30.5V17.5Z"
+                            fill="white"
+                            fill-opacity="0.95"
+                        />
+
+                        <path
+                            d="M19 24H29"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M24 19V29"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+            </div>
+
+
+            <div class="brand-text">
+
+                <h1>Sita Path Lab</h1>
+
+                <span>
+                    Laboratory Management Platform
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LOGIN CARD
+        ================================================== -->
+
+        <section class="login-card">
+
+
+            <!-- HEADER -->
+
+            <header class="login-header">
+
+                <div class="secure-badge">
+
+                    <span class="secure-dot"></span>
+
+                    Secure Admin Portal
+
+                </div>
+
+
+                <h2>
+                    Welcome back
+                </h2>
+
+
+                <p>
+                    Sign in to access the Super Admin dashboard.
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 SERVER MESSAGES
+            ================================================== -->
+
+            {% if messages %}
+
+                <div
+                    class="server-messages"
+                    id="serverMessages"
+                    role="alert"
+                >
+
+                    {% for message in messages %}
+
+                        <div
+                            class="server-message {% if message.tags %}{{ message.tags }}{% endif %}"
+                        >
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="9"
+                                />
+
+                                <line
+                                    x1="12"
+                                    y1="8"
+                                    x2="12"
+                                    y2="12"
+                                />
+
+                                <line
+                                    x1="12"
+                                    y1="16"
+                                    x2="12.01"
+                                    y2="16"
+                                />
+
+                            </svg>
+
+                            <span>
+                                {{ message }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 FORM NON FIELD ERRORS
+            ================================================== -->
+
+            {% if form.non_field_errors %}
+
+                <div
+                    class="form-error-box"
+                    role="alert"
+                >
+
+                    {% for error in form.non_field_errors %}
+
+                        <div class="form-error-message">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="9"
+                                />
+
+                                <line
+                                    x1="12"
+                                    y1="8"
+                                    x2="12"
+                                    y2="12"
+                                />
+
+                                <line
+                                    x1="12"
+                                    y1="16"
+                                    x2="12.01"
+                                    y2="16"
+                                />
+
+                            </svg>
+
+                            {{ error }}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
+            <form
+                method="post"
+                action="{% url 'superadmin:login' %}"
+                id="loginForm"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label
+                        for="username"
+                        class="form-label"
+                    >
+                        Username or Email
+                    </label>
+
+
+                    <div
+                        class="input-wrapper"
+                        id="usernameWrapper"
+                    >
+
+                        <span class="input-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <path
+                                    d="M20 21a8 8 0 0 0-16 0"
+                                />
+
+                                <circle
+                                    cx="12"
+                                    cy="7"
+                                    r="4"
+                                />
+
+                            </svg>
+
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-input"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            maxlength="150"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                            autofocus
+                            aria-describedby="usernameError"
+                        />
+
+                    </div>
+
+
+                    <div
+                        class="field-error"
+                        id="usernameError"
+                        aria-live="polite"
+                    >
+
+                        {% if form.username.errors %}
+
+                            {% for error in form.username.errors %}
+
+                                {{ error }}
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <div class="password-label-row">
+
+                        <label
+                            for="password"
+                            class="form-label"
+                        >
+                            Password
+                        </label>
+
+
+                        <button
+                            type="button"
+                            class="forgot-password"
+                            id="forgotPassword"
+                        >
+                            Forgot password?
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="input-wrapper"
+                        id="passwordWrapper"
+                    >
+
+                        <span class="input-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <rect
+                                    x="4"
+                                    y="10"
+                                    width="16"
+                                    height="11"
+                                    rx="2"
+                                />
+
+                                <path
+                                    d="M8 10V7a4 4 0 0 1 8 0v3"
+                                />
+
+                            </svg>
+
+                        </span>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input password-input"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            maxlength="128"
+                            required
+                            aria-describedby="passwordError"
+                        />
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Show password"
+                            title="Show password"
+                        >
+
+                            <svg
+                                class="eye-icon eye-open"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <path
+                                    d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                                />
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="3"
+                                />
+
+                            </svg>
+
+
+                            <svg
+                                class="eye-icon eye-closed"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+
+                                <path
+                                    d="M3 3l18 18"
+                                />
+
+                                <path
+                                    d="M10.6 10.6a2 2 0 0 0 2.8 2.8"
+                                />
+
+                                <path
+                                    d="M9.9 5.2A10.5 10.5 0 0 1 12 5c6.5 0 10 7 10 7a17.3 17.3 0 0 1-3.1 3.9"
+                                />
+
+                                <path
+                                    d="M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.2 0 2.3-.2 3.3-.6"
+                                />
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- PASSWORD STRENGTH -->
+
+                    <div
+                        class="password-strength"
+                        id="passwordStrength"
+                    >
+
+                        <div class="strength-bars">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+                        <span
+                            class="strength-label"
+                            id="strengthLabel"
+                        >
+                            Enter password
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="field-error"
+                        id="passwordError"
+                        aria-live="polite"
+                    >
+
+                        {% if form.password.errors %}
+
+                            {% for error in form.password.errors %}
+
+                                {{ error }}
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- REMEMBER ME -->
+
+                <div class="form-options">
+
+                    <label class="remember-control">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                            name="remember_me"
+                        >
+
+                        <span class="custom-checkbox">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="3"
+                            >
+
+                                <polyline
+                                    points="5 12 10 17 19 7"
+                                />
+
+                            </svg>
+
+                        </span>
+
+                        <span class="remember-text">
+                            Remember me
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="login-submit"
+                    id="loginSubmit"
+                >
+
+                    <span
+                        class="submit-content"
+                        id="submitContent"
+                    >
+
+                        <span>
+                            Sign in to dashboard
+                        </span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+
+                            <line
+                                x1="5"
+                                y1="12"
+                                x2="19"
+                                y2="12"
+                            />
+
+                            <polyline
+                                points="12 5 19 12 12 19"
+                            />
+
+                        </svg>
+
+                    </span>
+
+
+                    <span
+                        class="submit-loading"
+                        id="submitLoading"
+                    >
+
+                        <span class="button-spinner"></span>
+
+                        Authenticating...
+
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 SECURITY INFO
+            ================================================== -->
+
+            <div class="security-info">
+
+                <div class="security-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <path
+                            d="M12 3l8 4v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V7l8-4Z"
+                        />
+
+                        <polyline
+                            points="9 12 11 14 15 10"
+                        />
+
+                    </svg>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Secure connection
+                    </strong>
+
+                    <span>
+                        Your credentials are protected using
+                        encrypted authentication.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="login-footer">
+
+            <span>
+                © {% now "Y" %} Sita Path Lab
+            </span>
+
+            <span class="footer-separator">
+                •
+            </span>
+
+            <span>
+                Super Admin Portal
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         FORGOT PASSWORD MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-overlay"
+        id="forgotPasswordModal"
+        hidden
+    >
+
+        <div
+            class="forgot-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="forgotModalTitle"
+        >
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeForgotModal"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="modal-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+
+                    <path
+                        d="M4 4h16v16H4z"
+                    />
+
+                    <polyline
+                        points="4 6 12 13 20 6"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <h3 id="forgotModalTitle">
+                Reset your password
+            </h3>
+
+
+            <p>
+                Enter your administrator email address and
+                follow the password reset instructions.
+            </p>
+
+
+            <!--
+                PASSWORD RESET BACKEND ROUTE ABHI AVAILABLE NAHI HAI.
+                Isliye form ko direct Django URL se connect nahi kiya gaya.
+            -->
+
+            <form
+                id="forgotPasswordForm"
+                method="post"
+                action=""
+            >
+
+                {% csrf_token %}
+
+
+                <div class="form-group">
+
+                    <label
+                        for="resetEmail"
+                        class="form-label"
+                    >
+                        Administrator Email
+                    </label>
+
+
+                    <input
+                        type="email"
+                        id="resetEmail"
+                        name="email"
+                        class="modal-input"
+                        placeholder="admin@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-submit"
+                    id="resetPasswordButton"
+                >
+                    Send reset instructions
+                </button>
+
+            </form>
+
+
+            <div
+                id="resetMessage"
+                class="reset-message"
+                hidden
+            ></div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="{% static 'superadmin/js/login.js' %}"
+        defer
+    ></script>
+
+
+</div>
+
+</body>
+
+</html>

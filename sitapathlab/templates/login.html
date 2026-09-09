@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sita Path Lab - Login</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/login.css' %}"/>
+</head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center font-body-md">
+
+  <!-- Theme Toggle Button -->
+  <div class="theme-toggle-wrapper">
+    <button class="theme-toggle-btn" id="themeToggle" title="Toggle Theme">
+      <span class="material-symbols-outlined" id="themeToggleIcon">light_mode</span>
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <main class="login-container">
+    <!-- Left Side: Visual Anchor -->
+    <section class="login-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-overlay"></div>
+      <div class="visual-content">
+        <div class="visual-brand">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">biotech</span>
+          <h1 class="visual-brand-title">Sita Path Lab</h1>
+        </div>
+        <h2 class="visual-headline">Excellence in Diagnostic Care</h2>
+        <p class="visual-subhead">Empowering healthcare providers and patients through precision diagnostics and real-time clinical insights.</p>
+      </div>
+    </section>
+
+    <!-- Right Side: Login Content -->
+    <section class="login-form-wrapper">
+      <div class="login-form-container">
+        <div class="login-header">
+          <h2 class="login-title">Welcome back</h2>
+          <p class="login-subtitle">Please enter your clinical credentials to continue</p>
+        </div>
+
+        <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+          <!-- Email Field -->
+          <div class="form-group floating-label">
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">mail</span>
+              <input class="form-input" id="email" placeholder=" " type="email" required/>
+              <label class="form-label" for="email">Email Address</label>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group floating-label">
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">lock</span>
+              <input class="form-input" id="password" placeholder=" " type="password" required/>
+              <label class="form-label" for="password">Password</label>
+              <button class="password-toggle" type="button" id="passwordToggle" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined">visibility_off</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember & Forgot -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <div class="checkbox-wrapper">
+                <input class="checkbox-input" type="checkbox"/>
+                <span class="checkbox-check material-symbols-outlined">check</span>
+              </div>
+              <span class="checkbox-text">Remember me</span>
+            </label>
+            <a class="forgot-link" href="#">Forgot Password?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="login-btn" type="submit">
+            <span>Login to Dashboard</span>
+            <span class="material-symbols-outlined">login</span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+          <span class="divider-text">Secure Lab Access</span>
+        </div>
+
+        <!-- Alternative Login Options -->
+        <div class="alternative-login">
+          <button class="alt-btn" type="button" onclick="handleBiometric()">
+            <span class="material-symbols-outlined">fingerprint</span>
+            Biometric
+          </button>
+          <button class="alt-btn" type="button" onclick="handleSSO()">
+            <span class="material-symbols-outlined">key</span>
+            SSO
+          </button>
+        </div>
+
+        <!-- Help Link -->
+        <p class="help-text">
+          Need help? <a class="help-link" href="#">Contact System Admin</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>

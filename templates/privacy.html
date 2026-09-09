@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - MediFlow Healthcare SaaS</title>
+  <meta name="description" content="Read MediFlow's Privacy Policy. Learn how we collect, protect, and handle data for healthcare organizations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="nav-container">
+      <a href="{% url 'index' %}" class="brand-logo" id="brandLogo">
+        <div class="logo-icon-wrapper">
+          <svg class="logo-svg" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="9" fill="url(#logoGrad)"/><path d="M16 8V24M8 16H24" stroke="white" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="#06B6D4"/><defs><linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#0284C7"/><stop offset="1" stop-color="#0F766E"/></linearGradient></defs></svg>
+        </div>
+        <span class="logo-text">Medi<span class="logo-highlight">Flow</span></span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+          
+          <li class="nav-item has-dropdown">
+            <a href="{% url 'solutions' %}" class="nav-link dropdown-toggle" id="solutionsBtn">
+              Solutions
+              <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </a>
+            <div class="dropdown-panel solutions-menu">
+              <div class="dropdown-grid">
+                <a href="{% url 'solutions' %}#hospitals" class="dropdown-card">
+                  <div class="dropdown-icon-box hospitals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1M15 13h1M15 17h1"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Hospitals</span><span class="dropdown-desc">Enterprise OPD, IPD, and OT workflows</span></div>
+                </a>
+                <a href="{% url 'solutions' %}#clinics" class="dropdown-card">
+                  <div class="dropdown-icon-box clinics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Clinics</span><span class="dropdown-desc">Fast patient registration, EMR & queue</span></div>
+                </a>
+                <a href="{% url 'solutions' %}#pharmacy" class="dropdown-card">
+                  <div class="dropdown-icon-box pharmacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 3.5 13.5a5 5 0 1 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Pharmacy</span><span class="dropdown-desc">Batch expiry, billing, inventory & sales</span></div>
+                </a>
+                <a href="{% url 'solutions' %}#laboratory" class="dropdown-card">
+                  <div class="dropdown-icon-box laboratory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.31V2M8.5 2h7M14 14l-4 4"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Laboratory</span><span class="dropdown-desc">Test barcode, sample logs & auto reports</span></div>
+                </a>
+                <a href="{% url 'solutions' %}#doctors" class="dropdown-card">
+                  <div class="dropdown-icon-box doctors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Doctors</span><span class="dropdown-desc">Smart digital prescriptions & schedules</span></div>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item"><a href="{% url 'features' %}" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="{% url 'pricing' %}" class="nav-link">Pricing</a></li>
+
+          <li class="nav-item has-dropdown">
+            <a href="{% url 'resources' %}" class="nav-link dropdown-toggle" id="resourcesBtn">
+              Resources
+              <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </a>
+            <div class="dropdown-panel resources-menu">
+              <div class="dropdown-grid single-col">
+                <a href="{% url 'resources' %}#blog" class="dropdown-card">
+                  <div class="dropdown-icon-box resources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Blog</span><span class="dropdown-desc">Healthcare tech insights and best practices</span></div>
+                </a>
+                <a href="{% url 'resources' %}#documentation" class="dropdown-card">
+                  <div class="dropdown-icon-box resources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Documentation</span><span class="dropdown-desc">Setup guides, API docs, and architecture</span></div>
+                </a>
+                <a href="{% url 'resources' %}#help-center" class="dropdown-card">
+                  <div class="dropdown-icon-box resources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                  <div class="dropdown-text"><span class="dropdown-title">Help Center</span><span class="dropdown-desc">24/7 dedicated support & FAQs</span></div>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-ghost" id="loginBtn">Login</button>
+        <button class="btn btn-primary" id="bookDemoNavBtn">
+          <span>Book a Demo</span>
+          <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+        </button>
+        <button class="hamburger-btn" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="mobile-nav-inner">
+        <ul class="mobile-menu">
+          <li><a href="{% url 'home' %}" class="mobile-link">Home</a></li>
+          <li class="mobile-accordion">
+            <button class="mobile-accordion-toggle" id="mobileSolutionsToggle">
+              Solutions
+              <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+            <div class="mobile-accordion-content" id="mobileSolutionsContent">
+              <a href="{% url 'solutions' %}#hospitals" class="mobile-sublink">🏥 Hospitals</a>
+              <a href="{% url 'solutions' %}#clinics" class="mobile-sublink">🩺 Clinics</a>
+              <a href="{% url 'solutions' %}#pharmacy" class="mobile-sublink">💊 Pharmacy</a>
+              <a href="{% url 'solutions' %}#laboratory" class="mobile-sublink">🧪 Laboratory</a>
+              <a href="{% url 'solutions' %}#doctors" class="mobile-sublink">👨‍⚕️ Doctors</a>
+            </div>
+          </li>
+          <li><a href="{% url 'features' %}" class="mobile-link">Features</a></li>
+          <li><a href="{% url 'pricing' %} " class="mobile-link">Pricing</a></li>
+          <li class="mobile-accordion">
+            <button class="mobile-accordion-toggle" id="mobileResourcesToggle">
+              Resources
+              <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+            <div class="mobile-accordion-content" id="mobileResourcesContent">
+              <a href="{% url 'resources' %}#blog" class="mobile-sublink">📰 Blog</a>
+              <a href="{% url 'resources' %}#documentation" class="mobile-sublink">📖 Documentation</a>
+              <a href="{% url 'resources' %}#help-center" class="mobile-sublink">❓ Help Center</a>
+            </div>
+          </li>
+          <li><a href="{% url 'about' %}" class="mobile-link">About</a></li>
+          <li><a href="{% url 'contact' %}" class="mobile-link">Contact</a></li>
+        </ul>
+        <div class="mobile-actions">
+          <button class="btn btn-outline full-width" id="mobileLoginBtn">Login</button>
+          <button class="btn btn-primary full-width" id="mobileBookDemoBtn">Book a Demo</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= LEGAL CONTENT ================= -->
+  <main class="legal-page-main">
+    <div class="container">
+      <div class="legal-header">
+        <div class="section-tag">Legal & Trust</div>
+        <h1 class="legal-title">Privacy Policy</h1>
+        <p class="legal-updated">Last Updated: September 9, 2026</p>
+        <p class="legal-intro">
+          We respect your privacy and are committed to protecting the information you provide when using our healthcare management platform.
+        </p>
+      </div>
+
+      <div class="legal-content-card">
+        
+        <!-- Section 1 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-blue">📥</span>
+            <h2>1. Information We Collect</h2>
+          </div>
+          <p>Depending on how you use our platform, we may collect:</p>
+          <div class="legal-icon-grid">
+            <div class="legal-icon-item">
+              <span class="li-icon">🏢</span>
+              <span>Account and business information</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">👥</span>
+              <span>Staff and user information</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">🩺</span>
+              <span>Patient and healthcare-related information entered by authorized users</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">📅</span>
+              <span>Appointment, billing, laboratory, pharmacy, and operational data</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">💻</span>
+              <span>Device, browser, and technical information</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">📊</span>
+              <span>Usage and system activity information</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-teal">⚙️</span>
+            <h2>2. How We Use Information</h2>
+          </div>
+          <p>We use information to:</p>
+          <div class="legal-icon-grid">
+            <div class="legal-icon-item">
+              <span class="li-icon">🚀</span>
+              <span>Provide and operate our services</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">🔑</span>
+              <span>Manage accounts and user access</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">🔄</span>
+              <span>Process healthcare and business workflows</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">📈</span>
+              <span>Generate reports and analytics</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">💡</span>
+              <span>Improve platform performance and features</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">🎧</span>
+              <span>Provide customer support</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">🛡️</span>
+              <span>Maintain security and prevent unauthorized access</span>
+            </div>
+            <div class="legal-icon-item">
+              <span class="li-icon">📢</span>
+              <span>Communicate important service updates</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-indigo">🛡️</span>
+            <h2>3. Data Security</h2>
+          </div>
+          <p>We use appropriate technical and organizational measures designed to protect information against unauthorized access, alteration, disclosure, or loss.</p>
+          <div class="legal-highlight-box">
+            <span class="box-icon">🔒</span>
+            <p>Access to sensitive information should be limited according to each organization's assigned roles and permissions.</p>
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-emerald">🤝</span>
+            <h2>4. Data Sharing</h2>
+          </div>
+          <div class="legal-badge-card">
+            <span class="badge-icon">🚫</span>
+            <div>
+              <strong>Strict Privacy Pledge: We do not sell customer information.</strong>
+              <p>Your healthcare data is confidential and will never be monetized, rented, or traded.</p>
+            </div>
+          </div>
+          <p style="margin-top: 1rem;">Information may be shared with trusted service providers when necessary to operate the platform, provide integrations, process payments, maintain infrastructure, or comply with legal requirements.</p>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-amber">⏳</span>
+            <h2>5. Data Retention</h2>
+          </div>
+          <p>We retain information for as long as necessary to provide the service, meet contractual requirements, maintain security, or comply with applicable legal obligations.</p>
+        </section>
+
+        <!-- Section 6 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-purple">👤</span>
+            <h2>6. User Responsibilities</h2>
+          </div>
+          <p>Organizations using the platform are responsible for:</p>
+          <ul class="legal-checklist">
+            <li><span class="check-icon">✓</span> Maintaining accurate information</li>
+            <li><span class="check-icon">✓</span> Managing user accounts and permissions</li>
+            <li><span class="check-icon">✓</span> Protecting login credentials</li>
+            <li><span class="check-icon">✓</span> Ensuring authorized access to patient information</li>
+            <li><span class="check-icon">✓</span> Following applicable healthcare and privacy regulations</li>
+          </ul>
+        </section>
+
+        <!-- Section 7 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-amber">🍪</span>
+            <h2>7. Cookies</h2>
+          </div>
+          <p>Our website or platform may use cookies and similar technologies to improve functionality, security, performance, and user experience.</p>
+        </section>
+
+        <!-- Section 8 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-blue">🔌</span>
+            <h2>8. Third-Party Services</h2>
+          </div>
+          <p>Our platform may integrate with third-party services such as payment providers, communication services, analytics tools, or other external platforms. Their own privacy policies may apply to information processed through those services.</p>
+        </section>
+
+        <!-- Section 9 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-teal">🔄</span>
+            <h2>9. Changes to This Policy</h2>
+          </div>
+          <p>We may update this Privacy Policy from time to time. Changes will be published on this page with an updated revision date.</p>
+        </section>
+
+        <!-- Section 10 -->
+        <section class="legal-section">
+          <div class="legal-section-header">
+            <span class="sec-icon bg-indigo">📬</span>
+            <h2>10. Contact Us</h2>
+          </div>
+          <p>If you have questions about this Privacy Policy or our data practices, please contact our support team at <a href="mailto:privacy@mediflow.com">privacy@mediflow.com</a> or visit our <a href="{% url 'contact' %}">Contact Page</a>.</p>
+          
+          <div class="legal-tagline-box">
+            <p>Better Healthcare. Smarter Management. One Platform.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <a href="{% url 'home' %}" class="brand-logo footer-logo">
+          <div class="logo-icon-wrapper">
+            <svg class="logo-svg" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="9" fill="url(#logoGradFooter)"/><path d="M16 8V24M8 16H24" stroke="white" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="#06B6D4"/><defs><linearGradient id="logoGradFooter" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#0284C7"/><stop offset="1" stop-color="#0F766E"/></linearGradient></defs></svg>
+          </div>
+          <span class="logo-text">Medi<span class="logo-highlight">Flow</span></span>
+        </a>
+        <p class="footer-tagline">Empowering hospitals, diagnostic centers, and clinics with intelligent healthcare management solutions.</p>
+        <div class="footer-contact-mini">
+          <div>📍 Awa Road, Bhairahawa, Nepal</div>
+          <div>📞 <a href="tel:+9779827442335">+977 9827442335</a> / <a href="tel:+9779762327835">+977 9762327835</a></div>
+        </div>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="{% url 'solutions' %}#hospitals">Hospitals</a></li>
+            <li><a href="{% url 'solutions' %}#clinics">Clinics</a></li>
+            <li><a href="{% url 'solutions' %}#pharmacy">Pharmacy</a></li>
+            <li><a href="{% url 'solutions' %}#laboratory">Laboratory</a></li>
+            <li><a href="{% url 'solutions' %}#doctors">Doctors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="{% url 'features' %}">Features</a></li>
+            <li><a href="{% url 'pricing' %}">Pricing</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="{% url 'resources' %}#blog">Blog</a></li>
+            <li><a href="{% url 'resources' %}#documentation">Documentation</a></li>
+            <li><a href="{% url 'resources' %}#help-center">Help Center</a></li>
+            <li><a href="{% url 'contact' %}">Contact Support</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="footer-bottom-copy">
+        <p>© 2026 MediFlow Technologies Inc. All rights reserved.</p>
+        <span class="footer-divider-dot">•</span>
+        <p class="footer-powered">Powered by <a href="https://neovertexsolutions.com/" target="_blank" rel="noopener noreferrer">NeoVertex Solutions</a></p>
+      </div>
+      <div class="legal-links">
+        <a href="{% url 'privacy' %}" class="active">Privacy Policy</a>
+        <a href="{% url 'terms' %}">Terms of Service</a>
+        <a href="{% url 'compliance' %}">HIPAA Compliance</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div class="modal-backdrop" id="demoModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="closeDemoModal">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-badge">📅</div>
+        <h3>Book a Personalized Demo</h3>
+        <p>Discover how MediFlow can be customized to your facility's exact requirements.</p>
+      </div>
+      <form class="modal-form" id="demoForm">
+        <div class="form-group"><label for="demoName">Full Name *</label><input type="text" id="demoName" placeholder="Dr. Sarah Johnson" required></div>
+        <div class="form-row">
+          <div class="form-group"><label for="demoEmail">Work Email *</label><input type="email" id="demoEmail" placeholder="sarah@hospital.com" required></div>
+          <div class="form-group"><label for="demoPhone">Phone Number *</label><input type="tel" id="demoPhone" placeholder="+977 98XXXXXXXX" required></div>
+        </div>
+        <button type="submit" class="btn btn-primary full-width btn-submit">Schedule Live Demo</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="loginModal" aria-hidden="true">
+    <div class="modal-card modal-sm">
+      <button class="modal-close" id="closeLoginModal">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-badge">🔐</div>
+        <h3>Welcome to MediFlow</h3>
+        <p>Sign in to your healthcare management console.</p>
+      </div>
+      <form class="modal-form" id="loginForm">
+        <div class="form-group"><label for="loginEmail">Email Address</label><input type="email" id="loginEmail" placeholder="admin@mediflow.com" required></div>
+        <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
+        <button type="submit" class="btn btn-primary full-width btn-submit">Sign In to Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

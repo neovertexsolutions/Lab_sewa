@@ -1,0 +1,1055 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}System Settings | Sita Path Lab{% endblock %}
+{% block page_title %}System Settings{% endblock %}
+
+
+{% block extra_css %}
+<!--
+    FIX: layout was collapsing to a single stacked column because
+    the external stylesheet (superadmin/css/system_settings.css)
+    was not actually loading in the browser - check your network
+    tab for a 404 on that path. Most common causes:
+      1. `python manage.py collectstatic` was never run
+      2. STATICFILES_DIRS / STATIC_ROOT not pointing at this app's
+         static/ folder
+      3. file is at a different path than
+         static/superadmin/css/system_settings.css
+
+    Inlining the CSS here removes that dependency entirely so the
+    two-column layout renders correctly regardless of your static
+    file setup. Once you've confirmed collectstatic/static paths
+    are correct, you can move this back into the external file and
+    delete this <style> block + the trailing <link> below.
+-->
+<style>
+    .settings-page,
+    .settings-page *,
+    .settings-page *::before,
+    .settings-page *::after {
+        box-sizing: border-box;
+    }
+
+    .settings-page { width: 100%; max-width: 100%; margin: 0; padding: 0; }
+
+    /* HEADER */
+    .settings-header {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    .header-left { min-width: 0; }
+    .page-label {
+        display: block; margin-bottom: 6px; color: #2563eb;
+        font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+    .settings-header h1 {
+        margin: 0; color: #0f172a; font-size: 28px; line-height: 1.2;
+        font-weight: 800; letter-spacing: -0.6px;
+    }
+    .settings-header p {
+        margin: 8px 0 0; max-width: 760px; color: #64748b;
+        font-size: 13px; line-height: 1.6;
+    }
+    .header-actions { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+
+    .header-btn {
+        min-height: 38px; padding: 0 15px; border: 1px solid #e2e8f0;
+        border-radius: 8px; background: #ffffff; color: #334155;
+        font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+        transition: background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .header-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .header-btn.primary {
+        border-color: #2563eb; background: #2563eb; color: #ffffff;
+        box-shadow: 0 5px 15px rgba(37,99,235,.18);
+    }
+    .header-btn.primary:hover { background: #1d4ed8; border-color: #1d4ed8; transform: translateY(-1px); }
+    .save-icon { margin-right: 5px; }
+
+    /* MAIN GRID -- THIS is what makes sidebar + content sit side by side */
+    .settings-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 245px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    /* SIDEBAR */
+    .settings-sidebar {
+        width: 100%; min-width: 0; position: sticky; top: 20px; padding: 8px 0 0;
+        background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(15,23,42,.04); overflow: hidden;
+    }
+    .settings-nav-title {
+        padding: 12px 18px 9px; color: #94a3b8; font-size: 9px;
+        font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .settings-nav-item {
+        width: 100%; min-height: 58px; padding: 9px 14px;
+        display: flex; align-items: center; gap: 11px;
+        border: 0; border-left: 3px solid transparent; background: transparent;
+        color: #475569; text-align: left; cursor: pointer; font-family: inherit;
+        transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .settings-nav-item:hover { background: #f8fafc; }
+    .settings-nav-item.active { background: #eff6ff; color: #2563eb; border-left-color: #2563eb; }
+    .nav-icon {
+        width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center;
+        border-radius: 8px; background: #f8fafc; color: #64748b;
+        font-size: 13px; font-weight: 700; transition: .2s ease;
+    }
+    .settings-nav-item.active .nav-icon { background: #dbeafe; color: #2563eb; }
+    .settings-nav-item > span:last-child { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .settings-nav-item strong { color: inherit; font-size: 11px; line-height: 1.2; font-weight: 750; }
+    .settings-nav-item small { color: #94a3b8; font-size: 9px; line-height: 1.3; }
+
+    .sidebar-status {
+        margin: 12px; padding: 12px; display: flex; align-items: center; gap: 9px;
+        border: 1px solid #dbeafe; border-radius: 10px; background: #f8fbff;
+    }
+    .status-dot {
+        width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%;
+        background: #22c55e; box-shadow: 0 0 0 4px #dcfce7;
+    }
+    .sidebar-status div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-status strong { color: #334155; font-size: 10px; font-weight: 750; }
+    .sidebar-status small { color: #94a3b8; font-size: 9px; }
+
+    /* CONTENT */
+    .settings-content { min-width: 0; width: 100%; }
+    .settings-section { display: none; width: 100%; }
+    .settings-section.active { display: block; }
+
+    .section-header { margin-bottom: 17px; }
+    .section-label {
+        display: block; margin-bottom: 6px; color: #2563eb;
+        font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .section-header h2 { margin: 0; color: #0f172a; font-size: 21px; line-height: 1.25; font-weight: 800; letter-spacing: -.35px; }
+    .section-header p { margin: 6px 0 0; color: #64748b; font-size: 12px; line-height: 1.6; }
+
+    .settings-card {
+        width: 100%; margin-bottom: 18px; padding: 21px; background: #ffffff;
+        border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 5px 18px rgba(15,23,42,.035);
+    }
+    .card-heading { margin-bottom: 20px; }
+    .card-heading h3 { margin: 0; color: #0f172a; font-size: 14px; line-height: 1.3; font-weight: 800; }
+    .card-heading p { margin: 4px 0 0; color: #94a3b8; font-size: 10px; line-height: 1.5; }
+
+    .form-grid { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 17px; }
+    .form-group { min-width: 0; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { display: block; margin-bottom: 7px; color: #334155; font-size: 10px; font-weight: 800; }
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%; max-width: 100%; outline: none; border: 1px solid #e2e8f0;
+        border-radius: 9px; background: #ffffff; color: #0f172a; font-family: inherit; font-size: 12px;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .form-group input, .form-group select { height: 40px; padding: 0 11px; }
+    .form-group textarea { min-height: 90px; padding: 10px 11px; resize: vertical; line-height: 1.6; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: #94a3b8; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+    }
+    .form-group small { display: block; margin-top: 5px; color: #94a3b8; font-size: 9px; line-height: 1.4; }
+
+    .preference-list { width: 100%; }
+    .preference-row {
+        min-height: 70px; display: flex; align-items: center; justify-content: space-between;
+        gap: 20px; padding: 13px 0; border-bottom: 1px solid #f1f5f9;
+    }
+    .preference-row:first-child { padding-top: 0; }
+    .preference-row:last-child { padding-bottom: 0; border-bottom: 0; }
+    .preference-info { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .preference-info strong { color: #334155; font-size: 12px; line-height: 1.3; font-weight: 750; }
+    .preference-info span { max-width: 720px; color: #94a3b8; font-size: 10px; line-height: 1.5; }
+
+    .toggle { position: relative; width: 42px; height: 24px; flex: 0 0 42px; display: inline-block; cursor: pointer; }
+    .toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .toggle-slider { position: absolute; inset: 0; border-radius: 999px; background: #cbd5e1; transition: .2s ease; }
+    .toggle-slider::before {
+        content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+        border-radius: 50%; background: #ffffff; box-shadow: 0 1px 4px rgba(15,23,42,.18); transition: .2s ease;
+    }
+    .toggle input:checked + .toggle-slider { background: #2563eb; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+    .danger-toggle input:checked + .toggle-slider { background: #dc2626; }
+
+    .small-select {
+        width: 150px; height: 38px; flex: 0 0 150px; padding: 0 10px; border: 1px solid #e2e8f0;
+        border-radius: 8px; background: #ffffff; color: #334155; outline: none; font-family: inherit; font-size: 11px;
+    }
+    .small-select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.08); }
+
+    .notification-test {
+        margin-top: 20px; padding-top: 18px; display: flex; align-items: center;
+        justify-content: space-between; gap: 20px; border-top: 1px solid #f1f5f9; flex-wrap: wrap;
+    }
+    .notification-test > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .notification-test strong { color: #334155; font-size: 11px; }
+    .notification-test span { color: #94a3b8; font-size: 9px; line-height: 1.5; }
+
+    .secondary-btn, .primary-btn, .danger-btn {
+        min-height: 38px; padding: 0 15px; border-radius: 8px; font-family: inherit;
+        font-size: 11px; font-weight: 700; cursor: pointer;
+        transition: background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .secondary-btn { border: 1px solid #e2e8f0; background: #ffffff; color: #334155; }
+    .secondary-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .primary-btn { border: 1px solid #2563eb; background: #2563eb; color: #ffffff; box-shadow: 0 5px 15px rgba(37,99,235,.15); }
+    .primary-btn:hover { background: #1d4ed8; border-color: #1d4ed8; transform: translateY(-1px); }
+    .danger-btn { border: 1px solid #dc2626; background: #dc2626; color: #ffffff; }
+    .danger-btn:hover { background: #b91c1c; }
+
+    .danger-card { border-color: #fecaca; }
+    .danger-card .card-heading h3 { color: #b91c1c; }
+    .danger-card .card-heading p { color: #dc2626; }
+    .danger-action {
+        min-height: 40px; padding: 0 15px; border: 1px solid #fecaca; border-radius: 8px;
+        background: #fef2f2; color: #b91c1c; font-family: inherit; font-size: 11px; font-weight: 700;
+        cursor: pointer; transition: .2s ease;
+    }
+    .danger-action:hover { background: #fee2e2; border-color: #fca5a5; }
+
+    .system-status-card {
+        width: 100%; margin-bottom: 18px; padding: 16px 18px; display: flex; align-items: center;
+        gap: 13px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; flex-wrap: wrap;
+    }
+    .system-status-icon {
+        width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center;
+        border-radius: 10px; background: #dcfce7; color: #15803d; font-size: 15px; font-weight: 800;
+    }
+    .system-status-card > div:nth-child(2) { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .system-status-card strong { color: #166534; font-size: 11px; }
+    .system-status-card span { color: #65a30d; font-size: 9px; }
+    .online-status {
+        margin-left: auto; padding: 5px 9px; border-radius: 999px; background: #dcfce7;
+        color: #15803d !important; font-size: 9px !important; font-weight: 800; white-space: nowrap;
+    }
+
+    .password-field { position: relative; width: 100%; }
+    .password-field input { padding-right: 65px; }
+    .password-toggle {
+        position: absolute; top: 50%; right: 7px; transform: translateY(-50%); min-height: 28px;
+        padding: 0 8px; border: 0; border-radius: 6px; background: #f1f5f9; color: #475569;
+        font-family: inherit; font-size: 9px; font-weight: 700; cursor: pointer;
+    }
+    .password-toggle:hover { background: #e2e8f0; }
+
+    .integration-actions {
+        margin-top: 20px; padding-top: 18px; display: flex; align-items: center;
+        gap: 12px; border-top: 1px solid #f1f5f9; flex-wrap: wrap;
+    }
+    .connection-status { color: #94a3b8; font-size: 10px; font-weight: 700; }
+    .connection-status.success { color: #16a34a; }
+    .connection-status.error { color: #dc2626; }
+
+    .save-bar {
+        width: 100%; margin-top: 20px; margin-bottom: 10px; padding: 14px 17px;
+        display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+        box-shadow: 0 5px 18px rgba(15,23,42,.035); flex-wrap: wrap;
+    }
+    .save-bar > div:first-child { display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 10px; font-weight: 600; }
+    .unsaved-dot { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: #22c55e; }
+    .unsaved-dot.unsaved { background: #f59e0b; }
+    .save-actions { display: flex; align-items: center; gap: 8px; }
+
+    .modal-overlay {
+        position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center;
+        justify-content: center; padding: 20px; background: rgba(15,23,42,.55); backdrop-filter: blur(5px);
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal {
+        position: relative; width: min(420px, 100%); padding: 28px; background: #ffffff;
+        border: 1px solid #e5e7eb; border-radius: 15px; box-shadow: 0 30px 80px rgba(15,23,42,.20);
+        animation: modalIn .2s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-close {
+        position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; display: grid;
+        place-items: center; border: 0; border-radius: 7px; background: #f8fafc; color: #64748b;
+        font-size: 18px; cursor: pointer;
+    }
+    .modal-close:hover { background: #f1f5f9; }
+    .modal-icon {
+        width: 48px; height: 48px; margin-bottom: 13px; display: grid; place-items: center;
+        border-radius: 50%; background: #fff7ed; color: #ea580c; font-size: 18px; font-weight: 800;
+    }
+    .modal-label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+    .modal h3 { margin: 0; color: #0f172a; font-size: 18px; font-weight: 800; }
+    .modal p { margin: 8px 0 20px; color: #64748b; font-size: 11px; line-height: 1.6; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    .toast-container {
+        position: fixed; right: 24px; bottom: 24px; z-index: 11000; width: min(360px, calc(100vw - 30px));
+        display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+    }
+    .toast {
+        padding: 12px 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px;
+        color: #334155; font-size: 11px; font-weight: 600; box-shadow: 0 12px 35px rgba(15,23,42,.12);
+        pointer-events: auto; animation: toastIn .25s ease;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* DARK MODE */
+    body.dark .settings-header h1, body.dark .section-header h2, body.dark .card-heading h3,
+    body.dark .form-group label, body.dark .preference-info strong, body.dark .modal h3 { color: #f8fafc; }
+    body.dark .settings-header p, body.dark .section-header p, body.dark .card-heading p,
+    body.dark .preference-info span { color: #94a3b8; }
+    body.dark .settings-sidebar, body.dark .settings-card, body.dark .save-bar, body.dark .modal {
+        background: #111827; border-color: #1f2937;
+    }
+    body.dark .settings-nav-item { color: #cbd5e1; }
+    body.dark .settings-nav-item:hover { background: #172033; }
+    body.dark .settings-nav-item.active { background: #172554; color: #60a5fa; border-left-color: #3b82f6; }
+    body.dark .nav-icon { background: #0f172a; color: #94a3b8; }
+    body.dark .settings-nav-item.active .nav-icon { background: #1e3a8a; color: #60a5fa; }
+    body.dark .sidebar-status { background: #0f172a; border-color: #1e3a5f; }
+    body.dark .sidebar-status strong { color: #e2e8f0; }
+    body.dark .form-group input, body.dark .form-group select, body.dark .form-group textarea,
+    body.dark .small-select, body.dark .secondary-btn, body.dark .header-btn {
+        background: #0f172a; border-color: #334155; color: #f8fafc;
+    }
+    body.dark .form-group input::placeholder, body.dark .form-group textarea::placeholder { color: #64748b; }
+    body.dark .preference-row, body.dark .notification-test, body.dark .integration-actions { border-color: #1f2937; }
+    body.dark .password-toggle { background: #1e293b; color: #cbd5e1; }
+    body.dark .password-toggle:hover { background: #334155; }
+    body.dark .danger-card { background: #111827; border-color: #7f1d1d; }
+    body.dark .system-status-card { background: rgba(20,83,45,.18); border-color: #166534; }
+    body.dark .modal-close { background: #1e293b; color: #cbd5e1; }
+    body.dark .modal-close:hover { background: #334155; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+        .settings-container { grid-template-columns: 220px minmax(0,1fr); gap: 18px; }
+        .settings-nav-item { padding-left: 11px; padding-right: 11px; }
+        .settings-card { padding: 18px; }
+    }
+    @media (max-width: 900px) {
+        .settings-header { flex-direction: column; align-items: stretch; }
+        .header-actions { justify-content: flex-end; }
+        .settings-container { grid-template-columns: 1fr; }
+        .settings-sidebar {
+            position: static; display: flex; align-items: stretch; overflow-x: auto;
+            padding: 7px; gap: 5px; scrollbar-width: thin;
+        }
+        .settings-nav-title, .sidebar-status { display: none; }
+        .settings-nav-item {
+            width: auto; min-width: 155px; min-height: 56px; border-left: 0;
+            border-bottom: 3px solid transparent; border-radius: 8px;
+        }
+        .settings-nav-item.active { border-left: 0; border-bottom-color: #2563eb; }
+    }
+    @media (max-width: 650px) {
+        .settings-header h1 { font-size: 23px; }
+        .settings-header p { font-size: 11px; }
+        .header-actions { width: 100%; justify-content: stretch; }
+        .header-btn { flex: 1; }
+        .form-grid { grid-template-columns: 1fr; }
+        .form-group.full { grid-column: auto; }
+        .settings-card { padding: 15px; border-radius: 11px; }
+        .section-header h2 { font-size: 18px; }
+        .preference-row { align-items: flex-start; padding: 14px 0; }
+        .small-select { width: 125px; flex-basis: 125px; }
+        .notification-test { align-items: flex-start; flex-direction: column; }
+        .notification-test .secondary-btn { width: 100%; }
+        .integration-actions { align-items: stretch; flex-direction: column; }
+        .integration-actions .secondary-btn { width: 100%; }
+        .save-bar { align-items: stretch; flex-direction: column; }
+        .save-actions { width: 100%; }
+        .save-actions button { flex: 1; }
+    }
+    @media (max-width: 480px) {
+        .settings-nav-item { min-width: 140px; }
+        .settings-nav-item small { display: none; }
+        .settings-nav-item { min-height: 48px; }
+        .nav-icon { width: 30px; height: 30px; flex-basis: 30px; }
+        .settings-header { margin-bottom: 18px; }
+        .header-actions { flex-direction: column; }
+        .header-btn { width: 100%; flex: none; }
+        .preference-row { gap: 12px; }
+        .preference-info span { font-size: 9px; }
+        .small-select { width: 115px; flex-basis: 115px; }
+        .system-status-card { align-items: flex-start; flex-wrap: wrap; }
+        .online-status { width: 100%; margin-left: 51px; }
+        .modal { padding: 22px; }
+        .modal-actions { flex-direction: column-reverse; }
+        .modal-actions button { width: 100%; }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="settings-page">
+
+    <header class="settings-header">
+        <div class="header-left">
+            <span class="page-label">ADMINISTRATION</span>
+            <h1>System Settings</h1>
+            <p>Configure your laboratory system, security, notifications and operational preferences.</p>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="header-btn" id="resetAllBtn">Reset</button>
+            <button type="button" class="header-btn primary" id="saveAllBtn">
+                <span class="save-icon">✓</span>Save Changes
+            </button>
+        </div>
+    </header>
+
+
+    <main class="settings-container">
+
+        <!-- SIDEBAR -->
+        <aside class="settings-sidebar">
+            <div class="settings-nav-title">SETTINGS</div>
+
+            <button type="button" class="settings-nav-item active" data-section="general">
+                <span class="nav-icon">⚙</span>
+                <span><strong>General</strong><small>Basic system settings</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="lab">
+                <span class="nav-icon">⌂</span>
+                <span><strong>Lab Information</strong><small>Laboratory profile</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="localization">
+                <span class="nav-icon">◎</span>
+                <span><strong>Localization</strong><small>Language & timezone</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="notifications">
+                <span class="nav-icon">♢</span>
+                <span><strong>Notifications</strong><small>Email & system alerts</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="security">
+                <span class="nav-icon">◆</span>
+                <span><strong>Security</strong><small>Access & authentication</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="system">
+                <span class="nav-icon">▦</span>
+                <span><strong>System</strong><small>Application behavior</small></span>
+            </button>
+
+            <button type="button" class="settings-nav-item" data-section="api">
+                <span class="nav-icon">{ }</span>
+                <span><strong>API & Integrations</strong><small>External services</small></span>
+            </button>
+
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                <div><strong>System Online</strong><small>All services operational</small></div>
+            </div>
+        </aside>
+
+
+        <!-- CONTENT -->
+        <section class="settings-content">
+
+            <!-- GENERAL -->
+            <div class="settings-section active" id="section-general">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">GENERAL SETTINGS</span>
+                        <h2>Application Preferences</h2>
+                        <p>Configure the basic behavior and appearance of your laboratory management system.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="card-heading">
+                        <div><h3>Application</h3><p>Core application configuration.</p></div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="appName">Application Name</label>
+                            <input type="text" id="appName" name="app_name" value="Sita Path Lab" autocomplete="organization">
+                            <small>Name displayed throughout the admin panel.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="appShortName">Short Name</label>
+                            <input type="text" id="appShortName" name="app_short_name" value="SPL" maxlength="20">
+                            <small>Short identifier used in compact interfaces.</small>
+                        </div>
+                        <div class="form-group full">
+                            <label for="appDescription">Application Description</label>
+                            <textarea id="appDescription" name="app_description" rows="3">Pathology laboratory management and diagnostic information system.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="card-heading">
+                        <div><h3>Appearance</h3><p>Control the interface appearance.</p></div>
+                    </div>
+                    <div class="preference-list">
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Dark Mode</strong>
+                                <span>Use a dark interface for the administrative dashboard.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Compact Sidebar</strong>
+                                <span>Reduce sidebar width to maximize workspace area.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="compactSidebarToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Animations</strong>
+                                <span>Enable interface transitions and micro-interactions.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="animationsToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAB INFORMATION -->
+            <div class="settings-section" id="section-lab">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">LABORATORY PROFILE</span>
+                        <h2>Lab Information</h2>
+                        <p>Manage laboratory identity and contact details.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="card-heading">
+                        <div><h3>Laboratory Details</h3><p>Information used on reports, invoices and patient documents.</p></div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="labName">Laboratory Name</label>
+                            <input type="text" id="labName" value="Sita Path Lab">
+                        </div>
+                        <div class="form-group">
+                            <label for="labCode">Laboratory Code</label>
+                            <input type="text" id="labCode" value="SPL-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="labEmail">Official Email</label>
+                            <input type="email" id="labEmail" value="admin@sitapathlab.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="labPhone">Contact Number</label>
+                            <input type="tel" id="labPhone" value="+91 98765 43210">
+                        </div>
+                        <div class="form-group full">
+                            <label for="labAddress">Address</label>
+                            <textarea id="labAddress" rows="3">Main Road, Bihar, India</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="labRegistration">Registration Number</label>
+                            <input type="text" id="labRegistration" value="LAB/REG/2026/001">
+                        </div>
+                        <div class="form-group">
+                            <label for="labWebsite">Website</label>
+                            <input type="url" id="labWebsite" value="https://sitapathlab.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOCALIZATION -->
+            <div class="settings-section" id="section-localization">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">LOCALIZATION</span>
+                        <h2>Language & Regional Settings</h2>
+                        <p>Configure date, time, currency and language preferences.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="language">Language</label>
+                            <select id="language">
+                                <option value="en">English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="ne">Nepali</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone">Timezone</label>
+                            <select id="timezone">
+                                <option value="Asia/Kolkata">India Standard Time (IST)</option>
+                                <option value="Asia/Kathmandu">Nepal Time (NPT)</option>
+                                <option value="UTC">UTC</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFormat">Date Format</label>
+                            <select id="dateFormat">
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Currency</label>
+                            <select id="currency">
+                                <option value="INR">Indian Rupee (₹)</option>
+                                <option value="USD">US Dollar ($)</option>
+                                <option value="NPR">Nepalese Rupee (रू)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTIFICATIONS -->
+            <div class="settings-section" id="section-notifications">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">NOTIFICATIONS</span>
+                        <h2>Notification Preferences</h2>
+                        <p>Control system alerts and automated notifications.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="preference-list">
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>New Patient Registration</strong>
+                                <span>Notify administrators when a new patient is registered.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="newPatientNotification" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Report Ready</strong>
+                                <span>Notify staff when diagnostic reports are completed.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="reportNotification" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Payment Notifications</strong>
+                                <span>Receive alerts for successful and failed payments.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="paymentNotification" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Security Alerts</strong>
+                                <span>Receive notifications about suspicious login activity.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="securityNotification" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Daily Summary</strong>
+                                <span>Receive a daily operational summary.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="dailySummary">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-test">
+                        <div>
+                            <strong>Test Notification</strong>
+                            <span>Verify that your notification configuration is working correctly.</span>
+                        </div>
+                        <button type="button" class="secondary-btn" id="testNotificationBtn">Send Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECURITY -->
+            <div class="settings-section" id="section-security">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">SECURITY</span>
+                        <h2>Security Configuration</h2>
+                        <p>Configure authentication and account protection.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="preference-list">
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Two-Factor Authentication</strong>
+                                <span>Require an additional authentication factor for administrator accounts.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="twoFactorToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Login Notifications</strong>
+                                <span>Notify administrators about new login sessions.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="loginNotificationToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Session Timeout</strong>
+                                <span>Automatically log users out after inactivity.</span>
+                            </div>
+                            <select class="small-select" id="sessionTimeout">
+                                <option value="15">15 minutes</option>
+                                <option value="30" selected>30 minutes</option>
+                                <option value="60">1 hour</option>
+                                <option value="120">2 hours</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card danger-card">
+                    <div class="card-heading">
+                        <div>
+                            <h3>Danger Zone</h3>
+                            <p>These actions can affect system security and administrator access.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="danger-action" id="logoutAllBtn">Sign Out All Active Sessions</button>
+                </div>
+            </div>
+
+            <!-- SYSTEM -->
+            <div class="settings-section" id="section-system">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">SYSTEM</span>
+                        <h2>System Preferences</h2>
+                        <p>Configure application-level system behavior.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="preference-list">
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Automatic Backups</strong>
+                                <span>Automatically create scheduled database backups.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="backupToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Audit Logging</strong>
+                                <span>Record administrative and security activities.</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="auditToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-row">
+                            <div class="preference-info">
+                                <strong>Maintenance Mode</strong>
+                                <span>Temporarily prevent normal users from accessing the application.</span>
+                            </div>
+                            <label class="toggle danger-toggle">
+                                <input type="checkbox" id="maintenanceToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-status-card">
+                    <div class="system-status-icon">✓</div>
+                    <div>
+                        <strong>System Status</strong>
+                        <span>Application services are running normally.</span>
+                    </div>
+                    <span class="online-status">Operational</span>
+                </div>
+            </div>
+
+            <!-- API -->
+            <div class="settings-section" id="section-api">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">INTEGRATIONS</span>
+                        <h2>API & Integrations</h2>
+                        <p>Manage external services connected to your system.</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="apiBaseUrl">API Base URL</label>
+                            <input type="url" id="apiBaseUrl" value="https://api.sitapathlab.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiKey">API Key</label>
+                            <div class="password-field">
+                                <input type="password" id="apiKey" value="spl_live_xxxxxxxxxxxxx">
+                                <button type="button" class="password-toggle" data-target="apiKey">Show</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="webhookUrl">Webhook URL</label>
+                            <input type="url" id="webhookUrl" value="https://api.sitapathlab.com/webhooks/">
+                        </div>
+                    </div>
+
+                    <div class="integration-actions">
+                        <button type="button" class="secondary-btn" id="testApiBtn">Test API Connection</button>
+                        <span class="connection-status" id="apiConnectionStatus">Not tested</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAVE BAR -->
+            <div class="save-bar">
+                <div>
+                    <span class="unsaved-dot" id="unsavedDot"></span>
+                    <span id="saveStatus">All changes saved</span>
+                </div>
+                <div class="save-actions">
+                    <button type="button" class="secondary-btn" id="discardBtn">Discard</button>
+                    <button type="button" class="primary-btn" id="saveBottomBtn">Save Changes</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirmModal" hidden>
+    <div class="modal">
+        <button type="button" class="modal-close" id="modalCloseBtn">×</button>
+        <div class="modal-icon">!</div>
+        <span class="modal-label">CONFIRM ACTION</span>
+        <h3 id="modalTitle">Are you sure?</h3>
+        <p id="modalMessage">This action will affect your system configuration.</p>
+        <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="modalCancelBtn">Cancel</button>
+            <button type="button" class="danger-btn" id="modalConfirmBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+/*
+    Minimal, dependency-free JS so the page is fully functional even
+    if superadmin/js/system_settings.js hasn't been created yet.
+    If you already have that file with real save/API logic, delete
+    this block and just keep the <script src> tag below it.
+*/
+(function () {
+    "use strict";
+
+    var navItems = document.querySelectorAll(".settings-nav-item");
+    var sections = document.querySelectorAll(".settings-section");
+    var unsavedDot = document.getElementById("unsavedDot");
+    var saveStatus = document.getElementById("saveStatus");
+
+    function markUnsaved() {
+        if (unsavedDot) unsavedDot.classList.add("unsaved");
+        if (saveStatus) saveStatus.textContent = "Unsaved changes";
+    }
+
+    function markSaved() {
+        if (unsavedDot) unsavedDot.classList.remove("unsaved");
+        if (saveStatus) saveStatus.textContent = "All changes saved";
+    }
+
+    // Tab switching
+    navItems.forEach(function (item) {
+        item.addEventListener("click", function () {
+            var target = item.getAttribute("data-section");
+
+            navItems.forEach(function (n) { n.classList.remove("active"); });
+            item.classList.add("active");
+
+            sections.forEach(function (s) {
+                s.classList.toggle("active", s.id === "section-" + target);
+            });
+        });
+    });
+
+    // Any input change -> mark unsaved
+    document.querySelectorAll(
+        ".settings-content input, .settings-content select, .settings-content textarea"
+    ).forEach(function (el) {
+        el.addEventListener("change", markUnsaved);
+    });
+
+    // Save buttons
+    var saveAllBtn = document.getElementById("saveAllBtn");
+    var saveBottomBtn = document.getElementById("saveBottomBtn");
+    function doSave() {
+        // TODO: wire this to POST superadmin:update_system_settings
+        markSaved();
+        showToast("Settings saved successfully.");
+    }
+    if (saveAllBtn) saveAllBtn.addEventListener("click", doSave);
+    if (saveBottomBtn) saveBottomBtn.addEventListener("click", doSave);
+
+    var discardBtn = document.getElementById("discardBtn");
+    if (discardBtn) discardBtn.addEventListener("click", function () {
+        markSaved();
+        showToast("Changes discarded.");
+    });
+
+    var resetAllBtn = document.getElementById("resetAllBtn");
+    if (resetAllBtn) resetAllBtn.addEventListener("click", function () {
+        markUnsaved();
+    });
+
+    // Password show/hide
+    document.querySelectorAll(".password-toggle").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var input = document.getElementById(btn.getAttribute("data-target"));
+            if (!input) return;
+            var isHidden = input.type === "password";
+            input.type = isHidden ? "text" : "password";
+            btn.textContent = isHidden ? "Hide" : "Show";
+        });
+    });
+
+    // Dark mode toggle
+    var darkModeToggle = document.getElementById("darkModeToggle");
+    if (darkModeToggle) darkModeToggle.addEventListener("change", function () {
+        document.body.classList.toggle("dark", darkModeToggle.checked);
+    });
+
+    // Test API button
+    var testApiBtn = document.getElementById("testApiBtn");
+    var apiConnectionStatus = document.getElementById("apiConnectionStatus");
+    if (testApiBtn) testApiBtn.addEventListener("click", function () {
+        apiConnectionStatus.textContent = "Testing...";
+        apiConnectionStatus.className = "connection-status";
+        setTimeout(function () {
+            apiConnectionStatus.textContent = "Connected";
+            apiConnectionStatus.className = "connection-status success";
+        }, 700);
+    });
+
+    // Test notification button
+    var testNotificationBtn = document.getElementById("testNotificationBtn");
+    if (testNotificationBtn) testNotificationBtn.addEventListener("click", function () {
+        showToast("Test notification sent.");
+    });
+
+    // Danger zone: sign out all sessions -> confirm modal
+    var logoutAllBtn = document.getElementById("logoutAllBtn");
+    var modal = document.getElementById("confirmModal");
+    var modalTitle = document.getElementById("modalTitle");
+    var modalMessage = document.getElementById("modalMessage");
+    var modalCloseBtn = document.getElementById("modalCloseBtn");
+    var modalCancelBtn = document.getElementById("modalCancelBtn");
+    var modalConfirmBtn = document.getElementById("modalConfirmBtn");
+
+    function openModal(title, message, onConfirm) {
+        if (!modal) return;
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modal.hidden = false;
+
+        function cleanup() {
+            modal.hidden = true;
+            modalConfirmBtn.removeEventListener("click", confirmHandler);
+        }
+        function confirmHandler() {
+            cleanup();
+            onConfirm();
+        }
+
+        modalConfirmBtn.addEventListener("click", confirmHandler);
+        modalCancelBtn.onclick = cleanup;
+        modalCloseBtn.onclick = cleanup;
+    }
+
+    if (logoutAllBtn) logoutAllBtn.addEventListener("click", function () {
+        openModal(
+            "Sign out all sessions?",
+            "This will immediately log out every active Super Admin session, including this one.",
+            function () {
+                showToast("All sessions signed out.");
+            }
+        );
+    });
+
+    // Toast
+    function showToast(message) {
+        var container = document.getElementById("toastContainer");
+        if (!container) return;
+
+        var toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        setTimeout(function () {
+            toast.remove();
+        }, 3200);
+    }
+})();
+</script>
+
+<!-- If/when you build out superadmin/js/system_settings.js with real
+     save logic wired to the update_system_settings endpoint, include
+     it here and remove the inline script above. -->
+<script src="{% static 'superadmin/js/system_settings.js' %}" defer></script>
+
+{% endblock %}

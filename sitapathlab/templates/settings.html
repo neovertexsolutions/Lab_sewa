@@ -1,0 +1,1877 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Settings | Sita Path Lab
+    </title>
+
+
+    <!-- =====================================================
+         FONTS
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         SETTINGS CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/settings.css' %}"
+    >
+
+</head>
+
+
+<body class="settings-page">
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn"
+            onclick="toggleSidebar()"
+            aria-label="Open navigation"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+
+            <span class="material-symbols-outlined">
+                menu
+            </span>
+
+        </button>
+
+
+        <h1 class="topbar-brand">
+            Sita Path Lab
+        </h1>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <button
+            type="button"
+            class="icon-btn"
+            onclick="toggleTheme()"
+            title="Toggle Theme"
+            aria-label="Toggle theme"
+        >
+
+            <span class="material-symbols-outlined">
+                contrast
+            </span>
+
+        </button>
+
+
+        <a
+            href="{% url 'profile' %}"
+            class="avatar"
+            title="Profile"
+        >
+
+            <img
+                src="{% static 'images/default-avatar.png' %}"
+                alt="Profile"
+                onerror="
+                    this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22 viewBox=%220 0 48 48%22%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%2224%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2224%22 cy=%2218%22 r=%228%22 fill=%22%239ca3af%22/%3E%3Cpath d=%22M10 40c2-8 7-12 14-12s12 4 14 12%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'
+                "
+            >
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidenav"
+    id="sidebar"
+    aria-label="Main navigation"
+>
+
+    <div class="sidenav-header">
+
+        <p class="nav-label">
+            Main Menu
+        </p>
+
+    </div>
+
+
+    <nav class="sidenav-nav">
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                dashboard
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'patients' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                groups
+            </span>
+
+            <span>
+                Patients
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'register' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                person_add
+            </span>
+
+            <span>
+                Register
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'results' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                biotech
+            </span>
+
+            <span>
+                Results
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'reports' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                description
+            </span>
+
+            <span>
+                Reports
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'billing' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                payments
+            </span>
+
+            <span>
+                Billing
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'tests' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                science
+            </span>
+
+            <span>
+                Tests
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'appointments' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                event
+            </span>
+
+            <span>
+                Appointments
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'inventory' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                inventory_2
+            </span>
+
+            <span>
+                Inventory
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'staff' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                badge
+            </span>
+
+            <span>
+                Staff
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'settings' %}"
+            class="nav-link active"
+            aria-current="page"
+        >
+            <span class="material-symbols-outlined">
+                settings
+            </span>
+
+            <span>
+                Settings
+            </span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidenav-footer">
+
+        <div class="plan-card">
+
+            <div class="plan-icon">
+
+                <span class="material-symbols-outlined">
+                    health_metrics
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <p class="plan-name">
+                    Enterprise Plan
+                </p>
+
+                <p class="plan-role">
+                    Admin Access
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <div class="content-wrapper">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <header class="page-header">
+
+            <div>
+
+                <p class="page-eyebrow">
+                    SYSTEM CONFIGURATION
+                </p>
+
+
+                <h2 class="page-title">
+                    Lab Administration
+                </h2>
+
+
+                <p class="page-subtitle">
+                    Configure laboratory information, branding,
+                    communication, user access and data protection.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             SETTINGS LAYOUT
+        ================================================== -->
+
+        <div class="settings-layout">
+
+
+            <!-- =================================================
+                 TAB NAVIGATION
+            ================================================== -->
+
+            <div
+                class="tab-nav"
+                role="tablist"
+                aria-label="Settings navigation"
+            >
+
+
+                <button
+                    type="button"
+                    class="tab-btn active"
+                    data-tab="hospital"
+                    id="tab-hospital"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="panel-hospital"
+                    onclick="switchTab('hospital')"
+                >
+
+                    <span class="material-symbols-outlined">
+                        apartment
+                    </span>
+
+                    <span>
+                        Hospital Info
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    data-tab="branding"
+                    id="tab-branding"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-branding"
+                    onclick="switchTab('branding')"
+                >
+
+                    <span class="material-symbols-outlined">
+                        palette
+                    </span>
+
+                    <span>
+                        Theme & Branding
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    data-tab="comm"
+                    id="tab-comm"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-comm"
+                    onclick="switchTab('comm')"
+                >
+
+                    <span class="material-symbols-outlined">
+                        chat_bubble
+                    </span>
+
+                    <span>
+                        Communication
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    data-tab="roles"
+                    id="tab-roles"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-roles"
+                    onclick="switchTab('roles')"
+                >
+
+                    <span class="material-symbols-outlined">
+                        admin_panel_settings
+                    </span>
+
+                    <span>
+                        User Roles
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    data-tab="database"
+                    id="tab-database"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-database"
+                    onclick="switchTab('database')"
+                >
+
+                    <span class="material-symbols-outlined">
+                        database
+                    </span>
+
+                    <span>
+                        Backup & Restore
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 TAB PANELS
+            ================================================== -->
+
+            <div class="tab-panels">
+
+
+                <!-- =================================================
+                     1. HOSPITAL INFORMATION
+                ================================================== -->
+
+                <section
+                    class="tab-panel active"
+                    id="panel-hospital"
+                    role="tabpanel"
+                    aria-labelledby="tab-hospital"
+                >
+
+                    <div class="panel-card">
+
+
+                        <div class="panel-header">
+
+                            <div class="panel-icon">
+
+                                <span class="material-symbols-outlined">
+                                    local_hospital
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <h3 class="panel-title">
+                                    Hospital Information
+                                </h3>
+
+                                <p class="panel-sub">
+                                    Core identity details used across
+                                    reports, invoices and patient documents.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+
+                            <!-- LOGO -->
+
+                            <div class="logo-section">
+
+                                <div
+                                    class="logo-upload"
+                                    id="logoPreviewBox"
+                                >
+
+                                    <img
+                                        id="labLogoPreview"
+                                        src="{% static 'images/default-avatar.png' %}"
+                                        alt="Laboratory Logo"
+                                    >
+
+                                    <div class="logo-overlay">
+
+                                        <span class="material-symbols-outlined">
+                                            upload
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div>
+
+                                    <h4 class="logo-title">
+                                        Laboratory Logo
+                                    </h4>
+
+                                    <p class="logo-desc">
+                                        Upload a high-resolution PNG,
+                                        JPG or SVG logo.
+                                    </p>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn-upload"
+                                        id="changeLogoBtn"
+                                    >
+
+                                        Change Logo
+
+                                    </button>
+
+
+                                    <input
+                                        type="file"
+                                        id="logoInput"
+                                        name="logo"
+                                        accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml"
+                                        hidden
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- FORM -->
+
+                            <div class="form-grid">
+
+
+                                <div class="form-group">
+
+                                    <label
+                                        class="form-label"
+                                        for="labName"
+                                    >
+                                        Laboratory Name
+                                    </label>
+
+                                    <input
+                                        class="form-input"
+                                        id="labName"
+                                        name="lab_name"
+                                        type="text"
+                                        placeholder="Enter laboratory name"
+                                        autocomplete="organization"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label
+                                        class="form-label"
+                                        for="contactNumber"
+                                    >
+                                        Contact Number
+                                    </label>
+
+                                    <input
+                                        class="form-input"
+                                        id="contactNumber"
+                                        name="contact_number"
+                                        type="tel"
+                                        placeholder="+91 XXXXX XXXXX"
+                                        autocomplete="tel"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label
+                                        class="form-label"
+                                        for="emailAddress"
+                                    >
+                                        Email Address
+                                    </label>
+
+                                    <input
+                                        class="form-input"
+                                        id="emailAddress"
+                                        name="email"
+                                        type="email"
+                                        placeholder="admin@example.com"
+                                        autocomplete="email"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label
+                                        class="form-label"
+                                        for="registrationNumber"
+                                    >
+                                        Registration Number
+                                    </label>
+
+                                    <input
+                                        class="form-input"
+                                        id="registrationNumber"
+                                        name="registration_number"
+                                        type="text"
+                                        placeholder="Laboratory registration number"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group full-width">
+
+                                    <label
+                                        class="form-label"
+                                        for="registeredAddress"
+                                    >
+                                        Registered Address
+                                    </label>
+
+                                    <textarea
+                                        class="form-textarea"
+                                        id="registeredAddress"
+                                        name="address"
+                                        rows="4"
+                                        placeholder="Enter complete laboratory address"
+                                    ></textarea>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="panel-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline"
+                                    onclick="loadSettings()"
+                                >
+                                    Discard
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    onclick="saveSettings('Hospital Info')"
+                                >
+
+                                    <span class="material-symbols-outlined">
+                                        save
+                                    </span>
+
+                                    Save Changes
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     2. THEME & BRANDING
+                ================================================== -->
+
+                <section
+                    class="tab-panel hidden"
+                    id="panel-branding"
+                    role="tabpanel"
+                    aria-labelledby="tab-branding"
+                >
+
+                    <div class="panel-card">
+
+
+                        <div class="panel-header">
+
+                            <div class="panel-icon">
+
+                                <span class="material-symbols-outlined">
+                                    palette
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <h3 class="panel-title">
+                                    Visual Identity
+                                </h3>
+
+                                <p class="panel-sub">
+                                    Customize the appearance of your
+                                    laboratory management system.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+
+                            <div class="branding-grid">
+
+
+                                <div class="branding-left">
+
+
+                                    <!-- COLOR -->
+
+                                    <div class="color-section">
+
+                                        <p class="color-label">
+                                            Primary Brand Color
+                                        </p>
+
+
+                                        <div class="color-picker">
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn active"
+                                                data-color="#004ac6"
+                                                style="background:#004ac6"
+                                                aria-label="Blue"
+                                            ></button>
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn"
+                                                data-color="#7c3aed"
+                                                style="background:#7c3aed"
+                                                aria-label="Purple"
+                                            ></button>
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn"
+                                                data-color="#10b981"
+                                                style="background:#10b981"
+                                                aria-label="Green"
+                                            ></button>
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn"
+                                                data-color="#f59e0b"
+                                                style="background:#f59e0b"
+                                                aria-label="Orange"
+                                            ></button>
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn"
+                                                data-color="#ef4444"
+                                                style="background:#ef4444"
+                                                aria-label="Red"
+                                            ></button>
+
+
+                                            <button
+                                                type="button"
+                                                class="color-btn add-btn"
+                                                id="customColorBtn"
+                                                aria-label="Choose custom color"
+                                            >
+
+                                                <span class="material-symbols-outlined">
+                                                    add
+                                                </span>
+
+                                            </button>
+
+
+                                            <input
+                                                type="color"
+                                                id="customColorInput"
+                                                name="primary_color"
+                                                value="#004ac6"
+                                                hidden
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- THEME -->
+
+                                    <div class="theme-section">
+
+                                        <div class="theme-header">
+
+                                            <p class="theme-label">
+                                                System Theme
+                                            </p>
+
+
+                                            <div class="theme-toggle">
+
+
+                                                <button
+                                                    type="button"
+                                                    class="theme-btn active"
+                                                    data-theme="light"
+                                                    onclick="setTheme('light')"
+                                                >
+
+                                                    <span class="material-symbols-outlined">
+                                                        light_mode
+                                                    </span>
+
+                                                    Light
+
+                                                </button>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="theme-btn"
+                                                    data-theme="dark"
+                                                    onclick="setTheme('dark')"
+                                                >
+
+                                                    <span class="material-symbols-outlined">
+                                                        dark_mode
+                                                    </span>
+
+                                                    Dark
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <p class="theme-desc">
+                                            Choose the interface theme used
+                                            across the laboratory system.
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- HIDDEN BACKEND VALUE -->
+
+                                    <input
+                                        type="hidden"
+                                        id="systemTheme"
+                                        name="system_theme"
+                                        value="light"
+                                    >
+
+                                </div>
+
+
+                                <!-- PREVIEW -->
+
+                                <div class="branding-preview">
+
+                                    <div class="preview-card">
+
+                                        <div class="preview-header">
+
+                                            <span class="preview-label">
+                                                UI Preview
+                                            </span>
+
+                                            <div class="preview-dot"></div>
+
+                                        </div>
+
+
+                                        <div class="preview-body">
+
+                                            <div class="preview-line short"></div>
+
+                                            <div class="preview-line full"></div>
+
+                                            <div class="preview-box">
+
+                                                <span class="material-symbols-outlined">
+                                                    visibility
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="panel-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline"
+                                    id="resetBrandingBtn"
+                                >
+                                    Reset Defaults
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    onclick="saveSettings('Theme & Branding')"
+                                >
+
+                                    <span class="material-symbols-outlined">
+                                        save
+                                    </span>
+
+                                    Save Changes
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     3. COMMUNICATION
+                ================================================== -->
+
+                <section
+                    class="tab-panel hidden"
+                    id="panel-comm"
+                    role="tabpanel"
+                    aria-labelledby="tab-comm"
+                >
+
+                    <div class="panel-card">
+
+
+                        <div class="panel-header">
+
+                            <div class="panel-icon">
+
+                                <span class="material-symbols-outlined">
+                                    chat_bubble
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <h3 class="panel-title">
+                                    Communication
+                                </h3>
+
+                                <p class="panel-sub">
+                                    Configure email, WhatsApp and SMS
+                                    notifications for patients.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+
+                            <!-- EMAIL -->
+
+                            <div class="comm-item">
+
+                                <div class="comm-header">
+
+                                    <div class="comm-info">
+
+                                        <span class="material-symbols-outlined comm-icon">
+                                            mail
+                                        </span>
+
+
+                                        <div>
+
+                                            <p class="comm-title">
+                                                SMTP Email Gateway
+                                            </p>
+
+                                            <p class="comm-desc">
+                                                Send digital reports and
+                                                notifications through email.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="smtpEnabled"
+                                            checked
+                                        >
+
+                                        <span class="toggle-slider"></span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="comm-fields">
+
+
+                                    <input
+                                        class="form-input"
+                                        id="smtpHost"
+                                        name="smtp_host"
+                                        type="text"
+                                        placeholder="SMTP Host"
+                                        autocomplete="off"
+                                    >
+
+
+                                    <input
+                                        class="form-input"
+                                        id="smtpPort"
+                                        name="smtp_port"
+                                        type="number"
+                                        min="1"
+                                        max="65535"
+                                        placeholder="Port"
+                                        value="587"
+                                    >
+
+
+                                    <input
+                                        class="form-input"
+                                        id="smtpEmail"
+                                        name="smtp_email"
+                                        type="email"
+                                        placeholder="SMTP Email"
+                                        autocomplete="email"
+                                    >
+
+
+                                    <input
+                                        class="form-input"
+                                        id="smtpPassword"
+                                        name="smtp_password"
+                                        type="password"
+                                        placeholder="SMTP Password"
+                                        autocomplete="new-password"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- WHATSAPP -->
+
+                            <div class="comm-item">
+
+                                <div class="comm-header">
+
+                                    <div class="comm-info">
+
+                                        <span class="material-symbols-outlined comm-icon secondary">
+                                            sms
+                                        </span>
+
+
+                                        <div>
+
+                                            <p class="comm-title">
+                                                WhatsApp & SMS Integration
+                                            </p>
+
+                                            <p class="comm-desc">
+                                                Connect your messaging provider
+                                                for patient notifications.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        onclick="configureIntegration()"
+                                    >
+
+                                        <span class="material-symbols-outlined">
+                                            settings
+                                        </span>
+
+                                        Configure
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- API KEY -->
+
+                            <div class="comm-item">
+
+                                <div class="comm-header">
+
+                                    <div class="comm-info">
+
+                                        <span class="material-symbols-outlined comm-icon">
+                                            key
+                                        </span>
+
+
+                                        <div>
+
+                                            <p class="comm-title">
+                                                API Access
+                                            </p>
+
+                                            <p class="comm-desc">
+                                                Generate or revoke an integration
+                                                API key.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="comm-fields">
+
+
+                                    <input
+                                        class="form-input"
+                                        id="apiKey"
+                                        type="password"
+                                        placeholder="API key"
+                                        readonly
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        onclick="generateApiKey()"
+                                    >
+
+                                        <span class="material-symbols-outlined">
+                                            vpn_key
+                                        </span>
+
+                                        Generate
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline"
+                                        onclick="revokeApiKey()"
+                                    >
+
+                                        <span class="material-symbols-outlined">
+                                            key_off
+                                        </span>
+
+                                        Revoke
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="panel-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    onclick="saveSettings('Communication')"
+                                >
+
+                                    <span class="material-symbols-outlined">
+                                        save
+                                    </span>
+
+                                    Save Configuration
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     4. USER ROLES
+                ================================================== -->
+
+                <section
+                    class="tab-panel hidden"
+                    id="panel-roles"
+                    role="tabpanel"
+                    aria-labelledby="tab-roles"
+                >
+
+                    <div class="panel-card">
+
+
+                        <div class="panel-header">
+
+                            <div class="panel-icon">
+
+                                <span class="material-symbols-outlined">
+                                    admin_panel_settings
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <h3 class="panel-title">
+                                    User Roles & Permissions
+                                </h3>
+
+                                <p class="panel-sub">
+                                    Control access levels and permissions
+                                    for laboratory staff.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+
+                            <div
+                                class="roles-grid"
+                                id="rolesGrid"
+                            >
+
+
+                                <!-- ADMIN -->
+
+                                <div
+                                    class="role-card"
+                                    data-role="administrator"
+                                >
+
+                                    <div class="role-header">
+
+                                        <span class="material-symbols-outlined role-icon">
+                                            admin_panel_settings
+                                        </span>
+
+
+                                        <div>
+
+                                            <h4 class="role-name">
+                                                Administrator
+                                            </h4>
+
+                                            <p class="role-count">
+                                                Full system access
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="role-permissions">
+
+                                        <span class="permission-tag">
+                                            Full Access
+                                        </span>
+
+                                        <span class="permission-tag">
+                                            All Modules
+                                        </span>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="role-action"
+                                        onclick="manageRole('administrator')"
+                                    >
+                                        Manage Role
+                                    </button>
+
+                                </div>
+
+
+                                <!-- TECHNICIAN -->
+
+                                <div
+                                    class="role-card"
+                                    data-role="technician"
+                                >
+
+                                    <div class="role-header">
+
+                                        <span class="material-symbols-outlined role-icon">
+                                            badge
+                                        </span>
+
+
+                                        <div>
+
+                                            <h4 class="role-name">
+                                                Lab Technician
+                                            </h4>
+
+                                            <p class="role-count">
+                                                Laboratory operations
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="role-permissions">
+
+                                        <span class="permission-tag">
+                                            Results Entry
+                                        </span>
+
+                                        <span class="permission-tag">
+                                            Inventory
+                                        </span>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="role-action"
+                                        onclick="manageRole('technician')"
+                                    >
+                                        Manage Role
+                                    </button>
+
+                                </div>
+
+
+                                <!-- BILLING -->
+
+                                <div
+                                    class="role-card"
+                                    data-role="billing"
+                                >
+
+                                    <div class="role-header">
+
+                                        <span class="material-symbols-outlined role-icon">
+                                            payments
+                                        </span>
+
+
+                                        <div>
+
+                                            <h4 class="role-name">
+                                                Billing Staff
+                                            </h4>
+
+                                            <p class="role-count">
+                                                Billing operations
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="role-permissions">
+
+                                        <span class="permission-tag">
+                                            Invoicing
+                                        </span>
+
+                                        <span class="permission-tag">
+                                            Payments
+                                        </span>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="role-action"
+                                        onclick="manageRole('billing')"
+                                    >
+                                        Manage Role
+                                    </button>
+
+                                </div>
+
+
+                                <!-- ADD ROLE -->
+
+                                <button
+                                    type="button"
+                                    class="role-card add-role"
+                                    onclick="addNewRole()"
+                                >
+
+                                    <span class="material-symbols-outlined">
+                                        add_circle
+                                    </span>
+
+                                    <p>
+                                        Add New Role
+                                    </p>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     5. BACKUP & RESTORE
+                ================================================== -->
+
+                <section
+                    class="tab-panel hidden"
+                    id="panel-database"
+                    role="tabpanel"
+                    aria-labelledby="tab-database"
+                >
+
+                    <div class="panel-card">
+
+
+                        <div class="panel-header">
+
+                            <div class="panel-icon">
+
+                                <span class="material-symbols-outlined">
+                                    database
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <h3 class="panel-title">
+                                    Backup & Restore
+                                </h3>
+
+                                <p class="panel-sub">
+                                    Protect patient, billing and laboratory
+                                    data with reliable backups.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+
+                            <div class="backup-grid">
+
+
+                                <!-- MANUAL BACKUP -->
+
+                                <div class="backup-card primary">
+
+                                    <span class="material-symbols-outlined backup-icon">
+                                        backup
+                                    </span>
+
+
+                                    <h4 class="backup-title">
+                                        Instant Backup
+                                    </h4>
+
+
+                                    <p class="backup-desc">
+                                        Create a complete database snapshot
+                                        including patient records, reports,
+                                        billing and inventory data.
+                                    </p>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        onclick="startBackup()"
+                                    >
+
+                                        <span class="material-symbols-outlined">
+                                            cloud_upload
+                                        </span>
+
+                                        Start Manual Backup
+
+                                    </button>
+
+                                </div>
+
+
+                                <!-- SCHEDULE -->
+
+                                <div class="backup-card">
+
+                                    <div class="schedule-header">
+
+                                        <h4 class="schedule-title">
+                                            Automated Schedule
+                                        </h4>
+
+                                        <span
+                                            class="schedule-status active"
+                                            id="backupStatus"
+                                        >
+                                            Active
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="schedule-options">
+
+
+                                        <div class="schedule-row">
+
+                                            <span class="schedule-label">
+                                                Frequency
+                                            </span>
+
+
+                                            <select
+                                                class="schedule-select"
+                                                id="backupFrequency"
+                                                name="backup_frequency"
+                                            >
+
+                                                <option value="12_hours">
+                                                    Every 12 Hours
+                                                </option>
+
+                                                <option
+                                                    value="daily"
+                                                    selected
+                                                >
+                                                    Daily
+                                                </option>
+
+                                                <option value="weekly">
+                                                    Weekly
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+
+                                        <div class="schedule-row">
+
+                                            <span class="schedule-label">
+                                                Retention
+                                            </span>
+
+                                            <span class="schedule-value">
+                                                Last 30 Backups
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="schedule-row">
+
+                                            <span class="schedule-label">
+                                                Storage
+                                            </span>
+
+                                            <span class="schedule-value">
+                                                Server Storage
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline"
+                                        onclick="saveSettings('Backup Configuration')"
+                                    >
+
+                                        <span class="material-symbols-outlined">
+                                            save
+                                        </span>
+
+                                        Save Schedule
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- WARNING -->
+
+                            <div class="warning-box">
+
+                                <span class="material-symbols-outlined warning-icon">
+                                    warning
+                                </span>
+
+
+                                <div>
+
+                                    <p class="warning-title">
+                                        Critical Action: Data Restoration
+                                    </p>
+
+
+                                    <p class="warning-desc">
+                                        Restoring a backup may overwrite
+                                        current system data. Verify the
+                                        backup before proceeding.
+                                    </p>
+
+
+                                    <button
+                                        type="button"
+                                        class="warning-btn"
+                                        onclick="restoreBackup()"
+                                    >
+                                        Access Restore Portal
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     MOBILE NAVIGATION
+========================================================= -->
+
+<nav class="bottom-nav">
+
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            dashboard
+        </span>
+
+        <span>
+            Dashboard
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'patients' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            groups
+        </span>
+
+        <span>
+            Patients
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'billing' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            payments
+        </span>
+
+        <span>
+            Billing
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'settings' %}"
+        class="bottom-item active"
+        aria-current="page"
+    >
+
+        <span class="material-symbols-outlined">
+            settings
+        </span>
+
+        <span>
+            Settings
+        </span>
+
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     SETTINGS JS
+========================================================= -->
+
+<script src="{% static 'js/settings.js' %}"></script>
+
+
+</body>
+
+</html>

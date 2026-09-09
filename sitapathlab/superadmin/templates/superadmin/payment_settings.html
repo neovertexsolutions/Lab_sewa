@@ -1,0 +1,862 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Payment Settings{% endblock %}
+{% block page_title %}Payment Settings{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/payment_settings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="payment-settings-page">
+
+    <!-- PAGE HEADER -->
+    <div class="settings-header">
+        <div>
+            <div class="settings-eyebrow">
+                <i class="fa-solid fa-credit-card"></i>
+                SYSTEM CONFIGURATION
+            </div>
+
+            <h2>Payment Configuration</h2>
+
+            <p>
+                Manage payment gateways, billing preferences, taxes,
+                invoices and transaction configuration.
+            </p>
+        </div>
+
+        <div class="header-status">
+            <span class="status-dot"></span>
+            <span>Payment System Active</span>
+        </div>
+    </div>
+
+
+    <!-- GATEWAY STATUS -->
+    <div class="gateway-overview">
+
+        <div class="overview-card">
+            <div class="overview-icon razorpay-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+
+            <div class="overview-content">
+                <span class="overview-label">Primary Gateway</span>
+                <strong id="primaryGateway">Razorpay</strong>
+                <small id="gatewayEnvironment">Live Environment</small>
+            </div>
+
+            <span class="connection-status connected">
+                <i class="fa-solid fa-circle-check"></i>
+                Connected
+            </span>
+        </div>
+
+
+        <div class="overview-card">
+            <div class="overview-icon">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+            <div class="overview-content">
+                <span class="overview-label">Currency</span>
+                <strong id="currencyDisplay">INR (₹)</strong>
+                <small>Indian Rupee</small>
+            </div>
+        </div>
+
+
+        <div class="overview-card">
+            <div class="overview-icon">
+                <i class="fa-solid fa-percent"></i>
+            </div>
+
+            <div class="overview-content">
+                <span class="overview-label">Tax</span>
+                <strong id="taxDisplay">18%</strong>
+                <small>GST</small>
+            </div>
+        </div>
+
+
+        <div class="overview-card">
+            <div class="overview-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="overview-content">
+                <span class="overview-label">Security</span>
+                <strong>Encrypted</strong>
+                <small>PCI compliant</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SETTINGS LAYOUT -->
+    <div class="settings-layout">
+
+        <!-- SETTINGS SIDEBAR -->
+        <aside class="settings-sidebar">
+
+            <button class="settings-tab active" data-section="gateway">
+                <span class="tab-icon">
+                    <i class="fa-solid fa-plug"></i>
+                </span>
+
+                <span>
+                    <strong>Payment Gateway</strong>
+                    <small>Gateway configuration</small>
+                </span>
+            </button>
+
+
+            <button class="settings-tab" data-section="currency">
+                <span class="tab-icon">
+                    <i class="fa-solid fa-coins"></i>
+                </span>
+
+                <span>
+                    <strong>Currency & Tax</strong>
+                    <small>Billing preferences</small>
+                </span>
+            </button>
+
+
+            <button class="settings-tab" data-section="methods">
+                <span class="tab-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </span>
+
+                <span>
+                    <strong>Payment Methods</strong>
+                    <small>Accepted methods</small>
+                </span>
+            </button>
+
+
+            <button class="settings-tab" data-section="invoice">
+                <span class="tab-icon">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </span>
+
+                <span>
+                    <strong>Invoice Settings</strong>
+                    <small>Invoice configuration</small>
+                </span>
+            </button>
+
+
+            <button class="settings-tab" data-section="webhook">
+                <span class="tab-icon">
+                    <i class="fa-solid fa-code"></i>
+                </span>
+
+                <span>
+                    <strong>Webhooks</strong>
+                    <small>Payment notifications</small>
+                </span>
+            </button>
+
+        </aside>
+
+
+        <!-- SETTINGS CONTENT -->
+        <div class="settings-content">
+
+
+            <!-- ================================= -->
+            <!-- PAYMENT GATEWAY -->
+            <!-- ================================= -->
+
+            <section class="settings-section active" id="gateway">
+
+                <div class="section-heading">
+                    <div>
+                        <h3>Payment Gateway</h3>
+                        <p>Configure your primary online payment provider.</p>
+                    </div>
+
+                    <span class="section-badge">
+                        <i class="fa-solid fa-lock"></i>
+                        Secure
+                    </span>
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="gatewayProvider">
+                            Gateway Provider
+                        </label>
+
+                        <select id="gatewayProvider">
+                            <option value="razorpay">Razorpay</option>
+                            <option value="stripe">Stripe</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="cashfree">Cashfree</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="gatewayMode">
+                            Environment
+                        </label>
+
+                        <select id="gatewayMode">
+                            <option value="live">Live</option>
+                            <option value="test">Test / Sandbox</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="publicKey">
+                            Public / Key ID
+                        </label>
+
+                        <div class="input-with-action">
+
+                            <input
+                                type="text"
+                                id="publicKey"
+                                placeholder="Enter gateway public key"
+                                autocomplete="off"
+                            >
+
+                            <button
+                                type="button"
+                                class="input-action"
+                                data-copy="publicKey"
+                                title="Copy key"
+                            >
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="secretKey">
+                            Secret Key
+                        </label>
+
+                        <div class="input-with-action">
+
+                            <input
+                                type="password"
+                                id="secretKey"
+                                placeholder="Enter secret key"
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="input-action"
+                                id="toggleSecret"
+                                title="Show/Hide secret"
+                            >
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+
+                        </div>
+
+                        <small class="field-help">
+                            Never expose your secret key in frontend JavaScript.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-warning">
+
+                    <div class="warning-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <div>
+                        <strong>Security Notice</strong>
+
+                        <p>
+                            Gateway secret keys should be stored securely on
+                            the server. Do not place secret credentials inside
+                            HTML, CSS or client-side JavaScript.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="testGateway"
+                    >
+                        <i class="fa-solid fa-plug-circle-check"></i>
+                        Test Connection
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-save="gateway"
+                    >
+                        <i class="fa-solid fa-check"></i>
+                        Save Gateway
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- CURRENCY & TAX -->
+            <!-- ================================= -->
+
+            <section class="settings-section" id="currency">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Currency & Tax</h3>
+                        <p>Configure billing currency and tax rules.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="currency">
+                            Default Currency
+                        </label>
+
+                        <select id="currency">
+
+                            <option value="INR">
+                                INR — Indian Rupee (₹)
+                            </option>
+
+                            <option value="USD">
+                                USD — US Dollar ($)
+                            </option>
+
+                            <option value="EUR">
+                                EUR — Euro (€)
+                            </option>
+
+                            <option value="GBP">
+                                GBP — Pound Sterling (£)
+                            </option>
+
+                            <option value="NPR">
+                                NPR — Nepalese Rupee (रू)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taxType">
+                            Tax Type
+                        </label>
+
+                        <select id="taxType">
+
+                            <option value="gst">
+                                GST
+                            </option>
+
+                            <option value="vat">
+                                VAT
+                            </option>
+
+                            <option value="none">
+                                No Tax
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taxRate">
+                            Tax Rate (%)
+                        </label>
+
+                        <div class="input-suffix">
+
+                            <input
+                                type="number"
+                                id="taxRate"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                value="18"
+                            >
+
+                            <span>%</span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taxNumber">
+                            Business Tax / GST Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="taxNumber"
+                            placeholder="Enter GSTIN / Tax ID"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-reset="currency"
+                    >
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-save="currency"
+                    >
+                        <i class="fa-solid fa-check"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- PAYMENT METHODS -->
+            <!-- ================================= -->
+
+            <section class="settings-section" id="methods">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Payment Methods</h3>
+                        <p>Choose which payment methods vendors can use.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="payment-method-list">
+
+                    <div class="payment-method">
+
+                        <div class="method-icon upi">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+
+                        <div class="method-info">
+                            <strong>UPI</strong>
+                            <span>Google Pay, PhonePe, Paytm & others</span>
+                        </div>
+
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                id="methodUpi"
+                                checked
+                            >
+                            <span></span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="payment-method">
+
+                        <div class="method-icon card">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+
+                        <div class="method-info">
+                            <strong>Credit / Debit Card</strong>
+                            <span>Visa, Mastercard, RuPay & others</span>
+                        </div>
+
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                id="methodCard"
+                                checked
+                            >
+                            <span></span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="payment-method">
+
+                        <div class="method-icon bank">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+
+                        <div class="method-info">
+                            <strong>Net Banking</strong>
+                            <span>Major Indian banks</span>
+                        </div>
+
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                id="methodBank"
+                                checked
+                            >
+                            <span></span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="payment-method">
+
+                        <div class="method-icon wallet">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+
+                        <div class="method-info">
+                            <strong>Wallets</strong>
+                            <span>Supported digital wallets</span>
+                        </div>
+
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                id="methodWallet"
+                            >
+                            <span></span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="payment-method">
+
+                        <div class="method-icon cash">
+                            <i class="fa-solid fa-money-bill"></i>
+                        </div>
+
+                        <div class="method-info">
+                            <strong>Cash Payment</strong>
+                            <span>Allow offline payment recording</span>
+                        </div>
+
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                id="methodCash"
+                                checked
+                            >
+                            <span></span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-save="methods"
+                    >
+                        <i class="fa-solid fa-check"></i>
+                        Save Payment Methods
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- INVOICE SETTINGS -->
+            <!-- ================================= -->
+
+            <section class="settings-section" id="invoice">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Invoice Settings</h3>
+                        <p>Configure invoices generated for vendor subscriptions.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="invoicePrefix">
+                            Invoice Prefix
+                        </label>
+
+                        <input
+                            type="text"
+                            id="invoicePrefix"
+                            value="SPL"
+                            maxlength="20"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="invoiceStart">
+                            Starting Number
+                        </label>
+
+                        <input
+                            type="number"
+                            id="invoiceStart"
+                            value="10001"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="invoiceNote">
+                            Invoice Footer Note
+                        </label>
+
+                        <textarea
+                            id="invoiceNote"
+                            rows="4"
+                            placeholder="Enter invoice footer note..."
+                        >Thank you for choosing Sita Path Lab Management System.</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkbox-setting">
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            id="autoInvoice"
+                            checked
+                        >
+
+                        <span>
+                            <strong>Automatically generate invoices</strong>
+                            <small>
+                                Create an invoice automatically after successful payment.
+                            </small>
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="checkbox-setting">
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            id="invoiceEmail"
+                            checked
+                        >
+
+                        <span>
+                            <strong>Email invoice to vendor</strong>
+                            <small>
+                                Send the generated invoice automatically.
+                            </small>
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-save="invoice"
+                    >
+                        <i class="fa-solid fa-check"></i>
+                        Save Invoice Settings
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- WEBHOOK -->
+            <!-- ================================= -->
+
+            <section class="settings-section" id="webhook">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Payment Webhooks</h3>
+
+                        <p>
+                            Webhooks allow the system to receive automatic
+                            payment status updates from the gateway.
+                        </p>
+
+                    </div>
+
+                    <span class="webhook-status">
+                        <span></span>
+                        Active
+                    </span>
+
+                </div>
+
+
+                <div class="webhook-card">
+
+                    <div class="webhook-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+
+                    <div class="webhook-info">
+
+                        <span>Webhook Endpoint</span>
+
+                        <div class="webhook-url">
+                            <code id="webhookUrl">
+                                /api/payments/webhook/
+                            </code>
+
+                            <button
+                                type="button"
+                                class="input-action"
+                                data-copy="webhookUrl"
+                            >
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+
+                        </div>
+
+                        <small>
+                            Configure this endpoint inside your payment gateway dashboard.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="webhook-events">
+
+                    <h4>Subscribed Events</h4>
+
+                    <div class="event-tags">
+
+                        <span>payment.captured</span>
+                        <span>payment.failed</span>
+                        <span>payment.refunded</span>
+                        <span>subscription.activated</span>
+                        <span>subscription.cancelled</span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="testWebhook"
+                    >
+                        <i class="fa-solid fa-satellite-dish"></i>
+                        Send Test Event
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-save="webhook"
+                    >
+                        <i class="fa-solid fa-check"></i>
+                        Save Webhook
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/payment_settings.js' %}"></script>
+{% endblock %}

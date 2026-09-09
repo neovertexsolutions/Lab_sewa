@@ -1,0 +1,796 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Subscription Details{% endblock %}
+{% block page_title %}Subscription Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/subscription_details.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="subscription-page">
+
+    <!-- ================= HEADER ================= -->
+    <div class="page-header">
+
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fa-solid fa-credit-card"></i>
+            </div>
+
+            <div>
+                <div class="breadcrumb-text">
+                    Subscriptions / Details
+                </div>
+
+                <h2>Subscription Overview</h2>
+
+                <p>
+                    Manage subscription, license access, billing and vendor lifecycle.
+                </p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+
+            <button class="btn btn-light" id="backBtn" type="button">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+
+            <button class="btn btn-warning" id="suspendBtn" type="button">
+                <i class="fa-solid fa-pause"></i>
+                Suspend
+            </button>
+
+            <button class="btn btn-primary" id="renewBtn" type="button">
+                <i class="fa-solid fa-rotate"></i>
+                Renew
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATUS BAR ================= -->
+    <div class="status-card">
+
+        <div class="status-main">
+
+            <div class="status-icon active">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div>
+                <span class="status-label">Subscription Status</span>
+
+                <h3 id="subscriptionStatus">
+                    Active
+                </h3>
+
+                <p>
+                    Subscription is currently active and the vendor has access
+                    to the system.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="status-meta">
+
+            <div>
+                <span>Subscription ID</span>
+                <strong id="subscriptionId">
+                    SUB-2026-00124
+                </strong>
+            </div>
+
+            <div>
+                <span>Created</span>
+                <strong>
+                    12 Aug 2026
+                </strong>
+            </div>
+
+            <div>
+                <span>Auto Renewal</span>
+                <strong class="success-text">
+                    Enabled
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= MAIN GRID ================= -->
+    <div class="details-grid">
+
+        <!-- ================= LEFT ================= -->
+        <div class="details-left">
+
+            <!-- VENDOR -->
+            <div class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="panel-kicker">TENANT</span>
+                        <h3>Vendor Information</h3>
+                    </div>
+
+                    <button class="icon-action" id="vendorBtn" type="button">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </button>
+                </div>
+
+                <div class="vendor-profile">
+
+                    <div class="vendor-avatar">
+                        SL
+                    </div>
+
+                    <div class="vendor-info">
+                        <h4 id="vendorName">
+                            Sita Laboratory
+                        </h4>
+
+                        <p id="vendorEmail">
+                            admin@sitalaboratory.com
+                        </p>
+
+                        <div class="vendor-tags">
+                            <span class="tag green">
+                                <i class="fa-solid fa-circle"></i>
+                                Active
+                            </span>
+
+                            <span class="tag">
+                                Vendor ID: VEN-00124
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <span>Owner</span>
+                        <strong>Kamlesh Kumar</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Phone</span>
+                        <strong>+91 98765 43210</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Location</span>
+                        <strong>Patna, Bihar</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Joined</span>
+                        <strong>12 Jan 2026</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PLAN -->
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-kicker">BILLING</span>
+                        <h3>Plan Information</h3>
+                    </div>
+
+                    <button class="outline-btn" id="changePlanBtn" type="button">
+                        <i class="fa-solid fa-pen"></i>
+                        Change Plan
+                    </button>
+
+                </div>
+
+                <div class="plan-card">
+
+                    <div class="plan-main">
+
+                        <div class="plan-icon">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+
+                        <div>
+                            <span>Current Plan</span>
+                            <h3 id="planName">
+                                Professional
+                            </h3>
+
+                            <p>
+                                Complete laboratory management solution.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="plan-price">
+                        <strong>
+                            ₹4,999
+                        </strong>
+
+                        <span>
+                            / month
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Unlimited Patients</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Advanced Reports</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Billing & Invoices</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Staff Management</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>API Access</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Priority Support</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LICENSE -->
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-kicker">ACCESS CONTROL</span>
+                        <h3>License & Access Key</h3>
+                    </div>
+
+                    <span class="license-status">
+                        <i class="fa-solid fa-circle"></i>
+                        Valid
+                    </span>
+
+                </div>
+
+                <div class="license-box">
+
+                    <div class="license-row">
+
+                        <div class="license-icon">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+
+                        <div class="license-content">
+
+                            <span>License Key</span>
+
+                            <div class="key-wrapper">
+
+                                <code id="licenseKey">
+                                    SPL-PRO-8F42-91KD-7XQ2
+                                </code>
+
+                                <button
+                                    class="copy-btn"
+                                    id="copyLicenseBtn"
+                                    type="button"
+                                    title="Copy license key"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="license-details">
+
+                        <div>
+                            <span>Issued On</span>
+                            <strong>12 Aug 2026</strong>
+                        </div>
+
+                        <div>
+                            <span>Expires On</span>
+                            <strong id="licenseExpiry">
+                                12 Sep 2026
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Days Remaining</span>
+                            <strong class="warning-text">
+                                31 Days
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- USAGE -->
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-kicker">SYSTEM USAGE</span>
+                        <h3>Resource Usage</h3>
+                    </div>
+
+                    <span class="usage-period">
+                        Current Period
+                    </span>
+
+                </div>
+
+
+                <div class="usage-grid">
+
+                    <div class="usage-card">
+
+                        <div class="usage-top">
+                            <span>Patients</span>
+                            <strong>7,420</strong>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                class="progress-bar"
+                                style="width: 74%;"
+                            ></div>
+                        </div>
+
+                        <small>
+                            7,420 / 10,000
+                        </small>
+
+                    </div>
+
+
+                    <div class="usage-card">
+
+                        <div class="usage-top">
+                            <span>Staff Users</span>
+                            <strong>18</strong>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                class="progress-bar"
+                                style="width: 60%;"
+                            ></div>
+                        </div>
+
+                        <small>
+                            18 / 30
+                        </small>
+
+                    </div>
+
+
+                    <div class="usage-card">
+
+                        <div class="usage-top">
+                            <span>Storage</span>
+                            <strong>38 GB</strong>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                class="progress-bar"
+                                style="width: 38%;"
+                            ></div>
+                        </div>
+
+                        <small>
+                            38 / 100 GB
+                        </small>
+
+                    </div>
+
+
+                    <div class="usage-card">
+
+                        <div class="usage-top">
+                            <span>API Requests</span>
+                            <strong>82K</strong>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                class="progress-bar"
+                                style="width: 82%;"
+                            ></div>
+                        </div>
+
+                        <small>
+                            82K / 100K
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENT HISTORY -->
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-kicker">FINANCIAL</span>
+                        <h3>Recent Payments</h3>
+                    </div>
+
+                    <button class="text-btn" id="viewPaymentsBtn" type="button">
+                        View All
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Invoice</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    <strong>INV-00124</strong>
+                                </td>
+
+                                <td>
+                                    12 Aug 2026
+                                </td>
+
+                                <td>
+                                    ₹4,999
+                                </td>
+
+                                <td>
+                                    UPI
+                                </td>
+
+                                <td>
+                                    <span class="payment-success">
+                                        Paid
+                                    </span>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>
+                                    <strong>INV-00103</strong>
+                                </td>
+
+                                <td>
+                                    12 Jul 2026
+                                </td>
+
+                                <td>
+                                    ₹4,999
+                                </td>
+
+                                <td>
+                                    Card
+                                </td>
+
+                                <td>
+                                    <span class="payment-success">
+                                        Paid
+                                    </span>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>
+                                    <strong>INV-00082</strong>
+                                </td>
+
+                                <td>
+                                    12 Jun 2026
+                                </td>
+
+                                <td>
+                                    ₹4,999
+                                </td>
+
+                                <td>
+                                    UPI
+                                </td>
+
+                                <td>
+                                    <span class="payment-success">
+                                        Paid
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= RIGHT ================= -->
+        <aside class="details-right">
+
+            <!-- EXPIRY -->
+            <div class="expiry-card">
+
+                <div class="expiry-icon">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+
+                <span>Subscription Expires In</span>
+
+                <h2 id="daysRemaining">
+                    31
+                </h2>
+
+                <strong>
+                    Days Remaining
+                </strong>
+
+                <div class="expiry-date">
+                    12 September 2026
+                </div>
+
+                <button class="renew-full-btn" id="renewBtnSide" type="button">
+                    <i class="fa-solid fa-rotate"></i>
+                    Renew Subscription
+                </button>
+
+            </div>
+
+
+            <!-- SUBSCRIPTION DATES -->
+            <div class="panel compact">
+
+                <div class="panel-header">
+                    <h3>Subscription Period</h3>
+                </div>
+
+                <div class="timeline">
+
+                    <div class="timeline-item completed">
+
+                        <div class="timeline-dot">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <div>
+                            <span>Started</span>
+                            <strong>12 August 2026</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-line"></div>
+
+
+                    <div class="timeline-item current">
+
+                        <div class="timeline-dot">
+                            <i class="fa-solid fa-circle"></i>
+                        </div>
+
+                        <div>
+                            <span>Current</span>
+                            <strong>Active</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-line"></div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot">
+                            <i class="fa-solid fa-flag"></i>
+                        </div>
+
+                        <div>
+                            <span>Expires</span>
+                            <strong>12 September 2026</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+            <div class="panel compact">
+
+                <div class="panel-header">
+                    <h3>Quick Actions</h3>
+                </div>
+
+                <div class="quick-actions">
+
+                    <button type="button" id="editSubscriptionBtn">
+                        <i class="fa-solid fa-pen"></i>
+                        Edit Subscription
+                    </button>
+
+                    <button type="button" id="resetLicenseBtn">
+                        <i class="fa-solid fa-key"></i>
+                        Regenerate License
+                    </button>
+
+                    <button type="button" id="invoiceBtn">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        Generate Invoice
+                    </button>
+
+                    <button type="button" id="loginAsVendorBtn">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Login as Vendor
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SECURITY -->
+            <div class="security-card">
+
+                <div class="security-header">
+
+                    <div class="security-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div>
+                        <h3>Access Security</h3>
+                        <span>License enforcement enabled</span>
+                    </div>
+
+                </div>
+
+                <ul>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        License validation active
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Expiry enforcement enabled
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        Vendor isolation enabled
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-check"></i>
+                        API authentication enabled
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CONFIRM MODAL ================= -->
+
+<div class="modal-overlay" id="confirmModal">
+
+    <div class="modal">
+
+        <button class="modal-close" id="modalClose" type="button">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-icon">
+            <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+
+        <h3 id="modalTitle">
+            Confirm Action
+        </h3>
+
+        <p id="modalMessage">
+            Are you sure you want to continue?
+        </p>
+
+        <div class="modal-actions">
+
+            <button class="btn btn-light" id="cancelModal" type="button">
+                Cancel
+            </button>
+
+            <button class="btn btn-primary" id="confirmModalBtn" type="button">
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/subscription_details.js' %}"></script>
+{% endblock %}

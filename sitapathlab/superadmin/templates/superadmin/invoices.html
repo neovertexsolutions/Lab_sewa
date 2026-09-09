@@ -1,0 +1,733 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Invoice Management | Sita Path Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="invoice-page">
+
+    <!-- ================================
+         PAGE HEADER
+    ================================= -->
+    <div class="invoice-header">
+
+        <div>
+            <span class="page-label">BILLING MANAGEMENT</span>
+
+            <h1>Invoices</h1>
+
+            <p>
+                Create, manage, view and download laboratory invoices.
+            </p>
+        </div>
+
+        <div class="invoice-header-actions">
+
+            <button
+                type="button"
+                class="invoice-btn secondary"
+                id="refreshInvoicesBtn"
+            >
+                ↻ Refresh
+            </button>
+
+            <button
+                type="button"
+                class="invoice-btn primary"
+                id="createInvoiceBtn"
+            >
+                + Create Invoice
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         SUMMARY CARDS
+    ================================= -->
+    <section class="invoice-summary">
+
+        <div class="summary-card">
+            <div class="summary-icon blue">₹</div>
+
+            <div>
+                <span>Total Revenue</span>
+                <strong id="totalRevenue">₹0</strong>
+                <small>This month</small>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon green">✓</div>
+
+            <div>
+                <span>Paid Invoices</span>
+                <strong id="paidInvoices">0</strong>
+                <small>Successfully paid</small>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon orange">◷</div>
+
+            <div>
+                <span>Pending</span>
+                <strong id="pendingInvoices">0</strong>
+                <small>Awaiting payment</small>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon red">!</div>
+
+            <div>
+                <span>Overdue</span>
+                <strong id="overdueInvoices">0</strong>
+                <small>Payment overdue</small>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         FILTER BAR
+    ================================= -->
+    <section class="invoice-toolbar">
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                type="search"
+                id="invoiceSearch"
+                placeholder="Search invoice, patient or invoice ID..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="invoiceStatusFilter">
+            <option value="all">All Status</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="overdue">Overdue</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+
+
+        <select id="invoiceDateFilter">
+            <option value="all">All Dates</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+        </select>
+
+
+        <button
+            type="button"
+            class="filter-clear"
+            id="clearInvoiceFilters"
+        >
+            Clear
+        </button>
+
+    </section>
+
+
+    <!-- ================================
+         INVOICE TABLE
+    ================================= -->
+    <section class="invoice-table-card">
+
+        <div class="table-heading">
+
+            <div>
+                <span class="section-label">TRANSACTIONS</span>
+
+                <h2>Invoice History</h2>
+
+                <p>
+                    Complete billing and payment records.
+                </p>
+            </div>
+
+            <div class="table-count">
+                <span id="invoiceCount">0</span> invoices
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="invoice-table">
+
+                <thead>
+                    <tr>
+                        <th>
+                            <input
+                                type="checkbox"
+                                id="selectAllInvoices"
+                            >
+                        </th>
+
+                        <th>Invoice</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+
+                <tbody id="invoiceTableBody">
+
+                    <!-- JS DATA -->
+
+                </tbody>
+
+            </table>
+
+
+            <!-- EMPTY STATE -->
+            <div
+                class="invoice-empty"
+                id="invoiceEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    ▤
+                </div>
+
+                <h3>No invoices found</h3>
+
+                <p>
+                    Try changing your search or filter options.
+                </p>
+
+            </div>
+
+
+            <!-- LOADING -->
+            <div
+                class="invoice-loading"
+                id="invoiceLoading"
+                hidden
+            >
+                <div class="loading-spinner"></div>
+                <span>Loading invoices...</span>
+            </div>
+
+        </div>
+
+
+        <!-- ============================
+             PAGINATION
+        ============================= -->
+        <div class="invoice-pagination">
+
+            <div class="pagination-info">
+                Showing
+                <strong id="showingFrom">0</strong>
+                -
+                <strong id="showingTo">0</strong>
+                of
+                <strong id="totalInvoices">0</strong>
+            </div>
+
+
+            <div class="pagination-controls">
+
+                <button
+                    type="button"
+                    id="previousPage"
+                    class="pagination-btn"
+                >
+                    ‹
+                </button>
+
+                <div id="paginationNumbers"></div>
+
+                <button
+                    type="button"
+                    id="nextPage"
+                    class="pagination-btn"
+                >
+                    ›
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================
+     CREATE / EDIT INVOICE MODAL
+========================================= -->
+<div
+    class="invoice-modal-overlay"
+    id="invoiceModal"
+    hidden
+>
+
+    <div
+        class="invoice-modal"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <button
+            type="button"
+            class="modal-close"
+            id="closeInvoiceModal"
+        >
+            ×
+        </button>
+
+
+        <div class="modal-header">
+
+            <div class="modal-icon">
+                +
+            </div>
+
+            <div>
+                <span class="page-label">
+                    BILLING
+                </span>
+
+                <h2 id="invoiceModalTitle">
+                    Create Invoice
+                </h2>
+
+                <p>
+                    Add patient and billing information.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form id="invoiceForm">
+
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="invoicePatient">
+                        Patient
+                    </label>
+
+                    <select id="invoicePatient" required>
+
+                        <option value="">
+                            Select patient
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="invoiceDate">
+                        Invoice Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="invoiceDate"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="invoicePayment">
+                        Payment Method
+                    </label>
+
+                    <select id="invoicePayment">
+
+                        <option value="cash">
+                            Cash
+                        </option>
+
+                        <option value="upi">
+                            UPI
+                        </option>
+
+                        <option value="card">
+                            Card
+                        </option>
+
+                        <option value="bank">
+                            Bank Transfer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="invoiceStatus">
+                        Status
+                    </label>
+
+                    <select id="invoiceStatus">
+
+                        <option value="paid">
+                            Paid
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="overdue">
+                            Overdue
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="invoiceNotes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="invoiceNotes"
+                    rows="3"
+                    placeholder="Optional billing notes..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="invoice-items">
+
+                <div class="items-heading">
+
+                    <h3>Invoice Items</h3>
+
+                    <button
+                        type="button"
+                        id="addInvoiceItem"
+                        class="add-item-btn"
+                    >
+                        + Add Item
+                    </button>
+
+                </div>
+
+
+                <div id="invoiceItemsContainer">
+
+                    <div class="invoice-item-row">
+
+                        <input
+                            type="text"
+                            class="item-name"
+                            placeholder="Test / Service"
+                            required
+                        >
+
+                        <input
+                            type="number"
+                            class="item-qty"
+                            min="1"
+                            value="1"
+                            placeholder="Qty"
+                            required
+                        >
+
+                        <input
+                            type="number"
+                            class="item-price"
+                            min="0"
+                            step="0.01"
+                            placeholder="Price"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="remove-item"
+                            disabled
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="invoice-total-box">
+
+                <span>Total Amount</span>
+
+                <strong id="invoiceFormTotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="invoice-btn secondary"
+                    id="cancelInvoiceModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="invoice-btn primary"
+                    id="saveInvoiceBtn"
+                >
+                    Save Invoice
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     INVOICE PREVIEW MODAL
+========================================= -->
+<div
+    class="invoice-modal-overlay"
+    id="previewModal"
+    hidden
+>
+
+    <div class="invoice-preview-modal">
+
+        <button
+            type="button"
+            class="modal-close"
+            id="closePreviewModal"
+        >
+            ×
+        </button>
+
+
+        <div class="invoice-preview-header">
+
+            <div>
+
+                <span class="page-label">
+                    INVOICE
+                </span>
+
+                <h2 id="previewInvoiceNumber">
+                    INV-2026-001
+                </h2>
+
+            </div>
+
+
+            <div class="preview-actions">
+
+                <button
+                    type="button"
+                    class="invoice-btn secondary"
+                    id="printInvoiceBtn"
+                >
+                    🖨 Print
+                </button>
+
+                <button
+                    type="button"
+                    class="invoice-btn primary"
+                    id="downloadInvoiceBtn"
+                >
+                    ↓ Download PDF
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="invoice-document"
+            id="invoiceDocument"
+        >
+
+            <div class="document-top">
+
+                <div>
+
+                    <h1>SITA PATH LAB</h1>
+
+                    <p>
+                        Advanced Pathology & Diagnostic Centre
+                    </p>
+
+                    <small>
+                        India
+                    </small>
+
+                </div>
+
+
+                <div class="document-invoice">
+
+                    <strong>INVOICE</strong>
+
+                    <span id="documentInvoiceNumber">
+                        INV-2026-001
+                    </span>
+
+                    <span id="documentInvoiceDate">
+                        Aug 12, 2026
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="document-divider"></div>
+
+
+            <div class="billing-information">
+
+                <div>
+
+                    <span>BILLED TO</span>
+
+                    <strong id="documentPatientName">
+                        Patient Name
+                    </strong>
+
+                    <p id="documentPatientDetails">
+                        Patient details
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>PAYMENT STATUS</span>
+
+                    <strong
+                        class="document-status paid"
+                        id="documentPaymentStatus"
+                    >
+                        PAID
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <table class="document-items">
+
+                <thead>
+
+                    <tr>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="documentItemsBody"></tbody>
+
+            </table>
+
+
+            <div class="document-total">
+
+                <span>Total Amount</span>
+
+                <strong id="documentTotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="document-footer">
+
+                <div>
+                    Thank you for choosing Sita Path Lab.
+                </div>
+
+                <div>
+                    This is a computer-generated invoice.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     TOAST
+========================================= -->
+<div
+    class="invoice-toast-container"
+    id="invoiceToastContainer"
+    aria-live="polite"
+></div>
+
+
+<script src="{% static 'js/invoice.js' %}"></script>
+
+{% endblock %}

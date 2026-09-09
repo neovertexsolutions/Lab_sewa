@@ -1,0 +1,1000 @@
+{% extends 'superadmin/base.html' %}
+{% load static %}
+
+{% block title %}Create Plan{% endblock %}
+{% block page_title %}Create Subscription Plan{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/plan_create.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="plan-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <div class="breadcrumb-row">
+                <a href="{% url 'superadmin:plans' %}">
+                    <i class="fa-solid fa-layer-group"></i>
+                    Plans
+                </a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Create Plan</span>
+            </div>
+
+            <h2>Create New Subscription Plan</h2>
+
+            <p>
+                Configure pricing, duration, limits and features for laboratory vendors.
+            </p>
+        </div>
+
+        <a href="{% url 'superadmin:plans' %}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Plans
+        </a>
+
+    </div>
+
+
+    <!-- FORM -->
+    <form
+        id="planCreateForm"
+        method="POST"
+        action=""
+        novalidate
+    >
+
+        {% csrf_token %}
+
+        <div class="form-layout">
+
+            <!-- LEFT -->
+            <div class="form-main">
+
+                <!-- BASIC INFORMATION -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+
+                        <div>
+                            <h3>Basic Information</h3>
+                            <p>Define the basic details of this subscription plan.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="form-grid">
+
+                            <div class="form-group full">
+                                <label for="planName">
+                                    Plan Name
+                                    <span>*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="planName"
+                                    name="name"
+                                    placeholder="e.g. Professional"
+                                    maxlength="100"
+                                    required
+                                >
+
+                                <small>
+                                    Give your plan a clear and recognizable name.
+                                </small>
+
+                                <div class="field-error" id="planNameError"></div>
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="planCode">
+                                    Plan Code
+                                    <span>*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="planCode"
+                                    name="code"
+                                    placeholder="e.g. PROFESSIONAL"
+                                    maxlength="50"
+                                    required
+                                >
+
+                                <small>
+                                    Unique internal identifier.
+                                </small>
+
+                                <div class="field-error" id="planCodeError"></div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="planType">
+                                    Plan Type
+                                    <span>*</span>
+                                </label>
+
+                                <select id="planType" name="plan_type" required>
+
+                                    <option value="">
+                                        Select plan type
+                                    </option>
+
+                                    <option value="trial">
+                                        Trial
+                                    </option>
+
+                                    <option value="monthly">
+                                        Monthly
+                                    </option>
+
+                                    <option value="quarterly">
+                                        Quarterly
+                                    </option>
+
+                                    <option value="half_yearly">
+                                        Half Yearly
+                                    </option>
+
+                                    <option value="yearly">
+                                        Yearly
+                                    </option>
+
+                                    <option value="custom">
+                                        Custom
+                                    </option>
+
+                                </select>
+
+                                <div class="field-error" id="planTypeError"></div>
+
+                            </div>
+
+
+                            <div class="form-group full">
+
+                                <label for="description">
+                                    Description
+                                </label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows="4"
+                                    maxlength="500"
+                                    placeholder="Describe what this plan provides..."
+                                ></textarea>
+
+                                <div class="textarea-footer">
+                                    <small>Maximum 500 characters.</small>
+                                    <span id="descriptionCount">0 / 500</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRICING -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon pricing">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                        </div>
+
+                        <div>
+                            <h3>Pricing & Billing</h3>
+                            <p>Configure the commercial settings of the plan.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="price">
+                                    Price
+                                    <span>*</span>
+                                </label>
+
+                                <div class="input-prefix">
+                                    <span>₹</span>
+
+                                    <input
+                                        type="number"
+                                        id="price"
+                                        name="price"
+                                        min="0"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="field-error" id="priceError"></div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="billingCycle">
+                                    Billing Cycle
+                                    <span>*</span>
+                                </label>
+
+                                <select id="billingCycle" name="billing_cycle" required>
+
+                                    <option value="">
+                                        Select billing cycle
+                                    </option>
+
+                                    <option value="one_time">
+                                        One Time
+                                    </option>
+
+                                    <option value="monthly">
+                                        Monthly
+                                    </option>
+
+                                    <option value="quarterly">
+                                        Quarterly
+                                    </option>
+
+                                    <option value="yearly">
+                                        Yearly
+                                    </option>
+
+                                    <option value="custom">
+                                        Custom
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="trialDays">
+                                    Trial Period
+                                </label>
+
+                                <div class="input-suffix">
+
+                                    <input
+                                        type="number"
+                                        id="trialDays"
+                                        name="trial_days"
+                                        min="0"
+                                        max="365"
+                                        value="0"
+                                    >
+
+                                    <span>Days</span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="setupFee">
+                                    Setup Fee
+                                </label>
+
+                                <div class="input-prefix">
+
+                                    <span>₹</span>
+
+                                    <input
+                                        type="number"
+                                        id="setupFee"
+                                        name="setup_fee"
+                                        min="0"
+                                        step="0.01"
+                                        value="0"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="tax">
+
+                                    Tax / GST
+
+                                </label>
+
+                                <div class="input-suffix">
+
+                                    <input
+                                        type="number"
+                                        id="tax"
+                                        name="tax"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        value="18"
+                                    >
+
+                                    <span>%</span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="discount">
+
+                                    Default Discount
+
+                                </label>
+
+                                <div class="input-suffix">
+
+                                    <input
+                                        type="number"
+                                        id="discount"
+                                        name="discount"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        value="0"
+                                    >
+
+                                    <span>%</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACCESS LIMITS -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon limits">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+
+                        <div>
+                            <h3>Usage Limits</h3>
+                            <p>Set limits for vendors using this plan.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label>Maximum Users</label>
+
+                                <input
+                                    type="number"
+                                    name="max_users"
+                                    min="1"
+                                    value="5"
+                                >
+
+                                <small>
+                                    Maximum staff accounts allowed.
+                                </small>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>Maximum Patients</label>
+
+                                <input
+                                    type="number"
+                                    name="max_patients"
+                                    min="1"
+                                    placeholder="Unlimited"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>Maximum Reports / Month</label>
+
+                                <input
+                                    type="number"
+                                    name="max_reports"
+                                    min="1"
+                                    placeholder="Unlimited"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>Storage Limit</label>
+
+                                <div class="input-suffix">
+
+                                    <input
+                                        type="number"
+                                        name="storage_limit"
+                                        min="1"
+                                        value="5"
+                                    >
+
+                                    <span>GB</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="limit-options">
+
+                            <label class="check-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="unlimited_patients"
+                                    id="unlimitedPatients"
+                                >
+
+                                <span class="check-box"></span>
+
+                                <div>
+                                    <strong>Unlimited Patients</strong>
+                                    <small>
+                                        Remove patient limit for this plan.
+                                    </small>
+                                </div>
+
+                            </label>
+
+
+                            <label class="check-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="unlimited_reports"
+                                    id="unlimitedReports"
+                                >
+
+                                <span class="check-box"></span>
+
+                                <div>
+                                    <strong>Unlimited Reports</strong>
+                                    <small>
+                                        Allow unlimited report generation.
+                                    </small>
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FEATURES -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon features">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                        </div>
+
+                        <div>
+                            <h3>Features & Modules</h3>
+                            <p>Select modules available to vendors on this plan.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="feature-grid">
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="patients" checked>
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Patient Management</strong>
+                                    <small>Patient registration and records</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="billing" checked>
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Billing & Invoices</strong>
+                                    <small>Invoices and payment management</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="reports" checked>
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Lab Reports</strong>
+                                    <small>Generate and manage reports</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="inventory">
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Inventory</strong>
+                                    <small>Stock and reagent management</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="analytics">
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Analytics</strong>
+                                    <small>Business analytics and insights</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="notifications">
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Notifications</strong>
+                                    <small>Email and system notifications</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="api">
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>API Access</strong>
+                                    <small>External API integrations</small>
+                                </div>
+                            </label>
+
+
+                            <label class="feature-item">
+                                <input type="checkbox" name="features" value="backup">
+                                <span class="feature-check">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <strong>Automated Backup</strong>
+                                    <small>Scheduled data backups</small>
+                                </div>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADVANCED SETTINGS -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon advanced">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+
+                        <div>
+                            <h3>Advanced Settings</h3>
+                            <p>Configure access and subscription behavior.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="settings-list">
+
+                            <label class="setting-row">
+
+                                <div class="setting-info">
+
+                                    <strong>Auto Renewal</strong>
+
+                                    <span>
+                                        Allow vendors to automatically renew this plan.
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="checkbox"
+                                    class="switch"
+                                    name="auto_renewal"
+                                    checked
+                                >
+
+                            </label>
+
+
+                            <label class="setting-row">
+
+                                <div class="setting-info">
+
+                                    <strong>API Access</strong>
+
+                                    <span>
+                                        Allow API access for subscribed vendors.
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="checkbox"
+                                    class="switch"
+                                    name="api_access"
+                                >
+
+                            </label>
+
+
+                            <label class="setting-row">
+
+                                <div class="setting-info">
+
+                                    <strong>Plan Visible</strong>
+
+                                    <span>
+                                        Show this plan on the vendor subscription page.
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="checkbox"
+                                    class="switch"
+                                    name="is_visible"
+                                    checked
+                                >
+
+                            </label>
+
+
+                            <label class="setting-row">
+
+                                <div class="setting-info">
+
+                                    <strong>Active Plan</strong>
+
+                                    <span>
+                                        Allow new subscriptions to this plan.
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="checkbox"
+                                    class="switch"
+                                    name="is_active"
+                                    checked
+                                >
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT -->
+            <aside class="form-sidebar">
+
+                <!-- LIVE PREVIEW -->
+                <div class="preview-card">
+
+                    <div class="preview-header">
+
+                        <span class="preview-label">
+                            LIVE PREVIEW
+                        </span>
+
+                        <span class="status-pill">
+                            <i class="fa-solid fa-circle"></i>
+                            Active
+                        </span>
+
+                    </div>
+
+
+                    <div class="preview-body">
+
+                        <div class="preview-plan-icon">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+
+                        <h3 id="previewName">
+                            Professional
+                        </h3>
+
+                        <p id="previewDescription">
+                            Your plan description will appear here.
+                        </p>
+
+
+                        <div class="preview-price">
+
+                            <span class="currency">₹</span>
+
+                            <strong id="previewPrice">
+                                0
+                            </strong>
+
+                            <span id="previewCycle">
+                                / month
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-divider"></div>
+
+
+                        <ul class="preview-features">
+
+                            <li>
+                                <i class="fa-solid fa-check"></i>
+                                Patient Management
+                            </li>
+
+                            <li>
+                                <i class="fa-solid fa-check"></i>
+                                Billing & Invoices
+                            </li>
+
+                            <li>
+                                <i class="fa-solid fa-check"></i>
+                                Lab Reports
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+                <div class="card compact-card">
+
+                    <div class="compact-header">
+                        <i class="fa-solid fa-toggle-on"></i>
+                        Plan Status
+                    </div>
+
+                    <div class="status-control">
+
+                        <div>
+
+                            <strong>Active</strong>
+
+                            <span>
+                                Vendors can subscribe
+                            </span>
+
+                        </div>
+
+                        <label class="toggle">
+
+                            <input
+                                type="checkbox"
+                                name="status"
+                                id="planStatus"
+                                checked
+                            >
+
+                            <span></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY INFO -->
+                <div class="info-card">
+
+                    <div class="info-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>License Control</strong>
+
+                        <p>
+                            When a vendor subscribes to this plan,
+                            a license key will be generated automatically.
+                            The license will expire when the subscription ends.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+                <div class="action-card">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="createPlanBtn"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Create Plan
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary full-width"
+                        id="saveDraftBtn"
+                    >
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        Save as Draft
+                    </button>
+
+                    <a
+                        href="{% url 'superadmin:plans' %}"
+                        class="cancel-link"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal" id="confirmModal">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box">
+
+        <button
+            type="button"
+            class="modal-close"
+            id="closeConfirmModal"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-icon">
+            <i class="fa-solid fa-layer-group"></i>
+        </div>
+
+        <h3>Create Subscription Plan?</h3>
+
+        <p>
+            This plan will become available according to its visibility
+            and active status settings.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelCreate"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmCreate"
+            >
+                <i class="fa-solid fa-check"></i>
+                Confirm & Create
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'superadmin/js/plan_create.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sita Path Lab - Register Patient</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/register.css' %}"/>
+</head>
+<body>
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-brand">Sita Path Lab</span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+        <span class="material-symbols-outlined">contrast</span>
+      </button>
+     
+      <div class="avatar">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ9rQeCMcxl8ctMv-joVZAVE9Sw6eji4oxdJ3AHoPFYVqAfSdKp4mfgdjTjg67S1UndVPaJGPUjKZSpMArxgu68-c1sL0pJal7LQJKVHbrEQTEqB67DiwhUM7zhCJaKrD8Ccmv_ZiZ7qX_V2h2A79EvudCVWSuQOR9RxOeKjYTksWiTqII1pll8WPHWDDArNTPDwgwk9VMboN1yX_lst5iB2KMWWnxL5GYb5g97GGu7VNPiaylq6fTWoymRMZooWskyLwBHb2-lbo" alt="Profile"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== SIDENAV ===== -->
+  <aside class="sidenav">
+    <div class="sidenav-brand">
+      <span class="brand-title">Sita Path Lab</span>
+      <span class="brand-sub">Enterprise Healthcare</span>
+    </div>
+    <nav class="sidenav-nav">
+      <a href="{% url 'dashboard' %}" class="nav-link "><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+      <a href="{% url 'patients' %}" class="nav-link"><span class="material-symbols-outlined">groups</span><span>Patients</span></a>
+      <a href="{% url 'register' %}" class="nav-link active"><span class="material-symbols-outlined">person_add</span><span>Register</span></a>
+      <a href="#" class="nav-link"><span class="material-symbols-outlined">biotech</span><span>Results</span></a>
+      <a href="{% url 'reports' %}" class="nav-link"><span class="material-symbols-outlined">description</span><span>Reports</span></a>
+      <a href="{% url 'billing' %}" class="nav-link"><span class="material-symbols-outlined">payments</span><span>Billing</span></a>
+      <a href="{% url 'tests' %}" class="nav-link"><span class="material-symbols-outlined">science</span><span>Tests</span></a>
+      <a href="{% url 'appointments' %}" class="nav-link"><span class="material-symbols-outlined">event</span><span>Appointments</span></a>
+      <a href="{% url 'inventory' %}" class="nav-link"><span class="material-symbols-outlined">inventory_2</span><span>Inventory</span></a>
+      <a href="{% url 'staff' %}" class="nav-link"><span class="material-symbols-outlined">badge</span><span>Staff</span></a>
+      <a href="{% url 'settings' %}" class="nav-link"><span class="material-symbols-outlined">settings</span><span>Settings</span></a>
+    
+     
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Register New Patient</h1>
+        <p class="page-subtitle">Complete the clinical profile to initiate lab registration.</p>
+      </div>
+      <div class="patient-id-badge">
+        <span class="badge-label">PATIENT ID:</span>
+        <span class="badge-value" id="patientIdDisplay">SPL-2023-0842</span>
+      </div>
+    </div>
+
+    <!-- Form Grid -->
+    <div class="form-grid">
+      <!-- Left Column -->
+      <div class="form-left">
+        <!-- Section 1: Patient Information -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="material-symbols-outlined text-primary">person</span>
+            <h2 class="section-title">Patient Information</h2>
+          </div>
+          
+          <div class="form-row-2">
+            <div class="form-group">
+              <input class="form-input" id="fullName" placeholder="Enter a name  " type="text"/>
+              <label class="form-label" for="fullName"> </label>
+            </div>
+            <div class="form-group">
+              <select class="form-select" id="gender">
+                <option disabled selected value=""></option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+              <label class="form-label-sm" for="gender">Gender</label>
+              <span class="form-icon material-symbols-outlined">arrow_drop_down</span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <input class="form-input" id="age" placeholder="Enter age " type="number"/>
+              <label class="form-label" for="age"></label>
+            </div>
+            <div class="form-group">
+              <input class="form-input" id="dob" placeholder="Date of Birth " type="date"/>
+              <label class="form-label-sm" for="dob"></label>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <select class="form-select" id="bloodGroup">
+                <option disabled selected value=""></option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option>
+                <option>AB+</option><option>AB-</option>
+              </select>
+              <label class="form-label-sm" for="bloodGroup">Blood Group</label>
+              <span class="form-icon material-symbols-outlined">water_drop</span>
+            </div>
+            <div class="form-group">
+              <input class="form-input" id="contact" placeholder=" Enter Contact Number  " type="tel"/>
+              <label class="form-label" for="contact"></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <textarea class="form-textarea" id="address" placeholder=" " rows="2"></textarea>
+            <label class="form-label" for="address">Residential Address</label>
+          </div>
+        </section>
+
+        <!-- Section 2: Referral Information -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="material-symbols-outlined text-primary">stethoscope</span>
+            <h2 class="section-title">Referral Information</h2>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <input class="form-input" id="referringDoctor" placeholder=" " type="text"/>
+              <label class="form-label" for="referringDoctor">Referring Doctor Name</label>
+            </div>
+            <div class="form-group">
+              <input class="form-input" id="referringHospital" placeholder=" " type="text"/>
+              <label class="form-label" for="referringHospital">Clinic/Hospital Name</label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Emergency Contact -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="material-symbols-outlined text-primary">emergency</span>
+            <h2 class="section-title">Emergency Contact</h2>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <input class="form-input" id="emergencyName" placeholder=" " type="text"/>
+              <label class="form-label" for="emergencyName">Contact Person Name *</label>
+            </div>
+            <div class="form-group">
+              <input class="form-input" id="emergencyPhone" placeholder=" " type="tel"/>
+              <label class="form-label" for="emergencyPhone">Emergency Phone *</label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Mobile Actions -->
+        <div class="actions-mobile">
+          <button class="btn btn-primary" onclick="savePatient()">Save Patient</button>
+          <button class="btn btn-secondary" onclick="saveAndPrint()">
+            <span class="material-symbols-outlined">print</span> Save &amp; Print
+          </button>
+          <button class="btn btn-outline" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="form-right">
+        <!-- Photo Upload -->
+        <section class="panel photo-panel">
+          <h3 class="panel-label">Patient Photograph</h3>
+          <div class="photo-upload" id="photoUpload" onclick="document.getElementById('photoInput').click()">
+            <span class="material-symbols-outlined photo-icon">add_a_photo</span>
+            <p class="photo-text">Click to upload or capture</p>
+          </div>
+          <p class="photo-hint">Supported formats: JPG, PNG. Max 2MB.</p>
+          <input type="file" id="photoInput" accept="image/*" style="display:none;"/>
+        </section>
+
+        <!-- Barcode Preview -->
+        <section class="panel">
+          <div class="panel-header">
+            <h3 class="panel-label">Barcode Preview</h3>
+            <span class="material-symbols-outlined text-outline">barcode_scanner</span>
+          </div>
+          <div class="barcode-preview">
+            <div class="barcode-bars"></div>
+            <span class="barcode-text" id="barcodeText">SPL-2023-0842-X</span>
+          </div>
+          <p class="barcode-hint">This barcode will be printed on specimen tubes and reports.</p>
+        </section>
+
+        <!-- Desktop Actions -->
+        <div class="actions-desktop">
+          <button class="btn btn-primary" onclick="savePatient()">
+            <span class="material-symbols-outlined">save</span> Save Patient
+          </button>
+          <button class="btn btn-secondary" onclick="saveAndPrint()">
+            <span class="material-symbols-outlined">print</span> Save &amp; Print Label
+          </button>
+          <button class="btn btn-outline" onclick="resetForm()">Reset Form</button>
+        </div>
+
+        <!-- Tip -->
+        <div class="tip">
+          <span class="material-symbols-outlined text-tertiary">lightbulb</span>
+          <p class="tip-text">Ensure all mandatory fields are filled to enable automatic barcode generation for specimen tracking.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== BOTTOM NAV (Mobile) ===== -->
+  <nav class="bottom-nav">
+    <a href="{% url 'dashboard' %}" class="bottom-nav-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="{% url 'patients' %}" class="bottom-nav-item">
+      <span class="material-symbols-outlined">groups</span>
+      <span>Patients</span>
+    </a>
+    <a href="{% url 'register' %}" class="bottom-nav-item active">
+      <span class="material-symbols-outlined">person_add</span>
+      <span>Register</span>
+    </a>
+    <a href="{% url 'billing' %}" class="bottom-nav-item">
+      <span class="material-symbols-outlined">payments</span>
+      <span>Billing</span>
+    </a>
+    <a href="{% url 'profile' %}" class="bottom-nav-item">
+      <span class="material-symbols-outlined">account_circle</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="{% static 'js/register.js' %}"></script>
+</body>
+</html>

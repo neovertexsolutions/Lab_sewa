@@ -1,0 +1,647 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Analytics | Super Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/analytics.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div
+    class="analytics-page"
+    id="analyticsPage"
+    data-api-url="{% url 'superadmin:analytics_data' %}"
+>
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <header class="analytics-header">
+
+        <div class="header-left">
+
+            <div class="breadcrumb">
+                <span>Super Admin</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <strong>Analytics</strong>
+            </div>
+
+            <div class="page-title-wrapper">
+
+                <div class="page-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <div>
+                    <h1>Analytics</h1>
+
+                    <p>
+                        Monitor vendors, patients, revenue and platform
+                        performance from one place.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="refreshAnalyticsBtn"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="exportAnalyticsBtn"
+            >
+                <i class="fa-solid fa-download"></i>
+                <span>Export</span>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         FILTER BAR
+    ====================================================== -->
+
+    <section class="filter-card">
+
+        <div class="filter-title">
+
+            <div class="filter-icon">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+
+            <div>
+                <strong>Analytics Filters</strong>
+                <span>Customize the analytics period</span>
+            </div>
+
+        </div>
+
+
+        <div class="filter-controls">
+
+            <div class="filter-group">
+
+                <label for="dateRange">
+                    Period
+                </label>
+
+                <select id="dateRange">
+
+                    <option value="today">
+                        Today
+                    </option>
+
+                    <option value="7days">
+                        Last 7 Days
+                    </option>
+
+                    <option value="30days" selected>
+                        Last 30 Days
+                    </option>
+
+                    <option value="90days">
+                        Last 90 Days
+                    </option>
+
+                    <option value="year">
+                        This Year
+                    </option>
+
+                    <option value="custom">
+                        Custom
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="custom-date-fields"
+                id="customDateFields"
+                hidden
+            >
+
+                <div class="filter-group">
+
+                    <label for="startDate">
+                        From
+                    </label>
+
+                    <input
+                        type="date"
+                        id="startDate"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="endDate">
+                        To
+                    </label>
+
+                    <input
+                        type="date"
+                        id="endDate"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="filter-group vendor-filter">
+
+                <label for="vendorFilter">
+                    Vendor
+                </label>
+
+                <select id="vendorFilter">
+
+                    <option value="all">
+                        All Vendors
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="apply-filter-btn"
+                id="applyFilterBtn"
+            >
+                <i class="fa-solid fa-filter"></i>
+                Apply
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ====================================================== -->
+
+    <section class="stats-grid">
+
+        <!-- Vendors -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon vendors">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+
+                <span
+                    class="stat-change positive"
+                    id="vendorsChange"
+                >
+                    +0%
+                </span>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Total Vendors
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="totalVendors"
+                >
+                    0
+                </strong>
+
+                <span class="stat-subtitle">
+                    Registered laboratories
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- Active Vendors -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon active">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <span
+                    class="status-badge success"
+                    id="activeVendorPercentage"
+                >
+                    0%
+                </span>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Active Vendors
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="activeVendors"
+                >
+                    0
+                </strong>
+
+                <span class="stat-subtitle">
+                    Currently operational
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- Patients -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon patients">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <span
+                    class="stat-change positive"
+                    id="patientsChange"
+                >
+                    +0%
+                </span>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Total Patients
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="totalPatients"
+                >
+                    0
+                </strong>
+
+                <span class="stat-subtitle">
+                    Across all vendors
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- Revenue -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon revenue">
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                </div>
+
+                <span
+                    class="stat-change positive"
+                    id="revenueChange"
+                >
+                    +0%
+                </span>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Total Revenue
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="totalRevenue"
+                >
+                    ₹0
+                </strong>
+
+                <span class="stat-subtitle">
+                    Selected period
+                </span>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         CHART ROW
+    ====================================================== -->
+
+    <section class="charts-grid">
+
+        <!-- Revenue Chart -->
+
+        <article class="chart-card large-chart">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Revenue Overview
+                    </h2>
+
+                    <p>
+                        Revenue generated across the platform
+                    </p>
+
+                </div>
+
+                <div class="chart-legend">
+
+                    <span>
+                        <i></i>
+                        Revenue
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="revenueChart"></canvas>
+
+                <div
+                    class="chart-loading"
+                    id="revenueChartLoading"
+                >
+                    <span class="loader"></span>
+                    Loading analytics...
+                </div>
+
+                <div
+                    class="chart-empty"
+                    id="revenueChartEmpty"
+                    hidden
+                >
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>No revenue data available</span>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Vendor Growth -->
+
+        <article class="chart-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Vendor Growth
+                    </h2>
+
+                    <p>
+                        New vendors onboarded
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="vendorGrowthChart"></canvas>
+
+                <div
+                    class="chart-loading"
+                    id="vendorGrowthLoading"
+                >
+                    <span class="loader"></span>
+                    Loading...
+                </div>
+
+                <div
+                    class="chart-empty"
+                    id="vendorGrowthEmpty"
+                    hidden
+                >
+                    <i class="fa-solid fa-building"></i>
+                    <span>No vendor data available</span>
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         VENDOR PERFORMANCE
+    ====================================================== -->
+
+    <section class="table-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Vendor Performance
+                </h2>
+
+                <p>
+                    Compare performance of all laboratories
+                </p>
+
+            </div>
+
+            <div class="table-actions">
+
+                <button
+                    type="button"
+                    class="icon-button"
+                    id="sortVendorBtn"
+                    title="Sort vendors"
+                >
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="analytics-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Vendor
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Patients
+                        </th>
+
+                        <th>
+                            Appointments
+                        </th>
+
+                        <th>
+                            Revenue
+                        </th>
+
+                        <th>
+                            Growth
+                        </th>
+
+                        <th>
+                            Performance
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="vendorTableBody">
+
+                    <tr class="loading-row">
+
+                        <td colspan="7">
+
+                            <div class="table-loading">
+
+                                <span class="loader"></span>
+
+                                Loading vendor analytics...
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+            <div
+                class="table-empty"
+                id="vendorTableEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-building-circle-exclamation"></i>
+                </div>
+
+                <h3>
+                    No vendor data
+                </h3>
+
+                <p>
+                    There are no vendors matching the selected filters.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LAST UPDATED
+    ====================================================== -->
+
+    <div class="analytics-footer">
+
+        <span>
+            <i class="fa-regular fa-clock"></i>
+
+            Last updated:
+
+            <strong id="lastUpdated">
+                Never
+            </strong>
+
+        </span>
+
+        <span class="live-indicator">
+            <i></i>
+            Analytics system active
+        </span>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<script src="{% static 'superadmin/js/analytics.js' %}"></script>
+
+{% endblock %}

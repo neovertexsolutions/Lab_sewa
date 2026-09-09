@@ -1,12 +1,11 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediFlow - Next-Generation Healthcare Management SaaS</title>
-  <meta name="description" content="All-in-one healthcare management software for clinics, laboratories, pharmacies, and hospitals. Streamline appointments, billing, EMR, and operations.">
+  <title>About Us - MediFlow | Transforming Healthcare Through Smarter Technology</title>
+  <meta name="description" content="Learn about MediFlow's mission, vision, and healthcare SaaS platform empowering hospitals, clinics, laboratories, and pharmacies with unified digital management.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +17,7 @@
   <header class="site-header" id="siteHeader">
     <div class="nav-container">
       <!-- Logo -->
-      <a href="#" class="brand-logo" id="brandLogo">
+      <a href="{% url 'home' %} " class="brand-logo" id="brandLogo">
         <div class="logo-icon-wrapper">
           <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="32" height="32" rx="9" fill="url(#logoGrad)" />
@@ -39,7 +38,7 @@
       <nav class="desktop-nav" aria-label="Main Navigation">
         <ul class="nav-menu">
           <li class="nav-item">
-            <a href="{% url 'home' %}" class="nav-link active">Home</a>
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
           </li>
 
           <!-- Solutions Dropdown -->
@@ -72,7 +71,7 @@
                   </div>
                 </a>
 
-                <a href="{% url 'solutions' %} #pharmacy" class="dropdown-card">
+                <a href="{% url 'solutions' %}  #pharmacy" class="dropdown-card">
                   <div class="dropdown-icon-box pharmacy">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 3.5 13.5a5 5 0 1 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
                   </div>
@@ -123,7 +122,7 @@
             </a>
             <div class="dropdown-panel resources-menu">
               <div class="dropdown-grid single-col">
-                <a href="{% url 'resources' %}#blog" class="dropdown-card">
+                <a href="{% url 'resources' %}  #blog" class="dropdown-card">
                   <div class="dropdown-icon-box resources">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                   </div>
@@ -157,7 +156,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{% url 'about' %}" class="nav-link">About</a>
+            <a href="{% url 'about' %}" class="nav-link active">About</a>
           </li>
 
           <li class="nav-item">
@@ -189,7 +188,7 @@
     <div class="mobile-drawer" id="mobileDrawer">
       <div class="mobile-nav-inner">
         <ul class="mobile-menu">
-          <li><a href="{% url 'home' %}" class="mobile-link active">Home</a></li>
+          <li><a href="{% url 'home' %}" class="mobile-link">Home</a></li>
           
           <li class="mobile-accordion">
             <button class="mobile-accordion-toggle" id="mobileSolutionsToggle">
@@ -199,7 +198,7 @@
               </svg>
             </button>
             <div class="mobile-accordion-content" id="mobileSolutionsContent">
-              <a href="{% url 'solutions' %} #hospitals" class="mobile-sublink">🏥 Hospitals</a>
+              <a href="{% url 'solutions' %}#hospitals" class="mobile-sublink">🏥 Hospitals</a>
               <a href="{% url 'solutions' %}#clinics" class="mobile-sublink">🩺 Clinics</a>
               <a href="{% url 'solutions' %}#pharmacy" class="mobile-sublink">💊 Pharmacy</a>
               <a href="{% url 'solutions' %}#laboratory" class="mobile-sublink">🧪 Laboratory</a>
@@ -208,7 +207,7 @@
           </li>
 
           <li><a href="{% url 'features' %}" class="mobile-link">Features</a></li>
-          <li><a href="{% url 'pricing' %}" class="mobile-link">Pricing</a></li>
+          <li><a href="{% url 'pricing' %}  " class="mobile-link">Pricing</a></li>
 
           <li class="mobile-accordion">
             <button class="mobile-accordion-toggle" id="mobileResourcesToggle">
@@ -224,7 +223,7 @@
             </div>
           </li>
 
-          <li><a href="{% url 'about' %}" class="mobile-link">About</a></li>
+          <li><a href="{% url 'about' %}" class="mobile-link active">About</a></li>
           <li><a href="{% url 'contact' %}" class="mobile-link">Contact</a></li>
         </ul>
 
@@ -236,271 +235,350 @@
     </div>
   </header>
 
-  <!-- ================= HERO PRELUDE ================= -->
-  <main id="home">
-    <section class="hero-section">
-      <div class="container hero-container">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          <span>Unified Healthcare Management SaaS</span>
-        </div>
-        <h1 class="hero-title">
-          Intelligent Operations for Modern <span class="gradient-text">Healthcare Leaders</span>
-        </h1>
-        <p class="hero-subtitle">
-          From independent clinics to multi-specialty hospitals, MediFlow centralizes appointments, electronic records, pharmacy billing, and diagnostic labs in one seamless platform.
-        </p>
-        <div class="hero-stats-row">
-          <div class="hero-stat-item">
-            <span class="stat-number">99.9%</span>
-            <span class="stat-label">System Uptime</span>
-          </div>
-          <div class="hero-stat-divider"></div>
-          <div class="hero-stat-item">
-            <span class="stat-number">450+</span>
-            <span class="stat-label">Healthcare Centers</span>
-          </div>
-          <div class="hero-stat-divider"></div>
-          <div class="hero-stat-item">
-            <span class="stat-number">3.2M+</span>
-            <span class="stat-label">Patient Records</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PACKAGES & PRICING SECTION ================= -->
-    <section class="pricing-section" id="pricing">
+  <main>
+    <!-- ================= ABOUT HERO SECTION (LEFT IMAGE, RIGHT TEXT) ================= -->
+    <section class="about-hero-split">
       <div class="container">
-        <!-- Section Header -->
-        <div class="section-header">
-          <div class="section-tag">Packages & Pricing</div>
-          <h2 class="section-title">Choose the plan that fits your healthcare business</h2>
-          <p class="section-description">
-            Start with the essentials and upgrade as your clinic, laboratory, pharmacy, or hospital grows.
-          </p>
-
-          <!-- Billing Period Switcher -->
-          <div class="billing-toggle-container">
-            <span class="billing-label monthly-label active" id="monthlyLabel">Monthly</span>
-            <button class="toggle-switch" id="billingToggle" aria-label="Toggle billing duration">
-              <span class="toggle-slider"></span>
-            </button>
-            <span class="billing-label annual-label" id="annualLabel">
-              Yearly
-              <span class="save-badge">Save 20%</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- Pricing Cards Grid -->
-        <div class="pricing-grid">
+        <div class="about-hero-grid">
           
-          <!-- Plan 1: Starter -->
-          <div class="pricing-card" id="cardStarter">
-            <div class="card-header">
-              <div class="plan-badge-space"></div>
-              <h3 class="plan-name">Starter</h3>
-              <p class="plan-description">For small clinics and laboratories starting their digital journey.</p>
-              
-              <div class="price-container">
-                <span class="currency">NPR</span>
-                <span class="price-amount" data-monthly="4,999" data-annual="3,999">4,999</span>
-                <span class="price-cycle">/ month</span>
-              </div>
-              <div class="annual-note hidden" id="starterAnnualNote">Billed annually (NPR 47,988/yr)</div>
-            </div>
-
-            <div class="card-body">
-              <div class="features-label">Included Features:</div>
-              <ul class="features-list">
-                <li class="feature-item">
-                  <span class="feature-icon">🏢</span>
-                  <span class="feature-text"><strong>1 branch</strong></span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">👥</span>
-                  <span class="feature-text"><strong>Up to 5 staff</strong></span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">👤</span>
-                  <span class="feature-text">Patient management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📅</span>
-                  <span class="feature-text">Appointment management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🧪</span>
-                  <span class="feature-text">Sample & test management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📄</span>
-                  <span class="feature-text">Standard medical reports</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📧</span>
-                  <span class="feature-text">Email support</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="card-footer">
-              <button class="btn btn-outline full-width plan-cta" data-plan="Starter">Get Started</button>
+          <!-- Left Column: Image -->
+          <div class="about-hero-image-col">
+            <div class="about-hero-image-wrapper">
+              <img src="assets/images/healthcare_team.jpg" alt="MediFlow Healthcare Team and Doctors Collaborating" class="about-hero-img">
             </div>
           </div>
 
-          <!-- Plan 2: Professional (Popular) -->
-          <div class="pricing-card popular" id="cardProfessional">
-            <!-- Popular Badge -->
-            <div class="popular-ribbon">
-              <span class="star-icon">⭐</span> POPULAR
+          <!-- Right Column: Text Content -->
+          <div class="about-hero-content-col">
+            <div class="about-hero-badge">
+              <span class="badge-dot"></span>
+              <span>About MediFlow</span>
             </div>
+            
+            <h1 class="about-hero-title">
+              Transforming Healthcare Through <span class="gradient-text">Smarter Technology</span>
+            </h1>
+            
+            <p class="about-hero-lead">
+              We are building a modern healthcare technology platform designed to simplify the way medical organizations manage their daily operations.
+            </p>
+            
+            <p class="about-hero-sub">
+              From <strong>clinics and hospitals to pharmacies and laboratories</strong>, our platform brings essential healthcare workflows together in one secure, unified, and easy-to-use system.
+            </p>
 
-            <div class="card-header">
-              <div class="plan-badge-space"></div>
-              <h3 class="plan-name">Professional</h3>
-              <p class="plan-description">For growing healthcare businesses that need powerful management, billing, inventory, and analytics.</p>
-              
-              <div class="price-container">
-                <span class="currency">NPR</span>
-                <span class="price-amount" data-monthly="12,999" data-annual="10,399">12,999</span>
-                <span class="price-cycle">/ month</span>
+            <!-- Feature Check Highlights -->
+            <div class="about-hero-highlights">
+              <div class="highlight-pill">
+                <span class="pill-check">✓</span>
+                <span>Unified EMR & Smart Queue</span>
               </div>
-              <div class="annual-note hidden" id="proAnnualNote">Billed annually (NPR 124,788/yr)</div>
-            </div>
-
-            <div class="card-body">
-              <div class="features-label">All Starter features, plus:</div>
-              <ul class="features-list">
-                <li class="feature-item highlight">
-                  <span class="feature-icon">🏢</span>
-                  <span class="feature-text"><strong>Up to 3 branches</strong></span>
-                </li>
-                <li class="feature-item highlight">
-                  <span class="feature-icon">👥</span>
-                  <span class="feature-text"><strong>Up to 25 staff</strong></span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">👤</span>
-                  <span class="feature-text">Patient & doctor management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">💳</span>
-                  <span class="feature-text">Billing & payment management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">💊</span>
-                  <span class="feature-text">Pharmacy & inventory management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🧪</span>
-                  <span class="feature-text">Laboratory & test management</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📄</span>
-                  <span class="feature-text">Branded medical reports</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📊</span>
-                  <span class="feature-text">Dashboard & analytics</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🚀</span>
-                  <span class="feature-text">Priority support</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="card-footer">
-              <button class="btn btn-primary full-width plan-cta" data-plan="Professional">Get Started</button>
-            </div>
-          </div>
-
-          <!-- Plan 3: Enterprise -->
-          <div class="pricing-card" id="cardEnterprise">
-            <div class="card-header">
-              <div class="plan-badge-space"></div>
-              <h3 class="plan-name">Enterprise</h3>
-              <p class="plan-description">For hospitals, healthcare groups, and multi-branch organizations with advanced requirements.</p>
-              
-              <div class="price-container custom-price">
-                <span class="custom-pricing-text">Custom Pricing</span>
+              <div class="highlight-pill">
+                <span class="pill-check">✓</span>
+                <span>Integrated Pharmacy & LIS</span>
               </div>
-              <div class="annual-note">Tailored deployment & SLA</div>
+              <div class="highlight-pill">
+                <span class="pill-check">✓</span>
+                <span>HIPAA-Ready & Secure</span>
+              </div>
             </div>
 
-            <div class="card-body">
-              <div class="features-label">Complete Healthcare Suite:</div>
-              <ul class="features-list">
-                <li class="feature-item highlight">
-                  <span class="feature-icon">🏢</span>
-                  <span class="feature-text"><strong>Unlimited branches & staff</strong></span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🔗</span>
-                  <span class="feature-text">Hospital / ERP integrations</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">📊</span>
-                  <span class="feature-text">Advanced reports & analytics</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">⚙️</span>
-                  <span class="feature-text">Custom workflows</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🔌</span>
-                  <span class="feature-text">API access</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🛡️</span>
-                  <span class="feature-text">Custom SLA & security</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">👨‍💼</span>
-                  <span class="feature-text">Dedicated account manager</span>
-                </li>
-                <li class="feature-item">
-                  <span class="feature-icon">🚀</span>
-                  <span class="feature-text">Priority technical support</span>
-                </li>
-              </ul>
+            <!-- CTA Actions -->
+            <div class="about-hero-actions">
+              <button class="btn btn-primary" id="aboutHeroDemoBtn">
+                <span>Book a Live Demo</span>
+                <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <a href="{% url 'solutions' %}" class="btn btn-outline">Explore Solutions</a>
             </div>
 
-            <div class="card-footer">
-              <button class="btn btn-outline full-width plan-cta enterprise-btn" data-plan="Enterprise">Talk to Sales</button>
-            </div>
           </div>
 
         </div>
+      </div>
+    </section>
 
-        <!-- Trust Badges -->
-        <div class="trust-banner">
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>HIPAA Compliant & Encrypted</span>
+    <!-- ================= IMPACT STATS BAR ================= -->
+    <section class="about-stats-bar">
+      <div class="container">
+        <div class="about-stats-grid">
+          <div class="about-stat-item">
+            <div class="about-stat-num">450+</div>
+            <div class="about-stat-label">Hospitals & Clinics Powered</div>
           </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Instant Setup in 24 Hours</span>
+          <div class="about-stat-item">
+            <div class="about-stat-num">1.2M+</div>
+            <div class="about-stat-label">Patient Encounters Managed</div>
           </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-            <span>Cancel or Upgrade Anytime</span>
+          <div class="about-stat-item">
+            <div class="about-stat-num">99.99%</div>
+            <div class="about-stat-label">Cloud Availability & SLA</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="about-stat-num">24/7</div>
+            <div class="about-stat-label">Emergency Critical Support</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ================= BOTTOM CTA SECTION ================= -->
+    <!-- ================= MISSION & VISION ================= -->
+    <section class="mission-vision-section">
+      <div class="container">
+        <div class="mv-grid">
+          <!-- Mission Card -->
+          <div class="mv-card mission-card">
+            <div class="mv-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+            <div class="mv-tag">OUR MISSION</div>
+            <h2 class="mv-title">To make healthcare management simpler, smarter, and more accessible.</h2>
+            <p class="mv-desc">
+              We believe healthcare professionals should spend less time managing paperwork and disconnected systems and more time focusing on patients.
+            </p>
+            <p class="mv-desc">
+              Our platform helps organizations manage patients, appointments, doctors, billing, pharmacy, laboratory operations, inventory, reports, and analytics from a single platform.
+            </p>
+          </div>
+
+          <!-- Vision Card -->
+          <div class="mv-card vision-card">
+            <div class="mv-icon-wrapper vision-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div class="mv-tag">OUR VISION</div>
+            <h2 class="mv-title">A connected digital healthcare ecosystem where technology works for everyone.</h2>
+            <p class="mv-desc">
+              We aim to help healthcare organizations of every size move from traditional paperwork and disconnected software to an integrated digital environment.
+            </p>
+            <div class="vision-highlights">
+              <div class="v-pill">Zero Paperwork Friction</div>
+              <div class="v-pill">Unified Cloud Records</div>
+              <div class="v-pill">Real-time Diagnostic Flow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHAT WE DO ================= -->
+    <section class="what-we-do-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <div class="section-tag">Capabilities</div>
+          <h2 class="section-title">What We Do</h2>
+          <p class="section-description">
+            Our healthcare SaaS platform provides comprehensive, modular tools designed specifically for modern clinical environments.
+          </p>
+        </div>
+
+        <div class="capabilities-grid">
+          <div class="cap-card">
+            <span class="cap-emoji">🏥</span>
+            <div class="cap-content">
+              <h3>Hospital & Clinic Management</h3>
+              <p>End-to-end OPD/IPD flows, bed management, and doctor schedules.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">👨‍⚕️</span>
+            <div class="cap-content">
+              <h3>Doctor & Staff Management</h3>
+              <p>Rosters, duty assignments, clinician notes, and digital signatures.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">🧑‍🤝‍🧑</span>
+            <div class="cap-content">
+              <h3>Patient Management</h3>
+              <p>Lifetime electronic health records (EMR), allergies, and medical history.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">📅</span>
+            <div class="cap-content">
+              <h3>Appointment & Scheduling</h3>
+              <p>Smart queue management, online bookings, and automated SMS reminders.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">💊</span>
+            <div class="cap-content">
+              <h3>Pharmacy Management</h3>
+              <p>Point-of-sale billing, batch tracking, expiry alerts, and inventory sync.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">🧪</span>
+            <div class="cap-content">
+              <h3>Laboratory Management</h3>
+              <p>LIS test profiles, barcoded sample tracking, and auto-generated PDF reports.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">💰</span>
+            <div class="cap-content">
+              <h3>Billing & Payments</h3>
+              <p>Tax invoices, split payments, insurance claims, and multi-currency billing.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">📦</span>
+            <div class="cap-content">
+              <h3>Inventory Management</h3>
+              <p>Stock procurement, low-stock warnings, and vendor purchase orders.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">📄</span>
+            <div class="cap-content">
+              <h3>Medical Reports</h3>
+              <p>Custom hospital-branded test findings and discharge summaries.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">📊</span>
+            <div class="cap-content">
+              <h3>Analytics & Dashboards</h3>
+              <p>Real-time financial, patient census, and operational insights.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">🔐</span>
+            <div class="cap-content">
+              <h3>Secure Role-Based Access</h3>
+              <p>Granular staff permissions, encrypted audit trails, and HIPAA compliance.</p>
+            </div>
+          </div>
+
+          <div class="cap-card">
+            <span class="cap-emoji">🌐</span>
+            <div class="cap-content">
+              <h3>Multi-Branch Management</h3>
+              <p>Centralized oversight across multiple clinics, franchises, and lab units.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHY CHOOSE US? ================= -->
+    <section class="why-choose-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <div class="section-tag">The MediFlow Advantage</div>
+          <h2 class="section-title">Why Choose Us?</h2>
+          <p class="section-description">
+            Engineered specifically to solve the headaches of fragmented legacy medical software.
+          </p>
+        </div>
+
+        <div class="pillars-grid">
+          <!-- Pillar 1 -->
+          <div class="pillar-card">
+            <span class="pillar-number">01</span>
+            <div class="pillar-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+            </div>
+            <h3>One Platform</h3>
+            <p>Manage multiple healthcare operations from one centralized, synchronized system without juggling disjointed tools.</p>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="pillar-card">
+            <span class="pillar-number">02</span>
+            <div class="pillar-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m13 2-2 2.5h3L11 8h3l-5 6h3.5L10 18h3.5L11 22"/><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <h3>Simple & Powerful</h3>
+            <p>Designed to be intuitive for doctors and nurses while providing enterprise-grade controls for administrators.</p>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="pillar-card">
+            <span class="pillar-number">03</span>
+            <div class="pillar-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Secure by Design</h3>
+            <p>Protect sensitive patient health information with multi-tier encryption, 2FA, and strict role-based access controls.</p>
+          </div>
+
+          <!-- Pillar 4 -->
+          <div class="pillar-card">
+            <span class="pillar-number">04</span>
+            <div class="pillar-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            </div>
+            <h3>Built to Scale</h3>
+            <p>Start with a single clinic or pathology lab and effortlessly scale up to a nationwide multi-facility hospital chain.</p>
+          </div>
+
+          <!-- Pillar 5 -->
+          <div class="pillar-card">
+            <span class="pillar-number">05</span>
+            <div class="pillar-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            </div>
+            <h3>Data-Driven Decisions</h3>
+            <p>Turn raw daily operational data into actionable clinical and financial insights through interactive live dashboards.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BUILT FOR THE FUTURE ================= -->
+    <section class="future-section">
+      <div class="container">
+        <div class="future-grid">
+          <div class="future-content">
+            <div class="section-tag">Next-Gen Technology</div>
+            <h2 class="future-title">Built for the Future of Healthcare</h2>
+            <p class="future-text">
+              Healthcare is changing rapidly, and technology is becoming an essential part of modern healthcare operations.
+            </p>
+            <p class="future-text">
+              We are creating tools that help healthcare organizations <strong>work faster, reduce manual processes, improve visibility, and deliver better patient experiences.</strong>
+            </p>
+
+            <blockquote class="future-quote">
+              <div class="quote-bar"></div>
+              <p>“Better Healthcare. Smarter Management. One Platform.”</p>
+            </blockquote>
+
+            <div class="future-actions">
+              <button class="btn btn-primary btn-lg" id="futureGetStartedBtn">Get Started Free</button>
+              <button class="btn btn-outline btn-lg" id="futureBookDemoBtn">Book a Demo</button>
+            </div>
+          </div>
+
+          <div class="future-image-frame">
+            <img src="assets/images/smart_tech.jpg" alt="Advanced MediFlow Health Telemetry Interface" class="future-img">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA BANNER ================= -->
     <section class="cta-section">
       <div class="container cta-container">
         <div class="cta-glow"></div>
         <div class="cta-content">
-          <h2 class="cta-title">Ready to transform your healthcare operations?</h2>
+          <h2 class="cta-title">Ready to modernize your healthcare business?</h2>
           <p class="cta-description">
-            Start managing your healthcare business smarter, faster, and from one powerful platform.
+            Start your digital transformation today with MediFlow. Experience unified workflows designed for medical excellence.
           </p>
           <div class="cta-actions">
             <button class="btn btn-white btn-lg" id="bottomGetStartedBtn">Get Started Free</button>
@@ -515,7 +593,7 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-brand">
-        <a href="#" class="brand-logo footer-logo">
+        <a href="index.html" class="brand-logo footer-logo">
           <div class="logo-icon-wrapper">
             <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="32" height="32" rx="9" fill="url(#logoGradFooter)" />
@@ -544,11 +622,11 @@
         <div class="footer-col">
           <h4>Solutions</h4>
           <ul>
-            <li><a href="{% url 'solutions' %}#hospitals">Hospitals</a></li>
-            <li><a href="{% url 'solutions' %}#clinics">Clinics</a></li>
-            <li><a href="{% url 'solutions' %}#pharmacy">Pharmacy</a></li>
-            <li><a href="{% url 'solutions' %}#laboratory">Laboratory</a></li>
-            <li><a href="{% url 'solutions' %}#doctors">Doctors</a></li>
+            <li><a href="{% url 'index' %}#solutions-hospitals">Hospitals</a></li>
+            <li><a href="{% url 'index' %}#solutions-clinics">Clinics</a></li>
+            <li><a href="{% url 'index' %}#solutions-pharmacy">Pharmacy</a></li>
+            <li><a href="{% url 'index' %}#solutions-laboratory">Laboratory</a></li>
+            <li><a href="{% url 'index' %}#solutions-doctors">Doctors</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -557,7 +635,6 @@
             <li><a href="{% url 'features' %}">Features</a></li>
             <li><a href="{% url 'pricing' %}">Pricing</a></li>
             <li><a href="{% url 'about' %}">About Us</a></li>
-            <li><a href="{% url 'contact' %}">Contact</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
             <li><a href="{% url 'register' %}">Register Facility</a></li>
           </ul>
@@ -565,10 +642,10 @@
         <div class="footer-col">
           <h4>Resources</h4>
           <ul>
-            <li><a href="{% url 'resources' %}#blog">Blog</a></li>
-            <li><a href="{% url 'resources' %}#documentation">Documentation</a></li>
-            <li><a href="{% url 'resources' %}#help-center">Help Center</a></li>
-            <li><a href="{% url 'contact' %}">Contact Support</a></li>
+            <li><a href="{% url 'index' %}#blog">Blog</a></li>
+            <li><a href="{% url 'index' %}#documentation">Documentation</a></li>
+            <li><a href="{% url 'index' %}  #help-center">Help Center</a></li>
+            <li><a href="{% url 'index' %}#contact">Contact Support</a></li>
           </ul>
         </div>
       </div>
@@ -589,8 +666,6 @@
   </footer>
 
   <!-- ================= MODALS ================= -->
-
-  <!-- 1. Book a Demo Modal -->
   <div class="modal-backdrop" id="demoModal" aria-hidden="true">
     <div class="modal-card">
       <button class="modal-close" id="closeDemoModal" aria-label="Close modal">&times;</button>
@@ -634,7 +709,6 @@
     </div>
   </div>
 
-  <!-- 2. Login Modal -->
   <div class="modal-backdrop" id="loginModal" aria-hidden="true">
     <div class="modal-card modal-sm">
       <button class="modal-close" id="closeLoginModal" aria-label="Close modal">&times;</button>
@@ -657,15 +731,13 @@
         </div>
         <button type="submit" class="btn btn-primary full-width btn-submit">Sign In to Dashboard</button>
         <div class="modal-footer-note">
-          Don't have an account? <a href="{% url 'register' %}" id="modalSignUpLink">Register Facility</a>
+          Don't have an account? <a href="{% url 'register' %}  " id="modalSignUpLink">Register Facility</a>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
-
   <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

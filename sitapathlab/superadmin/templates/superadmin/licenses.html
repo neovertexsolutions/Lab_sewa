@@ -1,0 +1,1108 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}License Management | Sita Path Lab{% endblock %}
+{% block page_title %}License Management{% endblock %}
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/licenses.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="license-page" id="licensePage">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="license-page-header">
+
+        <div class="header-content">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <div class="header-text">
+
+                <span class="header-eyebrow">
+                    SUPER ADMIN
+                </span>
+
+                <h1>License Management</h1>
+
+                <p>
+                    Create, monitor and control vendor licenses
+                    from one centralized dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="refreshLicenses"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+            <a
+                href="{% url 'superadmin:license_create' %}"
+                class="btn btn-primary"
+                id="createLicenseBtn"
+            >
+                <i class="fa-solid fa-plus"></i>
+                <span>Create License</span>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LICENSE STATISTICS
+    ====================================================== -->
+
+    <section class="license-stats">
+
+        <!-- TOTAL -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon total">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Total Licenses
+                </span>
+
+                <strong
+                    id="totalLicenses"
+                    class="stat-value"
+                >
+                    0
+                </strong>
+
+                <small>
+                    All issued licenses
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <!-- ACTIVE -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon active">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Active
+                </span>
+
+                <strong
+                    id="activeLicenses"
+                    class="stat-value"
+                >
+                    0
+                </strong>
+
+                <small>
+                    Currently active
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <!-- EXPIRING -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon expiring">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Expiring Soon
+                </span>
+
+                <strong
+                    id="expiringLicenses"
+                    class="stat-value"
+                >
+                    0
+                </strong>
+
+                <small>
+                    Within 30 days
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <!-- EXPIRED -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon expired">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Expired
+                </span>
+
+                <strong
+                    id="expiredLicenses"
+                    class="stat-value"
+                >
+                    0
+                </strong>
+
+                <small>
+                    Access disabled
+                </small>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN LICENSE CARD
+    ====================================================== -->
+
+    <section class="license-card">
+
+        <!-- =================================================
+             TOOLBAR
+        ================================================== -->
+
+        <div class="license-toolbar">
+
+            <div class="toolbar-left">
+
+                <div class="search-box">
+
+                    <i
+                        class="fa-solid fa-magnifying-glass search-icon"
+                    ></i>
+
+                    <input
+                        type="search"
+                        id="licenseSearch"
+                        class="license-search"
+                        placeholder="Search license, vendor, username..."
+                        autocomplete="off"
+                        aria-label="Search licenses"
+                    >
+
+                    <kbd class="search-shortcut">
+                        Ctrl K
+                    </kbd>
+
+                </div>
+
+            </div>
+
+
+            <div class="toolbar-right">
+
+                <!-- STATUS -->
+
+                <div class="filter-group">
+
+                    <label
+                        for="statusFilter"
+                        class="sr-only"
+                    >
+                        Status
+                    </label>
+
+                    <select
+                        id="statusFilter"
+                        class="filter-select"
+                    >
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="expired">
+                            Expired
+                        </option>
+
+                        <option value="suspended">
+                            Suspended
+                        </option>
+
+                        <option value="revoked">
+                            Revoked
+                        </option>
+
+                        <option value="inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- VENDOR -->
+
+                <div class="filter-group">
+
+                    <label
+                        for="vendorFilter"
+                        class="sr-only"
+                    >
+                        Vendor
+                    </label>
+
+                    <select
+                        id="vendorFilter"
+                        class="filter-select"
+                    >
+
+                        <option value="">
+                            All Vendors
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- PLAN -->
+
+                <div class="filter-group">
+
+                    <label
+                        for="planFilter"
+                        class="sr-only"
+                    >
+                        Plan
+                    </label>
+
+                    <select
+                        id="planFilter"
+                        class="filter-select"
+                    >
+
+                        <option value="">
+                            All Plans
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ADVANCED FILTER -->
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    id="advancedFilterBtn"
+                >
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Filters</span>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ADVANCED FILTER PANEL
+        ================================================== -->
+
+        <div
+            class="advanced-filter-panel"
+            id="advancedFilterPanel"
+            hidden
+        >
+
+            <div class="advanced-filter-header">
+
+                <div>
+
+                    <strong>
+                        Advanced Filters
+                    </strong>
+
+                    <span>
+                        Refine license results
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="advanced-filter-close"
+                    id="closeAdvancedFilter"
+                    aria-label="Close filters"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+
+            <div class="advanced-filter-grid">
+
+                <div class="form-group">
+
+                    <label for="dateFilter">
+                        Created Date
+                    </label>
+
+                    <select
+                        id="dateFilter"
+                        class="filter-select"
+                    >
+
+                        <option value="">
+                            Any Date
+                        </option>
+
+                        <option value="today">
+                            Today
+                        </option>
+
+                        <option value="7">
+                            Last 7 Days
+                        </option>
+
+                        <option value="30">
+                            Last 30 Days
+                        </option>
+
+                        <option value="90">
+                            Last 90 Days
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="advanced-filter-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-clear-filters
+                    >
+                        Clear
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="applyAdvancedFilters"
+                    >
+                        Apply Filters
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BULK ACTION BAR
+        ================================================== -->
+
+        <div
+            class="bulk-actions"
+            data-bulk-actions
+            aria-hidden="true"
+        >
+
+            <div class="selected-info">
+
+                <span class="selected-check">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+
+                <strong>
+                    <span data-selected-count>0</span>
+                    selected
+                </strong>
+
+            </div>
+
+
+            <div class="bulk-action-buttons">
+
+                <button
+                    type="button"
+                    class="bulk-btn"
+                    data-bulk-action="activate"
+                >
+                    <i class="fa-solid fa-check"></i>
+                    <span>Activate</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="bulk-btn"
+                    data-bulk-action="suspend"
+                >
+                    <i class="fa-solid fa-pause"></i>
+                    <span>Suspend</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="bulk-btn danger"
+                    data-bulk-action="revoke"
+                >
+                    <i class="fa-solid fa-ban"></i>
+                    <span>Revoke</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="bulk-btn cancel"
+                    id="clearSelection"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>Clear</span>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE CONTAINER
+        ================================================== -->
+
+        <div class="table-container">
+
+            <div class="table-wrapper">
+
+                <table
+                    class="license-table"
+                    id="licenseTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="check-column">
+
+                                <input
+                                    type="checkbox"
+                                    id="selectAllLicenses"
+                                    aria-label="Select all licenses"
+                                >
+
+                            </th>
+
+
+                            <th>
+                                License Key
+                            </th>
+
+
+                            <th>
+                                Vendor
+                            </th>
+
+
+                            <th>
+                                Plan
+                            </th>
+
+
+                            <th>
+                                Created
+                            </th>
+
+
+                            <th>
+                                Expiry
+                            </th>
+
+
+                            <th>
+                                Status
+                            </th>
+
+
+                            <th class="action-column">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="licenseTableBody"
+                    ></tbody>
+
+                </table>
+
+
+                <!-- =================================================
+                     TABLE LOADING
+                ================================================== -->
+
+                <div
+                    id="licenseLoading"
+                    class="table-loading"
+                    aria-live="polite"
+                >
+
+                    <div class="loading-spinner">
+
+                        <i
+                            class="fa-solid fa-spinner fa-spin"
+                        ></i>
+
+                    </div>
+
+                    <span>
+                        Loading licenses...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div
+                id="licenseEmpty"
+                class="license-empty"
+                hidden
+            >
+
+                <div class="empty-icon">
+
+                    <i class="fa-solid fa-key"></i>
+
+                </div>
+
+                <h3>
+                    No licenses found
+                </h3>
+
+                <p>
+                    No licenses match your current filters.
+                </p>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-clear-filters
+                >
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                    Clear Filters
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE FOOTER
+        ================================================== -->
+
+        <div class="table-footer">
+
+            <div class="table-summary">
+
+                <span>
+                    Showing
+                </span>
+
+                <strong id="licenseTotalCount">
+                    0
+                </strong>
+
+                <span>
+                    licenses
+                </span>
+
+            </div>
+
+
+            <div
+                id="licensePagination"
+                class="pagination"
+                aria-label="License pagination"
+            ></div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     LICENSE DETAIL MODAL
+========================================================= -->
+
+<div
+    class="modal license-modal"
+    id="licenseDetailModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="licenseDetailTitle"
+>
+
+    <div
+        class="modal-backdrop"
+        data-modal-close
+    ></div>
+
+
+    <div class="modal-dialog modal-large">
+
+        <div class="modal-header">
+
+            <div class="modal-heading">
+
+                <span class="modal-eyebrow">
+                    LICENSE INFORMATION
+                </span>
+
+                <h3 id="licenseDetailTitle">
+                    License Details
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                data-modal-close
+                aria-label="Close license details"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-body"
+            data-license-detail
+        >
+
+            <div class="detail-loading">
+
+                <i
+                    class="fa-solid fa-spinner fa-spin"
+                ></i>
+
+                <span>
+                    Loading license details...
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-modal-close
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EDIT LICENSE MODAL
+========================================================= -->
+
+<div
+    class="modal license-modal"
+    id="licenseModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editLicenseTitle"
+>
+
+    <div
+        class="modal-backdrop"
+        data-modal-close
+    ></div>
+
+
+    <div class="modal-dialog">
+
+        <div class="modal-header">
+
+            <div class="modal-heading">
+
+                <span class="modal-eyebrow">
+                    LICENSE MANAGEMENT
+                </span>
+
+                <h3 id="editLicenseTitle">
+                    Edit License
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                data-modal-close
+                aria-label="Close edit license"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form
+            id="licenseEditForm"
+            class="license-form"
+            novalidate
+        >
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <!-- LICENSE KEY -->
+
+                    <div class="form-group form-group-full">
+
+                        <label for="licenseKey">
+                            License Key
+                        </label>
+
+                        <div class="input-with-icon">
+
+                            <i class="fa-solid fa-key"></i>
+
+                            <input
+                                id="licenseKey"
+                                type="text"
+                                name="license_key"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="form-group">
+
+                        <label for="licenseStatus">
+                            Status
+                        </label>
+
+                        <select
+                            id="licenseStatus"
+                            name="status"
+                            required
+                        >
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="suspended">
+                                Suspended
+                            </option>
+
+                            <option value="revoked">
+                                Revoked
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- START -->
+
+                    <div class="form-group">
+
+                        <label for="licenseStartDate">
+                            Start Date
+                        </label>
+
+                        <input
+                            id="licenseStartDate"
+                            type="date"
+                            name="start_date"
+                        >
+
+                    </div>
+
+
+                    <!-- EXPIRY -->
+
+                    <div class="form-group">
+
+                        <label for="licenseExpiryDate">
+                            Expiry Date
+                        </label>
+
+                        <input
+                            id="licenseExpiryDate"
+                            type="date"
+                            name="expiry_date"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-modal-close
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    <span>
+                        Save Changes
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM MODAL
+========================================================= -->
+
+<div
+    class="modal license-modal"
+    id="confirmModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirmTitle"
+>
+
+    <div
+        class="modal-backdrop"
+        data-modal-close
+    ></div>
+
+
+    <div class="modal-dialog modal-small">
+
+        <div class="confirm-modal">
+
+            <div class="confirm-icon">
+
+                <i
+                    class="fa-solid fa-shield-halved"
+                ></i>
+
+            </div>
+
+
+            <div class="confirm-content">
+
+                <span class="modal-eyebrow">
+                    SECURITY ACTION
+                </span>
+
+                <h3
+                    id="confirmTitle"
+                    data-confirm-title
+                >
+                    Confirm Action
+                </h3>
+
+                <p data-confirm-message>
+                    Are you sure you want to continue?
+                </p>
+
+            </div>
+
+
+            <div class="confirm-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-modal-close
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-confirm-action
+                >
+                    <i class="fa-solid fa-check"></i>
+                    Confirm
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST CONTAINER
+========================================================= -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+<!-- =========================================================
+     SCREEN LOADER
+========================================================= -->
+
+<div
+    id="licensePageLoader"
+    class="license-page-loader"
+    hidden
+>
+
+    <div class="loader-content">
+
+        <div class="loading-spinner">
+
+            <i
+                class="fa-solid fa-spinner fa-spin"
+            ></i>
+
+        </div>
+
+        <span>
+            Processing...
+        </span>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+{% block extra_js %}
+
+<script
+    src="{% static 'superadmin/js/license.js' %}"
+    defer
+></script>
+
+{% endblock %}
