@@ -1,0 +1,1181 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1220"
+    >
+
+    <meta
+        name="description"
+        content="{% block meta_description %}Sita Path Lab Super Admin Management Portal{% endblock %}"
+    >
+
+    <meta
+        name="robots"
+        content="noindex,nofollow"
+    >
+
+    <title>
+        {% block title %}Dashboard{% endblock %}
+        | Sita Path Lab Super Admin
+    </title>
+
+
+    <!-- =====================================================
+         FONTS
+    ====================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         BASE CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'superadmin/css/base.css' %}"
+    >
+
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+
+<body>
+
+
+<div
+    class="app-shell"
+    id="appShell"
+>
+
+
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        aria-hidden="true"
+    ></div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+        aria-label="Super Admin Navigation"
+    >
+
+
+        <!-- =================================================
+             BRAND
+        ================================================== -->
+
+        <div class="sidebar-brand">
+
+            <a
+                href="{% url 'superadmin:dashboard' %}"
+                class="brand-link"
+                aria-label="Sita Path Lab Super Admin Dashboard"
+            >
+
+                <div class="brand-logo">
+
+                    <i class="fa-solid fa-flask-vial"></i>
+
+                </div>
+
+
+                <div class="brand-text">
+
+                    <strong>Sita Path Lab</strong>
+
+                    <span>SUPER ADMIN</span>
+
+                </div>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+                aria-label="Close sidebar"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             CURRENT USER
+        ================================================== -->
+
+        <div class="sidebar-user">
+
+
+            <div
+                class="user-avatar"
+                aria-hidden="true"
+            >
+
+                {% if request.user.first_name %}
+                    {{ request.user.first_name|first|upper }}
+                {% elif request.user.username %}
+                    {{ request.user.username|first|upper }}
+                {% else %}
+                    A
+                {% endif %}
+
+            </div>
+
+
+            <div class="user-info">
+
+                <strong
+                    title="{{ request.user.get_full_name|default:request.user.username }}"
+                >
+
+                    {% if request.user.get_full_name %}
+                        {{ request.user.get_full_name }}
+                    {% else %}
+                        {{ request.user.username|default:"Administrator" }}
+                    {% endif %}
+
+                </strong>
+
+
+                <span>
+
+                    <i class="fa-solid fa-circle"></i>
+
+                    {% if request.user.is_superuser %}
+                        Super Administrator
+                    {% elif request.user.is_staff %}
+                        Staff Administrator
+                    {% else %}
+                        Administrator
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-menu-trigger"
+                id="sidebarUserMenu"
+                aria-label="Open account menu"
+                aria-expanded="false"
+            >
+
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             NAVIGATION
+        ================================================== -->
+
+        <nav
+            class="sidebar-nav"
+            aria-label="Main navigation"
+        >
+
+
+            <!-- =================================================
+                 OVERVIEW
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    OVERVIEW
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:dashboard' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Dashboard
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 TENANT MANAGEMENT
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    TENANT MANAGEMENT
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:vendors' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'vendors' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-building"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Vendors
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:users' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Users
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:roles' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'roles' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Roles & Permissions
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBSCRIPTION & BILLING
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    SUBSCRIPTION & BILLING
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:plans' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'plans' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Subscription Plans
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:subscriptions' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'subscriptions' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-repeat"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Subscriptions
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:licenses' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'licenses' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-id-card"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Licenses
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:payments' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'payments' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Payments
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:invoices' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'invoices' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Invoices
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:transactions' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'transactions' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Transactions
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 ANALYTICS
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    ANALYTICS
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:analytics' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Analytics
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 SECURITY & ACTIVITY
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    SECURITY & ACTIVITY
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:activity_logs' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-list-check"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Activity Logs
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:audit_logs' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'audit_logs' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Audit Logs
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:security' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'security' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Security
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 CONFIGURATION
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    CONFIGURATION
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:system_settings' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-sliders"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        System Settings
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:payment_settings' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'payment_settings' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Payment Settings
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUPPORT
+            ================================================== -->
+
+            <div class="nav-group">
+
+                <div class="nav-group-title">
+                    SUPPORT
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:notifications' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-regular fa-bell"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Notifications
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{% url 'superadmin:support' %}"
+                    class="nav-item {% if request.resolver_match.url_name == 'support' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </span>
+
+                    <span class="nav-label">
+                        Support
+                    </span>
+
+                </a>
+
+            </div>
+
+
+        </nav>
+
+
+        <!-- =================================================
+             SIDEBAR FOOTER
+        ================================================== -->
+
+        <div class="sidebar-footer">
+
+
+            <div class="system-status">
+
+                <span class="status-indicator"></span>
+
+                <div>
+
+                    <strong>
+                        System Operational
+                    </strong>
+
+                    <small>
+                        All services running
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!--
+                IMPORTANT:
+                Logout should be POST, not GET.
+            -->
+
+            <form
+                method="post"
+                action="{% url 'superadmin:logout' %}"
+                id="sidebarLogoutForm"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="logout-btn"
+                >
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <header class="topbar">
+
+
+            <div class="topbar-left">
+
+
+                <button
+                    type="button"
+                    class="mobile-menu-btn"
+                    id="sidebarOpen"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                >
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+
+                <div class="page-heading">
+
+                    <div class="breadcrumb">
+
+                        <span>
+                            Super Admin
+                        </span>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                        <strong>
+
+                            {% block breadcrumb %}
+                                Dashboard
+                            {% endblock %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <h1>
+
+                        {% block page_title %}
+                            Dashboard
+                        {% endblock %}
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TOPBAR ACTIONS
+            ================================================== -->
+
+            <div class="topbar-actions">
+
+
+                <!-- Theme -->
+
+                <button
+                    type="button"
+                    class="topbar-icon-btn"
+                    id="themeToggle"
+                    title="Toggle theme"
+                    aria-label="Toggle theme"
+                >
+
+                    <i class="fa-solid fa-moon"></i>
+
+                </button>
+
+
+                <!-- Notifications -->
+
+                <div class="notification-wrapper">
+
+
+                    <button
+                        type="button"
+                        class="topbar-icon-btn notification-btn"
+                        id="notificationBtn"
+                        title="Notifications"
+                        aria-label="Notifications"
+                        aria-expanded="false"
+                    >
+
+                        <i class="fa-regular fa-bell"></i>
+
+                        <span
+                            class="notification-count"
+                            id="notificationCount"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <div
+                        class="notification-dropdown"
+                        id="notificationDropdown"
+                        role="dialog"
+                        aria-label="Notifications"
+                    >
+
+                        <div class="dropdown-header">
+
+                            <div>
+
+                                <strong>
+                                    Notifications
+                                </strong>
+
+                                <small>
+                                    Recent system activity
+                                </small>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                id="markNotificationsRead"
+                            >
+                                Mark all read
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="notification-list"
+                            id="notificationList"
+                        >
+
+                            <div class="notification-empty">
+
+                                <i class="fa-regular fa-bell"></i>
+
+                                <strong>
+                                    No new notifications
+                                </strong>
+
+                                <span>
+                                    You're all caught up.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="dropdown-footer">
+
+                            <a
+                                href="{% url 'superadmin:notifications' %}"
+                            >
+                                View all notifications
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Divider -->
+
+                <div class="topbar-divider"></div>
+
+
+                <!-- User -->
+
+                <div class="topbar-user-wrapper">
+
+
+                    <button
+                        type="button"
+                        class="topbar-user"
+                        id="topbarUser"
+                        aria-label="Open user menu"
+                        aria-expanded="false"
+                    >
+
+                        <div class="topbar-avatar">
+
+                            {% if request.user.first_name %}
+                                {{ request.user.first_name|first|upper }}
+                            {% elif request.user.username %}
+                                {{ request.user.username|first|upper }}
+                            {% else %}
+                                A
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="topbar-user-info">
+
+                            <strong>
+
+                                {% if request.user.get_full_name %}
+                                    {{ request.user.get_full_name }}
+                                {% else %}
+                                    {{ request.user.username|default:"Administrator" }}
+                                {% endif %}
+
+                            </strong>
+
+                            <small>
+                                {% if request.user.is_superuser %}
+                                    Super Admin
+                                {% else %}
+                                    Administrator
+                                {% endif %}
+                            </small>
+
+                        </div>
+
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </button>
+
+
+                    <!-- USER DROPDOWN -->
+
+                    <div
+                        class="user-dropdown"
+                        id="userDropdown"
+                    >
+
+
+                        <a href="{% url 'superadmin:profile' %}">
+
+                            <i class="fa-regular fa-user"></i>
+
+                            <span>
+                                My Profile
+                            </span>
+
+                        </a>
+
+
+                        <a href="{% url 'superadmin:system_settings' %}">
+
+                            <i class="fa-solid fa-gear"></i>
+
+                            <span>
+                                Settings
+                            </span>
+
+                        </a>
+
+
+                        <a href="{% url 'superadmin:security' %}">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <span>
+                                Security
+                            </span>
+
+                        </a>
+
+
+                        <div class="dropdown-separator"></div>
+
+
+                        <form
+                            method="post"
+                            action="{% url 'superadmin:logout' %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="dropdown-logout"
+                            >
+
+                                <i class="fa-solid fa-right-from-bracket"></i>
+
+                                <span>
+                                    Logout
+                                </span>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <section class="page-content">
+
+            {% if messages %}
+
+                <div class="django-messages">
+
+                    {% for message in messages %}
+
+                        <div
+                            class="django-message django-message-{{ message.tags|default:'info' }}"
+                            role="alert"
+                        >
+
+                            <div class="django-message-icon">
+
+                                {% if message.tags == 'success' %}
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                {% elif message.tags == 'error' %}
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                {% else %}
+                                    <i class="fa-solid fa-circle-info"></i>
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="django-message-text">
+                                {{ message }}
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="app-footer">
+
+
+            <div class="footer-left">
+
+                <span>
+                    © {% now "Y" %} Sita Path Lab
+                </span>
+
+                <span class="footer-dot">
+                    •
+                </span>
+
+                <span>
+                    All rights reserved
+                </span>
+
+            </div>
+
+
+            <div class="footer-right">
+
+                <span class="footer-status">
+
+                    <span class="footer-status-dot"></span>
+
+                    Operational
+
+                </span>
+
+
+                <span class="footer-version">
+                    Super Admin v1.0
+                </span>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     GLOBAL TOAST
+====================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+<!-- =====================================================
+     GLOBAL LOADER
+====================================================== -->
+
+<div
+    class="global-loader"
+    id="globalLoader"
+    hidden
+    aria-hidden="true"
+>
+
+    <div class="loader-spinner"></div>
+
+    <span>
+        Loading...
+    </span>
+
+</div>
+
+
+<!-- =====================================================
+     GLOBAL JAVASCRIPT CONFIG
+====================================================== -->
+
+<script>
+
+    window.SITA_ADMIN = {
+
+        urls: {
+
+            dashboard:
+                "{% url 'superadmin:dashboard' %}",
+
+            notifications:
+                "{% url 'superadmin:notifications' %}",
+
+            profile:
+                "{% url 'superadmin:profile' %}",
+
+            logout:
+                "{% url 'superadmin:logout' %}"
+
+        },
+
+        user: {
+
+            id:
+                "{{ request.user.id|default:'' }}",
+
+            username:
+                "{{ request.user.username|default:''|escapejs }}",
+
+            isSuperuser: {% if request.user.is_superuser %}true{% else %}false{% endif %}
+
+        }
+
+    };
+
+</script>
+
+
+<!-- =====================================================
+     BASE JS
+====================================================== -->
+
+<script
+    src="{% static 'superadmin/js/base.js' %}"
+    defer
+></script>
+
+
+{% block extra_js %}{% endblock %}
+
+
+</body>
+
+</html>

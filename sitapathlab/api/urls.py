@@ -7,26 +7,26 @@ urlpatterns = [
     # =========================================================
     # FRONTEND / PAGES
     # =========================================================
-    path("", views.landing_view, name="index"),
-    path("features/", views.features_view, name="features"),
-    path("pricing/", views.pricing_view, name="pricing"),
-    path("about/", views.about_view, name="about"),
-    path("contact/", views.contact_view, name="contact"),
-    path("resources/", views.resources_view, name="resources"),
-    path("solutions/", views.solutions_view, name="solutions"),
-    
-     
-    
-    
-
-    
+    path(
+        "",
+        views.landing_view,
+        name="landing"
+    ),
+    path("/",
+        views.home_view,
+         name="index"
+        ),
     path(
         "dashboard/",
         views.home_view,
         name="home"
     ),
 
-    
+    path(
+        "index/",
+        views.home_view,
+        name="index"
+    ),
 
     path(
         "dashboard/",
@@ -39,33 +39,7 @@ urlpatterns = [
         views.dashboard_view,
         name="dashboard_ui"
     ),
-    
-    
-    path(
-                    "privacy/",
-                    views.privacy_view,
-                    name="privacy"
-                ),
-    path(
-                    "terms/",
-                    views.terms_view,
-                    name="terms"
-                ),
-    path(
-                        "compliance/",
-                        views.compliance_view,
-                        name="compliance"
-                    ),
 
-    path(
-                        "forgot-password/",
-                        views.forgot_password_view,
-                        name="forgot_password"
-                    ),        
-    
-        
-        
-    
     path(
         "patients/",
         views.patients_view,

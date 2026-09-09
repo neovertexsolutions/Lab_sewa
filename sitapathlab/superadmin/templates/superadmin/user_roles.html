@@ -1,0 +1,1122 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}User Roles{% endblock %}
+{% block page_title %}User Roles{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'superadmin/css/user_roles.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="roles-page">
+
+    <!-- =====================================================
+         CSRF
+    ====================================================== -->
+
+    <form id="csrfForm" style="display:none;">
+        {% csrf_token %}
+    </form>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="roles-header">
+
+        <div class="roles-heading">
+
+            <div class="heading-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div>
+
+                <div class="breadcrumb-text">
+                    Access Control / Roles
+                </div>
+
+                <h2>User Roles</h2>
+
+                <p>
+                    Create and manage roles, access levels and
+                    permissions for laboratory users.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="refreshRolesBtn"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                Refresh
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="createRoleBtn"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Create Role
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="role-stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Roles</span>
+
+                <strong id="totalRoles">
+                    {{ roles|length|default:"0" }}
+                </strong>
+
+                <small>
+                    Configured roles
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Active Roles</span>
+
+                <strong id="activeRoles">
+                    {{ active_roles_count|default:"0" }}
+                </strong>
+
+                <small>
+                    Currently enabled
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Assigned Users</span>
+
+                <strong id="assignedUsers">
+                    {{ assigned_users_count|default:"0" }}
+                </strong>
+
+                <small>
+                    Across all roles
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Permissions</span>
+
+                <strong id="totalPermissions">
+                    {{ total_permissions_count|default:"0" }}
+                </strong>
+
+                <small>
+                    Available permissions
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="roles-toolbar">
+
+        <div class="toolbar-left">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="roleSearch"
+                    placeholder="Search roles..."
+                    autocomplete="off"
+                    aria-label="Search roles"
+                >
+
+                <kbd>Ctrl K</kbd>
+
+            </div>
+
+        </div>
+
+
+        <div class="toolbar-right">
+
+            <div class="filter-box">
+
+                <i class="fa-solid fa-filter"></i>
+
+                <select
+                    id="statusFilter"
+                    aria-label="Filter roles by status"
+                >
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="view-switcher"
+                role="group"
+                aria-label="Role view"
+            >
+
+                <button
+                    type="button"
+                    class="view-btn active"
+                    data-view="grid"
+                    title="Grid view"
+                    aria-label="Grid view"
+                >
+                    <i class="fa-solid fa-grip"></i>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="view-btn"
+                    data-view="table"
+                    title="Table view"
+                    aria-label="Table view"
+                >
+                    <i class="fa-solid fa-list"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         GRID VIEW
+    ====================================================== -->
+
+    <section
+        class="roles-grid"
+        id="rolesGrid"
+    >
+
+        {% for role in roles %}
+
+        <article
+            class="role-card"
+            data-id="{{ role.id }}"
+            data-role="{{ role.name|lower|escape }}"
+            data-status="{% if role.is_active %}active{% else %}inactive{% endif %}"
+            data-users="{{ role.user_count|default:0 }}"
+        >
+
+            <!-- CARD TOP -->
+
+            <div class="role-card-top">
+
+                <div class="role-symbol {{ role.slug|default:'default' }}">
+
+                    {% if role.slug == "administrator" or role.name|lower == "administrator" %}
+                        <i class="fa-solid fa-user-shield">
+
+                    {% elif role.slug == "manager" or role.name|lower == "manager" %}
+                        <i class="fa-solid fa-user-tie">
+
+                    {% elif role.slug == "receptionist" or role.name|lower == "receptionist" %}
+                        <i class="fa-solid fa-headset">
+
+                    {% elif role.slug == "technician" or role.name|lower == "lab technician" %}
+                        <i class="fa-solid fa-flask">
+
+                    {% elif role.slug == "accountant" or role.name|lower == "accountant" %}
+                        <i class="fa-solid fa-calculator">
+
+                    {% elif role.slug == "viewer" or role.name|lower == "viewer" %}
+                        <i class="fa-solid fa-eye">
+
+                    {% else %}
+                        <i class="fa-solid fa-user-shield">
+                    {% endif %}
+
+                    </i>
+
+                </div>
+
+
+                <div class="role-menu">
+
+                    <button
+                        type="button"
+                        class="role-menu-btn"
+                        aria-label="Role actions"
+                        aria-haspopup="true"
+                    >
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+
+
+                    <div class="role-dropdown">
+
+                        <button
+                            type="button"
+                            data-action="view"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                            View Role
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-action="edit"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                            Edit Role
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-action="duplicate"
+                        >
+                            <i class="fa-regular fa-copy"></i>
+                            Duplicate
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-action="permissions"
+                        >
+                            <i class="fa-solid fa-key"></i>
+                            Permissions
+                        </button>
+
+
+                        <div class="dropdown-divider"></div>
+
+
+                        <button
+                            type="button"
+                            class="danger"
+                            data-action="delete"
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD BODY -->
+
+            <div class="role-card-body">
+
+                <div class="role-title-row">
+
+                    <h3>
+                        {{ role.name|escape }}
+                    </h3>
+
+
+                    {% if role.is_active %}
+
+                    <span class="status-badge active">
+                        <span></span>
+                        Active
+                    </span>
+
+                    {% else %}
+
+                    <span class="status-badge inactive">
+                        <span></span>
+                        Inactive
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <p>
+                    {{ role.description|default:"No description available."|escape }}
+                </p>
+
+
+                <div class="role-meta">
+
+                    <div>
+
+                        <span>
+                            Users
+                        </span>
+
+                        <strong>
+                            {{ role.user_count|default:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Permissions
+                        </span>
+
+                        <strong>
+                            {{ role.permission_count|default:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Type
+                        </span>
+
+                        <strong>
+
+                            {% if role.is_system %}
+                                System
+                            {% else %}
+                                Custom
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PERMISSION PREVIEW -->
+
+            <div class="permission-preview">
+
+                <span>
+                    Access
+                </span>
+
+
+                <div class="permission-tags">
+
+                    {% if role.permission_preview %}
+
+                        {% for permission in role.permission_preview|slice:":5" %}
+
+                        <span>
+                            {{ permission|escape }}
+                        </span>
+
+                        {% endfor %}
+
+
+                        {% if role.permission_count > 5 %}
+
+                        <span class="more">
+                            +{{ role.permission_count|add:"-5" }}
+                        </span>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <span>
+                            No permissions
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD FOOTER -->
+
+            <div class="role-card-footer">
+
+                <small>
+
+                    {% if role.updated_at %}
+                        Updated {{ role.updated_at|timesince }} ago
+                    {% else %}
+                        Recently created
+                    {% endif %}
+
+                </small>
+
+
+                <button
+                    type="button"
+                    class="view-role-btn"
+                    data-action="view"
+                >
+                    View Role
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </div>
+
+        </article>
+
+
+        {% empty %}
+
+        <!-- Empty backend state is handled below -->
+
+        {% endfor %}
+
+    </section>
+
+
+    <!-- =====================================================
+         EMPTY STATE
+    ====================================================== -->
+
+    <section
+        class="empty-state {% if not roles %}show{% endif %}"
+        id="emptyState"
+    >
+
+        <div class="empty-icon">
+            <i class="fa-solid fa-user-shield"></i>
+        </div>
+
+
+        <h3>
+            No roles found
+        </h3>
+
+
+        <p>
+            No roles match your current search or filter criteria.
+        </p>
+
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            id="emptyCreateBtn"
+        >
+            <i class="fa-solid fa-plus"></i>
+            Create Role
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         TABLE VIEW
+    ====================================================== -->
+
+    <section
+        class="roles-table-wrapper"
+        id="rolesTableWrapper"
+    >
+
+        <div class="table-scroll">
+
+            <table class="roles-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Role
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Users
+                        </th>
+
+                        <th>
+                            Permissions
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Updated
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="rolesTableBody">
+
+                    {% for role in roles %}
+
+                    <tr
+                        data-id="{{ role.id }}"
+                        data-role="{{ role.name|lower|escape }}"
+                        data-status="{% if role.is_active %}active{% else %}inactive{% endif %}"
+                    >
+
+                        <td>
+
+                            <div class="table-role">
+
+                                <span
+                                    class="table-role-icon {{ role.slug|default:'default' }}"
+                                >
+
+                                    <i class="fa-solid fa-user-shield"></i>
+
+                                </span>
+
+
+                                <div>
+
+                                    <strong>
+                                        {{ role.name|escape }}
+                                    </strong>
+
+                                    <small>
+                                        {{ role.description|default:"No description"|truncatechars:70|escape }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if role.is_system %}
+
+                            <span class="type-badge system">
+                                System
+                            </span>
+
+                            {% else %}
+
+                            <span class="type-badge custom">
+                                Custom
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ role.user_count|default:0 }}
+                        </td>
+
+
+                        <td>
+                            {{ role.permission_count|default:0 }}
+                        </td>
+
+
+                        <td>
+
+                            {% if role.is_active %}
+
+                            <span class="status-badge active">
+                                <span></span>
+                                Active
+                            </span>
+
+                            {% else %}
+
+                            <span class="status-badge inactive">
+                                <span></span>
+                                Inactive
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if role.updated_at %}
+                                {{ role.updated_at|timesince }} ago
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="table-action"
+                                data-action="view"
+                                data-id="{{ role.id }}"
+                            >
+                                View
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="table-empty"
+                        >
+                            No roles available.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CREATE / EDIT ROLE MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-backdrop"
+        id="roleModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="role-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="roleModalTitle"
+        >
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeRoleModal"
+                aria-label="Close modal"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <div class="modal-header">
+
+                <div class="modal-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 id="roleModalTitle">
+                        Create New Role
+                    </h3>
+
+                    <p id="roleModalDescription">
+                        Define a new access role for your users.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="roleForm"
+                method="post"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                <input
+                    type="hidden"
+                    id="roleId"
+                    name="role_id"
+                    value=""
+                >
+
+
+                <!-- ROLE NAME -->
+
+                <div class="form-group">
+
+                    <label for="roleName">
+
+                        Role Name
+
+                        <span>
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="roleName"
+                        name="role_name"
+                        placeholder="e.g. Senior Technician"
+                        maxlength="100"
+                        autocomplete="off"
+                        required
+                    >
+
+                    <small
+                        class="field-error"
+                        id="roleNameError"
+                    ></small>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="roleDescription">
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        id="roleDescription"
+                        name="description"
+                        rows="4"
+                        placeholder="Describe what this role can access..."
+                        maxlength="500"
+                    ></textarea>
+
+
+                    <div class="character-count">
+
+                        <span id="descriptionCount">
+                            0
+                        </span>
+
+                        /500
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="form-group">
+
+                    <label>
+                        Role Status
+                    </label>
+
+
+                    <label class="switch-field">
+
+                        <input
+                            type="checkbox"
+                            id="roleStatus"
+                            name="is_active"
+                            checked
+                        >
+
+                        <span class="switch-slider"></span>
+
+
+                        <span>
+                            Active role
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- FORM ERROR -->
+
+                <div
+                    class="form-error"
+                    id="roleFormError"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancelRoleBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="saveRoleBtn"
+                    >
+
+                        <i class="fa-solid fa-check"></i>
+
+                        <span>
+                            Create Role
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DELETE ROLE MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-backdrop"
+        id="deleteModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="delete-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="deleteModalTitle"
+        >
+
+            <div class="delete-icon">
+
+                <i class="fa-solid fa-trash"></i>
+
+            </div>
+
+
+            <h3 id="deleteModalTitle">
+                Delete Role?
+            </h3>
+
+
+            <p>
+
+                Are you sure you want to delete
+
+                <strong id="deleteRoleName">
+                    this role
+                </strong>?
+
+                This action cannot be undone.
+
+            </p>
+
+
+            <div class="warning-box">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+                    Users assigned to this role may lose
+                    their access.
+                </span>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelDeleteBtn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    id="confirmDeleteBtn"
+                >
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    <span>
+                        Delete Role
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         GLOBAL TOAST
+    ====================================================== -->
+
+    <div
+        class="toast-container"
+        id="roleToastContainer"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+    /*
+     * Backend URLs are exposed to user_roles.js.
+     * Change these names only if your Django urls.py
+     * uses different route names.
+     */
+
+    window.SUPERADMIN_ROLE_CONFIG = {
+        listUrl: "{% url 'superadmin:user_roles' %}",
+        createUrl: "{% url 'superadmin:create_role' %}",
+        updateUrl: "{% url 'superadmin:update_role' 0 %}",
+        deleteUrl: "{% url 'superadmin:delete_role' 0 %}",
+        permissionsUrl: "{% url 'superadmin:role_permissions' 0 %}",
+        detailUrl: "{% url 'superadmin:role_detail' 0 %}"
+    };
+</script>
+
+
+<script src="{% static 'superadmin/js/user_roles.js' %}"></script>
+
+{% endblock %}

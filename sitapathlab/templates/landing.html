@@ -1,0 +1,921 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="Sita Path Lab Enterprise - Complete Laboratory Management System">
+
+        <title>Sita Path Lab | Laboratory Management System</title>
+
+        <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- =====================================================
+     BACKGROUND EFFECT
+===================================================== -->
+
+        <div class="bg-grid"></div>
+
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+
+        <!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+        <header class="navbar">
+
+            <div class="nav-container">
+
+                <a href="/" class="brand">
+
+                    <div class="brand-icon">
+                        <span>✚</span>
+                    </div>
+
+                    <div class="brand-text">
+
+                        <strong>Sita Path Lab</strong>
+
+                        <small>
+                            ENTERPRISE HEALTHCARE
+                        </small>
+
+                    </div>
+
+                </a>
+
+
+                <nav class="nav-links">
+
+                    <a href="#features">Features</a>
+
+                    <a href="#modules">Modules</a>
+
+                    <a href="#security">Security</a>
+
+                    <a href="#about">About</a>
+
+                </nav>
+
+
+                <div class="nav-actions">
+
+                    <button class="login-btn" onclick="openLogin()">
+
+                        Vendor Login
+
+                    </button>
+
+                </div>
+
+
+                <button class="mobile-menu" onclick="toggleMenu()">
+
+                    ☰
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+     HERO
+===================================================== -->
+
+        <section class="hero">
+
+            <div class="hero-container">
+
+
+                <!-- LEFT -->
+
+                <div class="hero-content">
+
+                    <div class="hero-badge">
+
+                        <span class="pulse"></span>
+
+                        Laboratory Management • SaaS Platform
+
+                    </div>
+
+
+                    <h1>
+
+                        Run Your Laboratory
+
+                        <span>Smarter.</span>
+
+                    </h1>
+
+
+                    <p class="hero-description">
+
+                        A complete digital platform for modern diagnostic
+                        laboratories. Manage patients, billing, tests,
+                        staff, inventory, reports and operations from
+                        one powerful dashboard.
+
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <button class="primary-btn" onclick="openLogin()">
+
+                            Access Your Lab
+
+                            <span>→</span>
+
+                        </button>
+
+
+                        <a href="#features" class="secondary-btn">
+
+                            Explore Platform
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="hero-trust">
+
+                        <div class="trust-item">
+
+                            <strong>24/7</strong>
+
+                            <span>Cloud Access</span>
+
+                        </div>
+
+
+                        <div class="trust-line"></div>
+
+
+                        <div class="trust-item">
+
+                            <strong>100%</strong>
+
+                            <span>Digital Workflow</span>
+
+                        </div>
+
+
+                        <div class="trust-line"></div>
+
+
+                        <div class="trust-item">
+
+                            <strong>Secure</strong>
+
+                            <span>Data Management</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT DASHBOARD -->
+
+                <div class="hero-visual">
+
+                    <div class="dashboard-glow"></div>
+
+
+                    <div class="dashboard-window">
+
+                        <div class="window-header">
+
+                            <div class="window-dots">
+
+                                <span></span>
+                                <span></span>
+                                <span></span>
+
+                            </div>
+
+                            <div class="window-title">
+
+                                Sita Path Lab Dashboard
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="dashboard-body">
+
+                            <div class="mini-sidebar">
+
+                                <div class="mini-logo">
+                                    ✚
+                                </div>
+
+                                <div class="mini-nav active">
+                                    ▦
+                                </div>
+
+                                <div class="mini-nav">
+                                    ♙
+                                </div>
+
+                                <div class="mini-nav">
+                                    ◫
+                                </div>
+
+                                <div class="mini-nav">
+                                    $
+                                </div>
+
+                                <div class="mini-nav">
+                                    ⚗
+                                </div>
+
+                            </div>
+
+
+                            <div class="mini-content">
+
+                                <div class="mini-top">
+
+                                    <div>
+
+                                        <small>
+                                            Good Morning
+                                        </small>
+
+                                        <h3>
+                                            Administrator
+                                        </h3>
+
+                                    </div>
+
+                                    <div class="mini-avatar">
+                                        A
+                                    </div>
+
+                                </div>
+
+
+                                <div class="stats-grid">
+
+                                    <div class="stat-card blue">
+
+                                        <span>Patients</span>
+
+                                        <strong>1,284</strong>
+
+                                        <small>+12.4%</small>
+
+                                    </div>
+
+
+                                    <div class="stat-card purple">
+
+                                        <span>Appointments</span>
+
+                                        <strong>86</strong>
+
+                                        <small>Today</small>
+
+                                    </div>
+
+
+                                    <div class="stat-card orange">
+
+                                        <span>Revenue</span>
+
+                                        <strong>₹48K</strong>
+
+                                        <small>MTD</small>
+
+                                    </div>
+
+
+                                    <div class="stat-card green">
+
+                                        <span>Reports</span>
+
+                                        <strong>324</strong>
+
+                                        <small>Completed</small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="chart-card">
+
+                                    <div class="chart-title">
+
+                                        <strong>
+                                            Revenue Trend
+                                        </strong>
+
+                                        <span>
+                                            Last 30 Days
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="chart">
+
+                                        <div class="bar b1"></div>
+                                        <div class="bar b2"></div>
+                                        <div class="bar b3"></div>
+                                        <div class="bar b4"></div>
+                                        <div class="bar b5"></div>
+                                        <div class="bar b6"></div>
+                                        <div class="bar b7"></div>
+                                        <div class="bar b8"></div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="floating-card card-one">
+
+                        <div class="floating-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Report Ready
+                            </strong>
+
+                            <small>
+                                Patient #SPL-2026
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="floating-card card-two">
+
+                        <div class="floating-icon purple-icon">
+                            +
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                New Patient
+                            </strong>
+
+                            <small>
+                                Registration completed
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+     FEATURES
+===================================================== -->
+
+        <section class="features-section" id="features">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div class="section-label">
+                        POWERFUL PLATFORM
+                    </div>
+
+                    <h2>
+                        Everything Your Laboratory Needs
+                    </h2>
+
+                    <p>
+                        One integrated platform to manage your
+                        complete laboratory operation.
+                    </p>
+
+                </div>
+
+
+                <div class="features-grid">
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon blue-bg">
+                            ♙
+                        </div>
+
+                        <h3>
+                            Patient Management
+                        </h3>
+
+                        <p>
+                            Register patients, manage profiles,
+                            appointments and complete patient history.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon purple-bg">
+                            ⚗
+                        </div>
+
+                        <h3>
+                            Laboratory Tests
+                        </h3>
+
+                        <p>
+                            Manage tests, packages, pricing,
+                            samples and laboratory workflows.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon orange-bg">
+                            ₹
+                        </div>
+
+                        <h3>
+                            Billing & Invoices
+                        </h3>
+
+                        <p>
+                            Create invoices, track payments,
+                            discounts and outstanding balances.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon green-bg">
+                            ▣
+                        </div>
+
+                        <h3>
+                            Inventory Management
+                        </h3>
+
+                        <p>
+                            Track stock, suppliers, expiry dates
+                            and inventory alerts.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon pink-bg">
+                            ◫
+                        </div>
+
+                        <h3>
+                            Reports & Analytics
+                        </h3>
+
+                        <p>
+                            Understand your laboratory performance
+                            through real-time analytics.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon cyan-bg">
+                            ⚙
+                        </div>
+
+                        <h3>
+                            Staff & Access Control
+                        </h3>
+
+                        <p>
+                            Control staff access using powerful
+                            role-based permissions.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+     MODULES
+===================================================== -->
+
+        <section class="modules-section" id="modules">
+
+            <div class="section-container">
+
+                <div class="modules-content">
+
+                    <div class="section-label">
+                        COMPLETE CONTROL
+                    </div>
+
+                    <h2>
+                        One Platform.
+                        <span>Every Operation.</span>
+                    </h2>
+
+                    <p>
+                        Replace disconnected tools with one
+                        centralized laboratory management platform.
+                    </p>
+
+
+                    <div class="module-list">
+
+                        <div>
+                            ✓ Patient Registration
+                        </div>
+
+                        <div>
+                            ✓ Appointment Scheduling
+                        </div>
+
+                        <div>
+                            ✓ Laboratory Tests
+                        </div>
+
+                        <div>
+                            ✓ Test Packages
+                        </div>
+
+                        <div>
+                            ✓ Billing & Payments
+                        </div>
+
+                        <div>
+                            ✓ Inventory & Suppliers
+                        </div>
+
+                        <div>
+                            ✓ Staff Management
+                        </div>
+
+                        <div>
+                            ✓ Reports & Analytics
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modules-visual">
+
+                    <div class="module-circle">
+
+                        <div class="center-logo">
+                            ✚
+                        </div>
+
+                        <div class="module-orbit orbit-1">
+                            PATIENTS
+                        </div>
+
+                        <div class="module-orbit orbit-2">
+                            TESTS
+                        </div>
+
+                        <div class="module-orbit orbit-3">
+                            BILLING
+                        </div>
+
+                        <div class="module-orbit orbit-4">
+                            REPORTS
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+     SECURITY
+===================================================== -->
+
+        <section class="security-section" id="security">
+
+            <div class="security-container">
+
+                <div class="security-icon">
+                    🔐
+                </div>
+
+                <div>
+
+                    <div class="section-label">
+                        ENTERPRISE SECURITY
+                    </div>
+
+                    <h2>
+                        Your Laboratory Data,
+                        Your Control.
+                    </h2>
+
+                    <p>
+                        Role-based access, secure authentication,
+                        audit logs and controlled vendor access
+                        help keep your laboratory operations protected.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+     CTA
+===================================================== -->
+
+        <section class="cta-section">
+
+            <div class="cta-box">
+
+                <div class="cta-glow"></div>
+
+                <div class="cta-content">
+
+                    <div class="section-label">
+                        READY TO GO DIGITAL?
+                    </div>
+
+                    <h2>
+                        Access Your Laboratory
+                        Dashboard
+                    </h2>
+
+                    <p>
+                        Login with the credentials provided
+                        by your administrator.
+                    </p>
+
+                    <button class="primary-btn" onclick="openLogin()">
+
+                        Vendor Login
+
+                        <span>→</span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+     FOOTER
+===================================================== -->
+
+        <footer class="footer" id="about">
+
+            <div class="footer-container">
+
+
+                <div class="footer-brand">
+
+                    <div class="brand">
+
+                        <div class="brand-icon">
+                            ✚
+                        </div>
+
+                        <div class="brand-text">
+
+                            <strong>
+                                Sita Path Lab
+                            </strong>
+
+                            <small>
+                                ENTERPRISE HEALTHCARE
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+                        Modern laboratory management,
+                        built for modern healthcare businesses.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>Platform</h4>
+
+                    <a href="#features">Features</a>
+
+                    <a href="#modules">Modules</a>
+
+                    <a href="#security">Security</a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>Company</h4>
+
+                    <a href="#about">About</a>
+
+                    <a href="#">Contact</a>
+
+                    <a href="#">Support</a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>Access</h4>
+
+                    <a href="#" onclick="openLogin(); return false;">
+                        Vendor Login
+                    </a>
+
+                    <a href="/admin/">
+                        Administrator
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 Sita Path Lab Enterprise.
+                    All rights reserved.
+                </span>
+
+                <span>
+                    Laboratory Management Platform
+                </span>
+
+            </div>
+
+        </footer>
+
+
+        <!-- =====================================================
+     LOGIN MODAL
+===================================================== -->
+
+        <div class="login-overlay" id="loginModal">
+
+            <div class="login-box">
+
+                <button class="close-login" onclick="closeLogin()">
+
+                    ×
+
+                </button>
+
+
+                <div class="login-logo">
+                    ✚
+                </div>
+
+
+                <h2>
+                    Vendor Login
+                </h2>
+
+                <p>
+                    Sign in to access your laboratory dashboard.
+                </p>
+
+
+                <form method="POST" action="/">
+
+                    {% csrf_token %}
+
+
+                    <label>
+                        Username / Lab ID
+                    </label>
+
+                    <input type="text" name="username" placeholder="Enter your username" required>
+
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input type="password" name="password" placeholder="Enter your password" required>
+
+
+                    <div class="login-options">
+
+                        <label class="remember">
+
+                            <input type="checkbox" name="remember">
+
+                            Remember me
+
+                        </label>
+
+                        <a href="#">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+                    <button type="submit" class="login-submit">
+
+                        Sign In
+
+                        <span>→</span>
+
+                    </button>
+
+                </form>
+
+
+                <div class="login-security">
+
+                    🔒 Secure vendor authentication
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <script src="{% static 'js/landing.js' %}"></script>
+
+    </body>
+
+</html>

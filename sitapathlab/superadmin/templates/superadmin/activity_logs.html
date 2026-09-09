@@ -1,0 +1,697 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Activity Logs | Super Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/activity_logs.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="activity-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div class="page-header-left">
+
+            <div class="page-icon">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+
+            <div>
+                <h1>Activity Logs</h1>
+
+                <p>
+                    Monitor and audit all important activities
+                    across your platform.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="page-header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="refreshLogsBtn"
+            >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Refresh</span>
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="exportLogsBtn"
+            >
+                <i class="fa-solid fa-download"></i>
+                <span>Export Logs</span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-card-top">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+
+                <span class="stat-label">
+                    Total Activities
+                </span>
+            </div>
+
+            <div class="stat-value" id="totalActivities">
+                0
+            </div>
+
+            <div class="stat-footer">
+                <span class="stat-indicator positive">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span id="activityGrowth">0%</span>
+                </span>
+
+                <span>vs previous period</span>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+
+                <span class="stat-label">
+                    Successful
+                </span>
+
+            </div>
+
+            <div class="stat-value" id="successfulActivities">
+                0
+            </div>
+
+            <div class="stat-footer">
+
+                <span class="stat-indicator positive">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="successRate">0%</span>
+                </span>
+
+                <span>success rate</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon orange">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <span class="stat-label">
+                    Warnings
+                </span>
+
+            </div>
+
+            <div class="stat-value" id="warningActivities">
+                0
+            </div>
+
+            <div class="stat-footer">
+
+                <span class="stat-indicator warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Attention</span>
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon red">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <span class="stat-label">
+                    Security Events
+                </span>
+
+            </div>
+
+            <div class="stat-value" id="securityActivities">
+                0
+            </div>
+
+            <div class="stat-footer">
+
+                <span class="stat-indicator danger">
+                    <i class="fa-solid fa-shield"></i>
+                    <span>Monitored</span>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTER PANEL
+    ====================================================== -->
+
+    <div class="filter-card">
+
+        <div class="filter-header">
+
+            <div>
+                <h2>
+                    <i class="fa-solid fa-filter"></i>
+                    Filter Activities
+                </h2>
+
+                <p>
+                    Narrow down activity records using filters.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="clear-filter-btn"
+                id="clearFiltersBtn"
+            >
+                Clear Filters
+            </button>
+
+        </div>
+
+
+        <div class="filter-grid">
+
+            <div class="form-group">
+
+                <label for="searchLogs">
+                    Search
+                </label>
+
+                <div class="input-icon">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        id="searchLogs"
+                        placeholder="Search user, action, description..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="vendorFilter">
+                    Vendor
+                </label>
+
+                <select id="vendorFilter">
+
+                    <option value="">
+                        All Vendors
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="actionFilter">
+                    Action
+                </label>
+
+                <select id="actionFilter">
+
+                    <option value="">
+                        All Actions
+                    </option>
+
+                    <option value="login">
+                        Login
+                    </option>
+
+                    <option value="logout">
+                        Logout
+                    </option>
+
+                    <option value="create">
+                        Create
+                    </option>
+
+                    <option value="update">
+                        Update
+                    </option>
+
+                    <option value="delete">
+                        Delete
+                    </option>
+
+                    <option value="backup">
+                        Backup
+                    </option>
+
+                    <option value="restore">
+                        Restore
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="severityFilter">
+                    Severity
+                </label>
+
+                <select id="severityFilter">
+
+                    <option value="">
+                        All Severity
+                    </option>
+
+                    <option value="info">
+                        Information
+                    </option>
+
+                    <option value="success">
+                        Success
+                    </option>
+
+                    <option value="warning">
+                        Warning
+                    </option>
+
+                    <option value="danger">
+                        Critical
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="dateFrom">
+                    From Date
+                </label>
+
+                <input
+                    type="date"
+                    id="dateFrom"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="dateTo">
+                    To Date
+                </label>
+
+                <input
+                    type="date"
+                    id="dateTo"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACTIVITY TABLE
+    ====================================================== -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+                    Activity History
+                </h2>
+
+                <p>
+                    <span id="visibleRecords">0</span>
+                    records found
+                </p>
+
+            </div>
+
+            <div class="table-actions">
+
+                <button
+                    type="button"
+                    class="icon-btn"
+                    title="Refresh"
+                    id="tableRefreshBtn"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="activity-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            <input
+                                type="checkbox"
+                                id="selectAllLogs"
+                            >
+                        </th>
+
+                        <th>Activity</th>
+
+                        <th>Vendor</th>
+
+                        <th>User</th>
+
+                        <th>Action</th>
+
+                        <th>IP Address</th>
+
+                        <th>Date & Time</th>
+
+                        <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="activityTableBody">
+
+                    <tr class="loading-row">
+
+                        <td colspan="9">
+
+                            <div class="table-loader">
+
+                                <span class="spinner"></span>
+
+                                <span>
+                                    Loading activity logs...
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div
+            class="empty-state"
+            id="emptyState"
+            hidden
+        >
+
+            <div class="empty-icon">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+            </div>
+
+            <h3>
+                No activity found
+            </h3>
+
+            <p>
+                No activity records match your current filters.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="emptyClearBtn"
+            >
+                Clear Filters
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
+
+        <div class="pagination-wrapper">
+
+            <div class="pagination-info">
+
+                Showing
+                <strong id="paginationStart">0</strong>
+                -
+                <strong id="paginationEnd">0</strong>
+                of
+                <strong id="paginationTotal">0</strong>
+
+            </div>
+
+
+            <div
+                class="pagination"
+                id="pagination"
+            >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ACTIVITY DETAILS MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="activityModal"
+    hidden
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-eyebrow">
+                    Activity Details
+                </span>
+
+                <h2 id="modalActivityTitle">
+                    Activity
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeActivityModal"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="detail-grid">
+
+                <div class="detail-item">
+
+                    <span>
+                        Activity ID
+                    </span>
+
+                    <strong id="detailId">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Vendor
+                    </span>
+
+                    <strong id="detailVendor">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        User
+                    </span>
+
+                    <strong id="detailUser">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Action
+                    </span>
+
+                    <strong id="detailAction">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        IP Address
+                    </span>
+
+                    <strong id="detailIp">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Date
+                    </span>
+
+                    <strong id="detailDate">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-description">
+
+                <span>
+                    Description
+                </span>
+
+                <p id="detailDescription">
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="closeActivityModalBtn"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'superadmin/js/activity_logs.js' %}"></script>
+
+{% endblock %}

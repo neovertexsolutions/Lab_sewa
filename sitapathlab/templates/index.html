@@ -1,0 +1,1169 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sita Path Lab | Dashboard</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Dashboard CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard.css' %}"
+    >
+
+    <style>
+        .loading {
+            opacity: .55;
+            pointer-events: none;
+        }
+
+        .stat-value {
+            transition: all .25s ease;
+        }
+
+        .dashboard-error {
+            display: none;
+            margin: 20px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+<body class="bg-background text-on-background font-body-md transition-colors duration-300">
+
+
+<!-- =====================================================
+     DJANGO URL CONFIG
+===================================================== -->
+
+<script>
+    window.DASHBOARD_URLS = {
+        dashboard: "{% url 'dashboard' %}",
+        patients: "{% url 'patients' %}",
+        register: "{% url 'register' %}",
+        results: "{% url 'results' %}",
+        reports: "{% url 'reports' %}",
+        billing: "{% url 'billing' %}",
+        tests: "{% url 'tests' %}",
+        appointments: "{% url 'appointments' %}",
+        inventory: "{% url 'inventory' %}",
+        staff: "{% url 'staff' %}",
+        settings: "{% url 'settings' %}",
+        profile: "{% url 'profile' %}",
+
+        dashboardAPI: "{% url 'dashboard_data' %}",
+        patientsAPI: "{% url 'patients_api' %}",
+        appointmentsAPI: "{% url 'appointments_api' %}",
+        doctorsAPI: "{% url 'doctors_api' %}",
+        inventoryAPI: "{% url 'get_inventory_data' %}",
+        analyticsAPI: "{% url 'get_analytics_data' %}"
+    };
+</script>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-icon">
+            <span
+                class="material-symbols-outlined"
+                style="font-variation-settings:'FILL'1"
+            >
+                biotech
+            </span>
+        </div>
+
+        <div>
+            <h1 class="brand-title">
+                Sita Path Lab
+            </h1>
+
+            <p class="brand-sub">
+                Enterprise Healthcare
+            </p>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}"
+           class="nav-link active">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <a href="{% url 'patients' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">groups</span>
+            <span>Patients</span>
+        </a>
+
+
+        <a href="{% url 'register' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">person_add</span>
+            <span>Register</span>
+        </a>
+
+
+        <a href="{% url 'results' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">biotech</span>
+            <span>Results</span>
+        </a>
+
+
+        <a href="{% url 'reports' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">description</span>
+            <span>Reports</span>
+        </a>
+
+
+        <a href="{% url 'billing' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">payments</span>
+            <span>Billing</span>
+        </a>
+
+
+        <a href="{% url 'tests' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">science</span>
+            <span>Tests</span>
+        </a>
+
+
+        <a href="{% url 'appointments' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">event</span>
+            <span>Appointments</span>
+        </a>
+
+
+        <a href="{% url 'inventory' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <span>Inventory</span>
+        </a>
+
+
+        <a href="{% url 'staff' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">badge</span>
+            <span>Staff</span>
+        </a>
+
+
+        <a href="{% url 'settings' %}"
+           class="nav-link">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <div class="search-wrapper hidden md:block">
+
+            <span class="material-symbols-outlined search-icon">
+                search
+            </span>
+
+            <input
+                id="globalSearch"
+                type="search"
+                placeholder="Search patients, tests or reports..."
+                class="search-input"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="menu-toggle lg:hidden p-2 hover:bg-surface-container rounded-full"
+            aria-label="Open menu"
+        >
+            <span class="material-symbols-outlined">
+                menu
+            </span>
+        </button>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            title="Toggle Theme"
+            aria-label="Toggle dark mode"
+        >
+            <span class="material-symbols-outlined">
+                contrast
+            </span>
+        </button>
+
+
+        <div class="divider"></div>
+
+
+        <a
+            href="{% url 'profile' %}"
+            class="profile-wrap"
+        >
+
+            <div class="profile-text hidden sm:block">
+
+                <p class="profile-name">
+                    {{ request.user.get_full_name|default:request.user.username|default:"Administrator" }}
+                </p>
+
+                <p class="profile-role">
+                    Administrator
+                </p>
+
+            </div>
+
+            {% if request.user.is_authenticated and request.user.profile.photo %}
+                <img
+                    class="profile-avatar"
+                    src="{{ request.user.profile.photo.url }}"
+                    alt="Profile"
+                >
+            {% else %}
+                <div class="profile-avatar flex items-center justify-center bg-primary text-white">
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
+                </div>
+            {% endif %}
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main-content">
+
+
+    <div
+        id="dashboardError"
+        class="dashboard-error"
+    ></div>
+
+
+    <!-- =================================================
+         WELCOME
+    ================================================== -->
+
+    <section class="welcome-section">
+
+        <h2 class="welcome-title">
+            Good Morning,
+            <span id="welcomeUser">
+                {{ request.user.first_name|default:"Administrator" }}
+            </span>
+        </h2>
+
+        <p class="welcome-sub">
+
+            Here's what's happening at
+            <strong>Sita Path Lab</strong>
+            today,
+            <span id="currentDate"></span>.
+
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <section
+        class="stats-grid"
+        id="dashboardStats"
+    >
+
+
+        <!-- TOTAL PATIENTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-primary-fixed text-primary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        groups
+                    </span>
+
+                </span>
+
+                <span
+                    id="patientsTrend"
+                    class="stat-trend up"
+                >
+                    --
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Total Patients
+            </p>
+
+            <h3
+                id="totalPatients"
+                class="stat-value"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- TODAY PATIENTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-secondary-fixed text-secondary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        today
+                    </span>
+
+                </span>
+
+                <span class="stat-trend neutral">
+                    Today
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Today's Patients
+            </p>
+
+            <h3
+                id="todayPatients"
+                class="stat-value"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- REVENUE -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-tertiary-fixed text-tertiary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        payments
+                    </span>
+
+                </span>
+
+                <span
+                    id="revenueTrend"
+                    class="stat-trend up"
+                >
+                    --
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Revenue (MTD)
+            </p>
+
+            <h3
+                id="monthlyRevenue"
+                class="stat-value"
+            >
+                ₹0
+            </h3>
+
+        </div>
+
+
+        <!-- PENDING REPORTS -->
+
+        <div class="stat-card border-l-4 border-l-error">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-error-container text-error">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        pending_actions
+                    </span>
+
+                </span>
+
+                <span class="stat-badge danger">
+                    CRITICAL
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Pending Reports
+            </p>
+
+            <h3
+                id="pendingReports"
+                class="stat-value"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- APPOINTMENTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-surface-variant text-on-surface-variant">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        calendar_month
+                    </span>
+
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Appointments
+            </p>
+
+            <h3
+                id="totalAppointments"
+                class="stat-value"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- COMPLETED REPORTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-primary-fixed-dim text-primary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        verified
+                    </span>
+
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Completed Reports
+            </p>
+
+            <h3
+                id="completedReports"
+                class="stat-value"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- INVENTORY -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-tertiary-container/20 text-tertiary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        inventory_2
+                    </span>
+
+                </span>
+
+            </div>
+
+            <p class="stat-label">
+                Inventory Alerts
+            </p>
+
+            <h3
+                id="inventoryAlerts"
+                class="stat-value text-tertiary"
+            >
+                0
+            </h3>
+
+        </div>
+
+
+        <!-- STAFF -->
+
+        <div class="stat-card">
+
+            <div class="stat-head">
+
+                <span class="stat-icon bg-secondary-fixed-dim text-secondary">
+
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings:'FILL'1"
+                    >
+                        badge
+                    </span>
+
+                </span>
+
+                <div class="avatar-stack">
+                    <div class="avatar-ring"></div>
+                    <div class="avatar-ring"></div>
+                    <div class="avatar-ring"></div>
+                </div>
+
+            </div>
+
+            <p class="stat-label">
+                Staff Online
+            </p>
+
+            <h3
+                id="staffOnline"
+                class="stat-value"
+            >
+                0/0
+            </h3>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         DASHBOARD GRID
+    ================================================== -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- =============================================
+             LEFT
+        ============================================== -->
+
+        <div class="dash-left">
+
+
+            <!-- REVENUE CHART -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h4 class="card-title">
+                            Revenue Trend
+                        </h4>
+
+                        <p class="card-sub">
+                            Financial performance
+                        </p>
+
+                    </div>
+
+
+                    <select
+                        id="revenuePeriod"
+                        class="card-select"
+                    >
+
+                        <option value="30">
+                            Last 30 Days
+                        </option>
+
+                        <option value="180">
+                            Last 6 Months
+                        </option>
+
+                        <option value="365">
+                            Last Year
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="revenueChart"
+                    class="chart-bars"
+                >
+                </div>
+
+
+                <div
+                    id="chartLabels"
+                    class="chart-labels"
+                >
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div>
+
+                <h4 class="section-label">
+                    Quick Actions
+                </h4>
+
+
+                <div class="action-grid">
+
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="action-btn bg-primary-container text-on-primary-container"
+                    >
+
+                        <span class="material-symbols-outlined text-4xl">
+                            person_add
+                        </span>
+
+                        <span>
+                            Register Patient
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'results' %}"
+                        class="action-btn bg-secondary-container text-on-secondary-container"
+                    >
+
+                        <span class="material-symbols-outlined text-4xl">
+                            add_task
+                        </span>
+
+                        <span>
+                            Add Result
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'reports' %}"
+                        class="action-btn bg-surface-container-high text-on-surface"
+                    >
+
+                        <span class="material-symbols-outlined text-4xl">
+                            print
+                        </span>
+
+                        <span>
+                            Reports
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'patients' %}"
+                        class="action-btn bg-error/10 text-error"
+                    >
+
+                        <span class="material-symbols-outlined text-4xl">
+                            emergency
+                        </span>
+
+                        <span>
+                            Patient Entry
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ACTIVITY -->
+
+            <div class="card">
+
+                <h4 class="card-title mb-4">
+                    Recent Activity
+                </h4>
+
+
+                <div
+                    id="activityList"
+                    class="activity-list"
+                >
+
+                    <div class="empty-state">
+                        Loading activity...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             RIGHT
+        ============================================== -->
+
+        <div class="dash-right">
+
+
+            <!-- TODAY'S SCHEDULE -->
+
+            <div class="card">
+
+                <div class="flex justify-between items-center mb-4">
+
+                    <h4 class="card-title">
+                        Today's Schedule
+                    </h4>
+
+                    <a
+                        href="{% url 'appointments' %}"
+                        class="text-primary font-bold cursor-pointer hover:underline"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="scheduleList"
+                    class="schedule-list"
+                >
+
+                    <div class="empty-state">
+                        Loading schedule...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PATIENT GROWTH -->
+
+            <div class="growth-card">
+
+                <div class="growth-content">
+
+                    <h4 class="card-title text-white">
+                        Patient Growth
+                    </h4>
+
+                    <p
+                        id="growthMessage"
+                        class="growth-sub"
+                    >
+                        Loading today's target...
+                    </p>
+
+
+                    <div class="growth-ring-wrap">
+
+                        <div class="ring-wrapper">
+
+                            <svg
+                                class="ring-svg"
+                                viewBox="0 0 80 80"
+                            >
+
+                                <circle
+                                    class="ring-bg"
+                                    cx="40"
+                                    cy="40"
+                                    r="34"
+                                    stroke-width="8"
+                                    fill="none"
+                                />
+
+                                <circle
+                                    id="growthRing"
+                                    class="ring-fg"
+                                    cx="40"
+                                    cy="40"
+                                    r="34"
+                                    stroke-width="8"
+                                    fill="none"
+                                    stroke-dasharray="213.6"
+                                    stroke-dashoffset="213.6"
+                                />
+
+                            </svg>
+
+
+                            <div
+                                id="growthPercentage"
+                                class="ring-label"
+                            >
+                                0%
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <p
+                                id="growthStats"
+                                class="ring-stats"
+                            >
+                                0 / 0
+                            </p>
+
+                            <p class="ring-sub">
+                                Patients Today
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'analytics' %}"
+                        class="growth-btn"
+                    >
+                        Details
+                    </a>
+
+                </div>
+
+                <div class="growth-glow"></div>
+
+            </div>
+
+
+            <!-- DEMOGRAPHICS -->
+
+            <div class="card">
+
+                <h4 class="card-title mb-4">
+                    Demographics
+                </h4>
+
+
+                <div id="demographics">
+
+                    <div class="demo-item">
+
+                        <div class="demo-label">
+                            <span>
+                                Pediatric (0-18)
+                            </span>
+
+                            <span id="pediatricPercent">
+                                0%
+                            </span>
+                        </div>
+
+                        <div class="demo-bar">
+                            <div
+                                id="pediatricBar"
+                                class="demo-fill"
+                                style="width:0%"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="demo-item">
+
+                        <div class="demo-label">
+                            <span>
+                                Adult (19-60)
+                            </span>
+
+                            <span id="adultPercent">
+                                0%
+                            </span>
+                        </div>
+
+                        <div class="demo-bar">
+                            <div
+                                id="adultBar"
+                                class="demo-fill"
+                                style="width:0%"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="demo-item">
+
+                        <div class="demo-label">
+                            <span>
+                                Geriatric (60+)
+                            </span>
+
+                            <span id="geriatricPercent">
+                                0%
+                            </span>
+                        </div>
+
+                        <div class="demo-bar">
+                            <div
+                                id="geriatricBar"
+                                class="demo-fill"
+                                style="width:0%"
+                            ></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     MOBILE NAV
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="bottom-nav-item active"
+    >
+
+        <span class="material-symbols-outlined">
+            dashboard
+        </span>
+
+        <span>
+            Dashboard
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'patients' %}"
+        class="bottom-nav-item"
+    >
+
+        <span class="material-symbols-outlined">
+            groups
+        </span>
+
+        <span>
+            Patients
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'billing' %}"
+        class="bottom-nav-item"
+    >
+
+        <span class="material-symbols-outlined">
+            payments
+        </span>
+
+        <span>
+            Billing
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'reports' %}"
+        class="bottom-nav-item"
+    >
+
+        <span class="material-symbols-outlined">
+            description
+        </span>
+
+        <span>
+            Reports
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'profile' %}"
+        class="bottom-nav-item"
+    >
+
+        <span class="material-symbols-outlined">
+            account_circle
+        </span>
+
+        <span>
+            Profile
+        </span>
+
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     FAB
+===================================================== -->
+
+<a
+    href="{% url 'register' %}"
+    class="fab"
+    title="Register Patient"
+>
+
+    <span class="material-symbols-outlined text-3xl">
+        add
+    </span>
+
+</a>
+
+
+<!-- =====================================================
+     CSRF
+===================================================== -->
+
+{% csrf_token %}
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+</body>
+</html>
+

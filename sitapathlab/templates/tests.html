@@ -1,0 +1,908 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Sita Path Lab - Laboratory Test Management"
+    >
+
+    <title>Test Management | Sita Path Lab</title>
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =====================================================
+         MATERIAL SYMBOLS
+    ====================================================== -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =====================================================
+         PAGE CSS
+    ====================================================== -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/tests.css' %}"
+    >
+
+</head>
+
+
+<body class="bg-background text-on-background min-h-screen">
+
+<!-- =========================================================
+     TOP NAVBAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            type="button"
+            class="menu-btn lg:hidden"
+            id="menuButton"
+            onclick="toggleSidebar()"
+            aria-label="Open navigation menu"
+        >
+
+            <span class="material-symbols-outlined">
+                menu
+            </span>
+
+        </button>
+
+
+        <h1 class="topbar-brand">
+            Sita Path Lab
+        </h1>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <!-- Top Search -->
+
+        <div class="search-box hidden md:flex">
+
+            <span class="material-symbols-outlined search-icon">
+                search
+            </span>
+
+            <input
+                class="search-input"
+                id="testSearch"
+                type="search"
+                placeholder="Search tests..."
+                autocomplete="off"
+                aria-label="Search tests"
+            >
+
+        </div>
+
+
+        <!-- Theme -->
+
+        <button
+            type="button"
+            class="icon-btn"
+            id="themeToggle"
+            onclick="toggleTheme()"
+            title="Toggle Theme"
+            aria-label="Toggle theme"
+        >
+
+            <span class="material-symbols-outlined">
+                contrast
+            </span>
+
+        </button>
+
+
+        <!-- Profile -->
+
+        <div class="avatar">
+
+            <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoWi4hiZXpwYR8lixfoVEd8KYnPirKMO9bSHBtV0Jox-QGlSBOTIeMjSGy4htNiDMmigmHgXDqVaWDGTnNaAaPGHSEAKKZVfrb2_yM-Ima04TbXhrd7nCCdEDAiprB_dsr1cXT-E7leDeASVUznO2RQqgcMmkDe-oGZwM6q_fIRdUCAhdhCRm7Ze5dCAxWgH65wx6qK8IUC7MCUuKtKHr2ejXUk2O0nZnEydeeP60vv0cBmVUoLyditTXT1aTwqaaObGNJbrQ7o1U"
+                alt="Profile"
+                loading="lazy"
+            >
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidenav"
+    id="sidebar"
+>
+
+    <nav class="sidenav-nav">
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                dashboard
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'patients' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                groups
+            </span>
+
+            <span>
+                Patients
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'register' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                person_add
+            </span>
+
+            <span>
+                Register
+            </span>
+        </a>
+
+
+        <a
+            href="#"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                biotech
+            </span>
+
+            <span>
+                Results
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'reports' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                description
+            </span>
+
+            <span>
+                Reports
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'billing' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                payments
+            </span>
+
+            <span>
+                Billing
+            </span>
+        </a>
+
+
+        <!-- ACTIVE -->
+
+        <a
+            href="{% url 'tests' %}"
+            class="nav-link active"
+            aria-current="page"
+        >
+
+            <span class="material-symbols-outlined">
+                science
+            </span>
+
+            <span>
+                Tests
+            </span>
+
+        </a>
+
+
+        <a
+            href="{% url 'appointments' %}"
+            class="nav-link"
+        >
+
+            <span class="material-symbols-outlined">
+                event
+            </span>
+
+            <span>
+                Appointments
+            </span>
+
+        </a>
+
+
+        <a
+            href="{% url 'inventory' %}"
+            class="nav-link"
+        >
+
+            <span class="material-symbols-outlined">
+                inventory_2
+            </span>
+
+            <span>
+                Inventory
+            </span>
+
+        </a>
+
+
+        <a
+            href="{% url 'staff' %}"
+            class="nav-link"
+        >
+
+            <span class="material-symbols-outlined">
+                badge
+            </span>
+
+            <span>
+                Staff
+            </span>
+
+        </a>
+
+
+        <a
+            href="{% url 'settings' %}"
+            class="nav-link"
+        >
+
+            <span class="material-symbols-outlined">
+                settings
+            </span>
+
+            <span>
+                Settings
+            </span>
+
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <header class="page-header">
+
+        <div>
+
+            <h2 class="page-title">
+                Test Catalog
+            </h2>
+
+            <p class="page-subtitle">
+                Manage and organize laboratory tests and packages.
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="createPackage()"
+            >
+
+                <span class="material-symbols-outlined">
+                    package_2
+                </span>
+
+                Create Package
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="addNewTest()"
+            >
+
+                <span class="material-symbols-outlined">
+                    add
+                </span>
+
+                Add New Test
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <section
+        class="filters-section"
+        aria-label="Test filters"
+    >
+
+        <!-- Search -->
+
+        <div class="search-wrapper">
+
+            <span class="material-symbols-outlined search-icon">
+                search
+            </span>
+
+            <input
+                class="search-input"
+                id="filterSearch"
+                type="search"
+                placeholder="Search by name, category, department, or code..."
+                autocomplete="off"
+                aria-label="Search laboratory tests"
+            >
+
+        </div>
+
+
+        <!-- Category -->
+
+        <select
+            class="filter-select"
+            id="categoryFilter"
+            aria-label="Filter by category"
+        >
+
+            <option value="all">
+                All Categories
+            </option>
+
+            <option value="biochemistry">
+                Biochemistry
+            </option>
+
+            <option value="hematology">
+                Hematology
+            </option>
+
+            <option value="microbiology">
+                Microbiology
+            </option>
+
+            <option value="immunology">
+                Immunology
+            </option>
+
+        </select>
+
+
+        <!-- Status -->
+
+        <select
+            class="filter-select"
+            id="statusFilter"
+            aria-label="Filter by status"
+        >
+
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="active">
+                Active
+            </option>
+
+            <option value="inactive">
+                Inactive
+            </option>
+
+        </select>
+
+
+        <button
+            type="button"
+            class="filter-btn"
+            onclick="applyFilters()"
+            title="Apply filters"
+            aria-label="Apply filters"
+        >
+
+            <span class="material-symbols-outlined">
+                tune
+            </span>
+
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN GRID
+    ====================================================== -->
+
+    <div class="tests-grid">
+
+
+        <!-- =================================================
+             TEST TABLE
+        ================================================== -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <div>
+
+                    <h3 class="table-title">
+                        Test Inventory
+                    </h3>
+
+                    <span
+                        class="table-count"
+                        id="testCount"
+                    >
+                        Loading...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table
+                    class="test-table"
+                    id="testTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Test Details
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Normal Range
+                            </th>
+
+                            <th>
+                                Price
+                            </th>
+
+                            <th class="text-center">
+                                Status
+                            </th>
+
+                            <th class="text-right">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!--
+                        IMPORTANT:
+
+                        There is NO hardcoded test here.
+
+                        tests.js will populate this tbody
+                        using:
+
+                        GET /api/tests/data/
+                    -->
+
+                    <tbody id="testTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                style="
+                                    text-align:center;
+                                    padding:50px 20px;
+                                "
+                            >
+
+                                <span
+                                    class="material-symbols-outlined"
+                                    style="
+                                        font-size:42px;
+                                        display:block;
+                                        margin-bottom:12px;
+                                    "
+                                >
+                                    progress_activity
+                                </span>
+
+                                <p
+                                    style="
+                                        font-weight:600;
+                                        margin:0;
+                                    "
+                                >
+                                    Loading tests...
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =================================================
+                 TABLE FOOTER
+            ================================================== -->
+
+            <div class="table-footer">
+
+                <p
+                    class="footer-text"
+                    id="footerText"
+                >
+                    Loading test records...
+                </p>
+
+
+                <div class="pagination">
+
+                    <button
+                        type="button"
+                        class="page-btn"
+                        id="prevPage"
+                        disabled
+                    >
+                        Previous
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="page-btn"
+                        id="nextPage"
+                        disabled
+                    >
+                        Next
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PACKAGE COLUMN
+        ================================================== -->
+
+        <aside class="package-column">
+
+
+            <!-- =================================================
+                 CREATE PACKAGE CTA
+            ================================================== -->
+
+            <section class="package-cta">
+
+                <div class="cta-content">
+
+                    <h3 class="cta-title">
+                        Create New Package
+                    </h3>
+
+                    <p class="cta-desc">
+                        Group multiple tests into a discounted
+                        bundle for health checkups.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="cta-btn"
+                        onclick="createPackage()"
+                    >
+
+                        <span class="material-symbols-outlined">
+                            auto_awesome
+                        </span>
+
+                        Bundle Builder
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ACTIVE PACKAGES
+            ================================================== -->
+
+            <section class="packages-card">
+
+                <div class="packages-header">
+
+                    <h3 class="packages-title">
+                        Active Packages
+                    </h3>
+
+
+                    <a
+                        class="packages-view-all"
+                        href="#"
+                        onclick="return false;"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <!--
+                    IMPORTANT:
+
+                    NO dummy package exists here.
+
+                    tests.js will render packages from:
+
+                    GET /api/tests/data/
+                -->
+
+                <div
+                    class="packages-list"
+                    id="packagesList"
+                >
+
+                    <div
+                        class="package-empty"
+                        style="
+                            padding:24px;
+                            text-align:center;
+                            opacity:0.7;
+                        "
+                    >
+
+                        Loading packages...
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="create-package-btn"
+                    onclick="createPackage()"
+                >
+
+                    <span class="material-symbols-outlined">
+                        add_circle
+                    </span>
+
+                    Create Individual Package
+
+                </button>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     MOBILE BOTTOM NAVIGATION
+========================================================= -->
+
+<nav
+    class="bottom-nav"
+    aria-label="Mobile navigation"
+>
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            dashboard
+        </span>
+
+        <span>
+            Dashboard
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'patients' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            groups
+        </span>
+
+        <span>
+            Patients
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'tests' %}"
+        class="bottom-item active"
+        aria-current="page"
+    >
+
+        <span class="material-symbols-outlined">
+            science
+        </span>
+
+        <span>
+            Tests
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'reports' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            description
+        </span>
+
+        <span>
+            Reports
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'profile' %}"
+        class="bottom-item"
+    >
+
+        <span class="material-symbols-outlined">
+            account_circle
+        </span>
+
+        <span>
+            Profile
+        </span>
+
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     FLOATING ACTION BUTTON
+========================================================= -->
+
+<button
+    type="button"
+    class="fab"
+    onclick="addNewTest()"
+    title="Add New Test"
+    aria-label="Add new test"
+>
+
+    <span class="material-symbols-outlined">
+        add
+    </span>
+
+</button>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script
+    src="{% static 'js/tests.js' %}"
+    defer
+></script>
+
+
+<!-- =========================================================
+     CACHE-BUSTING VERSION
+     
+     If browser is showing old JavaScript, change v=2,
+     v=3 etc. after every major JS deployment.
+========================================================= -->
+
+<script>
+    /*
+     * Production debugging:
+     * This confirms that the current page is using
+     * the new tests.js file.
+     */
+    window.TESTS_PAGE_VERSION = "production-2026-08-11";
+</script>
+
+</body>
+</html>

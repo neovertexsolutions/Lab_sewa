@@ -1,0 +1,902 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Management | Sita Path Lab</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Staff CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/staff.css' %}"
+    >
+</head>
+
+
+<body>
+
+<!-- =========================================================
+     TOP NAVBAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            type="button"
+            class="menu-btn"
+            onclick="toggleSidebar()"
+            aria-label="Open menu"
+        >
+            <span class="material-symbols-outlined">
+                menu
+            </span>
+        </button>
+
+        <span class="topbar-brand">
+            Sita Path Lab
+        </span>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <div class="search-box">
+
+            <span class="material-symbols-outlined search-icon">
+                search
+            </span>
+
+            <input
+                type="search"
+                id="staffSearch"
+                class="search-input"
+                placeholder="Search staff, roles..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="icon-btn"
+            onclick="toggleTheme()"
+            title="Toggle Theme"
+            aria-label="Toggle Theme"
+        >
+            <span class="material-symbols-outlined">
+                contrast
+            </span>
+        </button>
+
+
+        <div class="avatar">
+
+            <img
+                src="{% static 'images/default-avatar.png' %}"
+                alt="Profile"
+                onerror="this.style.display='none'"
+            >
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+     KEEPING ORIGINAL STRUCTURE
+========================================================= -->
+
+<nav class="sidenav" id="sidebar">
+
+    <div class="sidenav-brand">
+
+        <h2 class="brand-title">
+            Staff Portal
+        </h2>
+
+        <p class="brand-sub">
+            Manage Your Excellence
+        </p>
+
+    </div>
+
+
+    <div class="sidenav-nav">
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                dashboard
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'patients' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                groups
+            </span>
+
+            <span>
+                Patients
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'register' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                person_add
+            </span>
+
+            <span>
+                Register
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'results' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                biotech
+            </span>
+
+            <span>
+                Results
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'reports' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                description
+            </span>
+
+            <span>
+                Reports
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'billing' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                payments
+            </span>
+
+            <span>
+                Billing
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'tests' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                science
+            </span>
+
+            <span>
+                Tests
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'appointments' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                event
+            </span>
+
+            <span>
+                Appointments
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'inventory' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                inventory_2
+            </span>
+
+            <span>
+                Inventory
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'staff' %}"
+            class="nav-link active"
+        >
+            <span class="material-symbols-outlined">
+                badge
+            </span>
+
+            <span>
+                Staff
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'settings' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                settings
+            </span>
+
+            <span>
+                Settings
+            </span>
+        </a>
+
+    </div>
+
+
+    <div class="sidenav-footer">
+
+        <a
+            href="{% url 'profile' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                account_circle
+            </span>
+
+            <span>
+                Profile
+            </span>
+        </a>
+
+
+        <a
+            href="{% url 'settings' %}"
+            class="nav-link"
+        >
+            <span class="material-symbols-outlined">
+                settings
+            </span>
+
+            <span>
+                Settings
+            </span>
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <div class="content-wrapper">
+
+
+        <!-- PAGE HEADER -->
+
+        <section class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Personnel Directory
+                </h1>
+
+                <p class="page-subtitle">
+                    Manage lab personnel, certifications, and shift distribution.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="addNewStaff()"
+            >
+
+                <span class="material-symbols-outlined">
+                    person_add
+                </span>
+
+                Add New Staff
+
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             STATISTICS
+        ====================================================== -->
+
+        <section class="stats-grid">
+
+
+            <!-- ON DUTY -->
+
+            <div class="stat-card wide">
+
+                <div class="stat-header">
+
+                    <div>
+
+                        <h3 class="stat-title">
+                            On Duty Today
+                        </h3>
+
+                        <p class="stat-sub">
+                            Real-time attendance overview
+                        </p>
+
+                    </div>
+
+
+                    <span class="stat-number">
+
+                        <span id="activeStaffCount">
+                            0
+                        </span>
+
+                        <span class="stat-total">
+                            /
+                            <span id="totalStaffCount">
+                                0
+                            </span>
+                        </span>
+
+                    </span>
+
+                </div>
+
+
+                <div class="avatar-stack" id="staffAvatarStack">
+
+                    <!-- Generated by JS -->
+
+                </div>
+
+
+                <div class="stat-tags">
+
+                    <span class="tag green" id="pathologistCount">
+                        0 Pathologists
+                    </span>
+
+                    <span class="tag blue" id="technicianCount">
+                        0 Technicians
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHEDULED LEAVE -->
+
+            <div class="stat-card small">
+
+                <div>
+
+                    <p class="stat-label">
+                        Scheduled Leave
+                    </p>
+
+
+                    <div class="stat-value-group">
+
+                        <div class="stat-icon tertiary">
+
+                            <span class="material-symbols-outlined">
+                                beach_access
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="stat-value"
+                            id="leaveCount"
+                        >
+                            00
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p class="stat-meta">
+                    Current leave records
+                </p>
+
+            </div>
+
+
+            <!-- SYSTEM ACCESS -->
+
+            <div class="stat-card small">
+
+                <div>
+
+                    <p class="stat-label">
+                        System Access
+                    </p>
+
+
+                    <div class="stat-value-group">
+
+                        <div class="stat-icon secondary">
+
+                            <span class="material-symbols-outlined">
+                                security
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="stat-value"
+                            id="adminRoleCount"
+                        >
+                            00
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p class="stat-meta">
+                    Active Admin roles
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             STAFF DIRECTORY
+        ====================================================== -->
+
+        <section class="staff-section">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    Employee Directory
+                </h2>
+
+
+                <div class="section-actions">
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        onclick="filterStaff()"
+                        title="Filter"
+                    >
+
+                        <span class="material-symbols-outlined">
+                            filter_list
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        onclick="toggleView()"
+                        title="Toggle View"
+                    >
+
+                        <span class="material-symbols-outlined">
+                            grid_view
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="staff-grid"
+                id="staffGrid"
+            >
+
+                <div class="empty-state">
+
+                    <span class="material-symbols-outlined">
+                        hourglass_empty
+                    </span>
+
+                    <p>
+                        Loading staff...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             DETAIL SECTION
+        ====================================================== -->
+
+        <section class="detail-section">
+
+
+            <!-- PROFILE -->
+
+            <div class="profile-card">
+
+                <div class="profile-glow"></div>
+
+
+                <div class="profile-header">
+
+                    <div class="profile-avatar">
+
+                        <img
+                            src="{% static 'images/default-avatar.png' %}"
+                            alt="Staff Profile"
+                            onerror="this.src='{% static 'images/default-avatar.png' %}'"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <h2
+                            class="profile-name"
+                            id="profileName"
+                        >
+                            Select Staff
+                        </h2>
+
+
+                        <div class="profile-tags">
+
+                            <span class="profile-tag primary">
+                                Staff
+                            </span>
+
+                            <span class="profile-tag secondary">
+                                Dpt: General
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-body">
+
+
+                    <!-- CERTIFICATIONS -->
+
+                    <div class="profile-section">
+
+                        <h4 class="profile-section-title">
+                            Certifications
+                        </h4>
+
+
+                        <div class="cert-list">
+
+                            <div class="cert-item">
+
+                                <span class="material-symbols-outlined">
+                                    verified
+                                </span>
+
+                                <div>
+
+                                    <p class="cert-name">
+                                        No certifications loaded
+                                    </p>
+
+                                    <p class="cert-exp">
+                                        Select a staff member
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PERFORMANCE -->
+
+                    <div class="profile-section">
+
+                        <h4 class="profile-section-title">
+                            Performance Metrics
+                        </h4>
+
+
+                        <!-- ACCURACY -->
+
+                        <div class="metric-item">
+
+                            <div class="metric-header">
+
+                                <span>
+                                    Accuracy Rate
+                                </span>
+
+                                <span
+                                    class="metric-value"
+                                    id="accuracyRate"
+                                >
+                                    --
+                                </span>
+
+                            </div>
+
+
+                            <div class="metric-bar">
+
+                                <div
+                                    class="metric-fill primary"
+                                    style="width:0%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TURNAROUND -->
+
+                        <div class="metric-item">
+
+                            <div class="metric-header">
+
+                                <span>
+                                    Report Turnaround
+                                </span>
+
+                                <span
+                                    class="metric-value"
+                                    id="turnaroundTime"
+                                >
+                                    --
+                                </span>
+
+                            </div>
+
+
+                            <div class="metric-bar">
+
+                                <div
+                                    class="metric-fill secondary"
+                                    style="width:0%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ROLES
+            ================================================== -->
+
+            <div class="roles-card">
+
+                <div class="roles-header">
+
+                    <h3 class="roles-title">
+                        Access Roles
+                    </h3>
+
+
+                    <button
+                        type="button"
+                        class="roles-add"
+                        onclick="addRole()"
+                        title="Add Role"
+                    >
+
+                        <span class="material-symbols-outlined">
+                            add_circle
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="roles-list"
+                    id="rolesList"
+                >
+
+                    <div
+                        style="
+                            padding:20px;
+                            text-align:center;
+                            opacity:.7;
+                        "
+                    >
+                        Loading roles...
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="audit-btn"
+                    onclick="auditPermissions()"
+                >
+                    Audit Permissions Log
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     MOBILE BOTTOM NAV
+========================================================= -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="bottom-item"
+    >
+        <span class="material-symbols-outlined">
+            dashboard
+        </span>
+
+        <span>
+            Home
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'patients' %}"
+        class="bottom-item"
+    >
+        <span class="material-symbols-outlined">
+            groups
+        </span>
+
+        <span>
+            Patients
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'staff' %}"
+        class="bottom-item active"
+    >
+        <span class="material-symbols-outlined">
+            badge
+        </span>
+
+        <span>
+            Staff
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'reports' %}"
+        class="bottom-item"
+    >
+        <span class="material-symbols-outlined">
+            description
+        </span>
+
+        <span>
+            Reports
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'profile' %}"
+        class="bottom-item"
+    >
+        <span class="material-symbols-outlined">
+            account_circle
+        </span>
+
+        <span>
+            Profile
+        </span>
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     STAFF JAVASCRIPT
+========================================================= -->
+
+<script src="{% static 'js/staff.js' %}"></script>
+
+</body>
+</html>

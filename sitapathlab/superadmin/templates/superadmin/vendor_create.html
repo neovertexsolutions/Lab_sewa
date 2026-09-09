@@ -1,0 +1,1249 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Create Vendor | Super Admin{% endblock %}
+{% block page_title %}Create Vendor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/vendor_create.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div
+    class="vendor-create-page"
+    id="vendorCreatePage"
+    data-vendors-url="{% url 'superadmin:vendors' %}"
+>
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <header class="create-header">
+
+        <div class="header-info">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-building-circle-check"></i>
+            </div>
+
+            <div>
+                <h1>Create New Vendor</h1>
+
+                <p>
+                    Register a pathology laboratory, create its administrator
+                    account, assign a subscription and generate its license.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'superadmin:vendors' %}"
+                class="btn btn-secondary"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Vendors</span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         GLOBAL ALERT
+    ========================================================== -->
+
+    <div
+        id="formAlert"
+        class="form-alert"
+        role="alert"
+        aria-live="assertive"
+    ></div>
+
+
+    <!-- =========================================================
+         MAIN FORM
+    ========================================================== -->
+
+    <form
+        id="vendorCreateForm"
+        method="POST"
+        action="{% url 'superadmin:vendor_create' %}"
+        autocomplete="off"
+        novalidate
+    >
+
+        {% csrf_token %}
+
+        <div class="form-layout">
+
+            <!-- =================================================
+                 MAIN CONTENT
+            ================================================== -->
+
+            <main class="form-main">
+
+                <!-- =================================================
+                     LABORATORY
+                ================================================== -->
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+
+                            <div>
+                                <h2>Laboratory Information</h2>
+                                <p>
+                                    Basic information about the pathology
+                                    laboratory.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <span class="required-label">
+                            * Required
+                        </span>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <!-- Vendor Name -->
+
+                        <div class="form-group full">
+
+                            <label for="vendorName">
+                                Laboratory / Vendor Name
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-building"></i>
+
+                                <input
+                                    type="text"
+                                    id="vendorName"
+                                    name="vendor_name"
+                                    placeholder="Enter laboratory name"
+                                    maxlength="150"
+                                    autocomplete="organization"
+                                    required
+                                >
+
+                            </div>
+
+                            <small>
+                                Official registered name of the laboratory.
+                            </small>
+
+                        </div>
+
+
+                        <!-- Owner -->
+
+                        <div class="form-group">
+
+                            <label for="ownerName">
+                                Owner / Contact Person
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="ownerName"
+                                    name="owner_name"
+                                    placeholder="Full name"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Business Email
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="admin@laboratory.com"
+                                    maxlength="150"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper phone-input">
+
+                                <span class="country-code">+91</span>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="9876543210"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    autocomplete="tel"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Alternate Phone -->
+
+                        <div class="form-group">
+
+                            <label for="alternatePhone">
+                                Alternate Phone
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input
+                                    type="tel"
+                                    id="alternatePhone"
+                                    name="alternate_phone"
+                                    placeholder="Optional"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                            <div>
+                                <h2>Laboratory Address</h2>
+                                <p>
+                                    Physical address of the laboratory.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+
+                            <label for="address">
+                                Complete Address
+                                <span>*</span>
+                            </label>
+
+                            <div class="textarea-wrapper">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    rows="4"
+                                    placeholder="Enter complete laboratory address"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="city">
+                                City
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-city"></i>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    placeholder="Enter city"
+                                    maxlength="100"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="state">
+                                State
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-map"></i>
+
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    placeholder="Enter state"
+                                    maxlength="100"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="pincode">
+                                PIN Code
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-map-pin"></i>
+
+                                <input
+                                    type="text"
+                                    id="pincode"
+                                    name="pincode"
+                                    placeholder="6 digit PIN"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="country">
+                                Country
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-globe"></i>
+
+                                <input
+                                    type="text"
+                                    id="country"
+                                    name="country"
+                                    value="India"
+                                    maxlength="100"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADMIN ACCOUNT
+                ================================================== -->
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+
+                            <div>
+                                <h2>Vendor Admin Account</h2>
+                                <p>
+                                    Login credentials for the vendor
+                                    administrator.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="credential-notice">
+
+                        <div class="notice-icon">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>Vendor Login Credentials</strong>
+
+                            <p>
+                                These credentials will be used by the vendor
+                                administrator to access the laboratory
+                                management dashboard.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <!-- Username -->
+
+                        <div class="form-group">
+
+                            <label for="username">
+                                Username
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-at"></i>
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    placeholder="vendor_username"
+                                    minlength="4"
+                                    maxlength="50"
+                                    autocomplete="username"
+                                    required
+                                >
+
+                            </div>
+
+                            <small>
+                                4–50 characters. Letters, numbers,
+                                dot, underscore and hyphen are allowed.
+                            </small>
+
+                        </div>
+
+
+                        <!-- Password -->
+
+                        <div class="form-group">
+
+                            <label for="password">
+                                Password
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create secure password"
+                                    minlength="8"
+                                    maxlength="128"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="password"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <div class="password-strength">
+
+                                <div class="strength-bar">
+                                    <span id="strengthBar"></span>
+                                </div>
+
+                                <span id="strengthText">
+                                    Enter password
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Confirm -->
+
+                        <div class="form-group">
+
+                            <label for="confirmPassword">
+                                Confirm Password
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirm_password"
+                                    placeholder="Confirm password"
+                                    maxlength="128"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="confirmPassword"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <small id="passwordMatch"></small>
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="form-group">
+
+                            <label for="accountStatus">
+                                Account Status
+                            </label>
+
+                            <div class="select-wrapper">
+
+                                <select
+                                    id="accountStatus"
+                                    name="status"
+                                >
+
+                                    <option value="active" selected>
+                                        Active
+                                    </option>
+
+                                    <option value="pending">
+                                        Pending
+                                    </option>
+
+                                    <option value="suspended">
+                                        Suspended
+                                    </option>
+
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SUBSCRIPTION
+                ================================================== -->
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+
+                            <div>
+                                <h2>Subscription</h2>
+                                <p>
+                                    Select the initial subscription plan.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="plan-selection">
+
+                        <!-- BASIC -->
+
+                        <label class="plan-option">
+
+                            <input
+                                type="radio"
+                                name="plan"
+                                value="basic"
+                                data-plan-name="Basic"
+                                data-plan-price="999"
+                                checked
+                            >
+
+                            <div class="plan-card">
+
+                                <div class="plan-top">
+
+                                    <div>
+                                        <span class="plan-name">
+                                            Basic
+                                        </span>
+
+                                        <span class="plan-description">
+                                            Essential laboratory management
+                                        </span>
+                                    </div>
+
+                                    <div class="plan-price">
+                                        ₹999
+                                        <small>/month</small>
+                                    </div>
+
+                                </div>
+
+                                <div class="plan-features">
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Patient Management
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Reports
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Billing
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+
+                        <!-- PROFESSIONAL -->
+
+                        <label class="plan-option">
+
+                            <input
+                                type="radio"
+                                name="plan"
+                                value="professional"
+                                data-plan-name="Professional"
+                                data-plan-price="1999"
+                            >
+
+                            <div class="plan-card">
+
+                                <div class="plan-top">
+
+                                    <div>
+                                        <span class="plan-name">
+                                            Professional
+                                        </span>
+
+                                        <span class="plan-description">
+                                            Advanced laboratory operations
+                                        </span>
+                                    </div>
+
+                                    <div class="plan-price">
+                                        ₹1,999
+                                        <small>/month</small>
+                                    </div>
+
+                                </div>
+
+                                <div class="plan-features">
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Everything in Basic
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Analytics
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Staff Management
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+
+                        <!-- ENTERPRISE -->
+
+                        <label class="plan-option">
+
+                            <input
+                                type="radio"
+                                name="plan"
+                                value="enterprise"
+                                data-plan-name="Enterprise"
+                                data-plan-price="3999"
+                            >
+
+                            <div class="plan-card">
+
+                                <div class="plan-top">
+
+                                    <div>
+                                        <span class="plan-name">
+                                            Enterprise
+                                        </span>
+
+                                        <span class="plan-description">
+                                            Complete enterprise solution
+                                        </span>
+                                    </div>
+
+                                    <div class="plan-price">
+                                        ₹3,999
+                                        <small>/month</small>
+                                    </div>
+
+                                </div>
+
+                                <div class="plan-features">
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Unlimited Users
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Advanced Analytics
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-check"></i>
+                                        Priority Support
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-grid subscription-fields">
+
+                        <div class="form-group">
+
+                            <label for="startDate">
+                                Start Date
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    name="start_date"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="duration">
+                                Subscription Duration
+                                <span>*</span>
+                            </label>
+
+                            <div class="select-wrapper">
+
+                                <select
+                                    id="duration"
+                                    name="duration"
+                                    required
+                                >
+
+                                    <option value="30">
+                                        30 Days
+                                    </option>
+
+                                    <option value="90">
+                                        90 Days
+                                    </option>
+
+                                    <option value="180">
+                                        180 Days
+                                    </option>
+
+                                    <option value="365" selected>
+                                        365 Days
+                                    </option>
+
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="endDate">
+                                Expiry Date
+                            </label>
+
+                            <div class="input-wrapper readonly">
+
+                                <i class="fa-solid fa-calendar-xmark"></i>
+
+                                <input
+                                    type="date"
+                                    id="endDate"
+                                    name="end_date"
+                                    readonly
+                                >
+
+                            </div>
+
+                            <small>
+                                Automatically calculated from start date
+                                and duration.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     LICENSE
+                ================================================== -->
+
+                <section class="form-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="section-icon license-icon">
+                                <i class="fa-solid fa-key"></i>
+                            </div>
+
+                            <div>
+                                <h2>License Configuration</h2>
+
+                                <p>
+                                    Automatic license generation after
+                                    successful vendor creation.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="license-box">
+
+                        <div class="license-status">
+
+                            <div class="status-indicator">
+                                <i class="fa-solid fa-circle"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Automatic License Generation
+                                </strong>
+
+                                <p>
+                                    A unique license key will be generated
+                                    automatically by the backend after the
+                                    vendor is successfully created.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="license-rule">
+
+                            <div>
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>
+                                    License remains linked to the vendor
+                                    and subscription.
+                                </span>
+                            </div>
+
+                            <div>
+                                <i class="fa-solid fa-clock"></i>
+                                <span>
+                                    License expiry follows the subscription.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="form-sidebar">
+
+                <!-- SUMMARY -->
+
+                <div class="summary-card">
+
+                    <div class="summary-header">
+
+                        <div>
+                            <h3>Vendor Summary</h3>
+                            <p>Live preview of entered information.</p>
+                        </div>
+
+                        <i class="fa-solid fa-clipboard-check"></i>
+
+                    </div>
+
+
+                    <div class="summary-preview">
+
+                        <div
+                            class="vendor-preview-avatar"
+                            id="previewAvatar"
+                        >
+                            V
+                        </div>
+
+                        <div>
+
+                            <strong id="previewName">
+                                New Vendor
+                            </strong>
+
+                            <span id="previewEmail">
+                                vendor@email.com
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-list">
+
+                        <div>
+                            <span>Plan</span>
+                            <strong id="summaryPlan">Basic</strong>
+                        </div>
+
+                        <div>
+                            <span>Duration</span>
+                            <strong id="summaryDuration">
+                                365 Days
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Start Date</span>
+                            <strong id="summaryStart">—</strong>
+                        </div>
+
+                        <div>
+                            <span>Expiry Date</span>
+                            <strong id="summaryEnd">—</strong>
+                        </div>
+
+                        <div>
+                            <span>Account</span>
+                            <strong id="summaryStatus">Active</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="security-card">
+
+                    <div class="security-title">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <strong>Security</strong>
+
+                    </div>
+
+                    <ul>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Unique vendor account
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Secure password authentication
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Subscription-based access
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Automatic license expiry
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="action-card">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-create"
+                        id="createVendorBtn"
+                    >
+                        <i class="fa-solid fa-building-circle-check"></i>
+                        <span>Create Vendor</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-light"
+                        id="resetFormBtn"
+                    >
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset Form</span>
+                    </button>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =============================================================
+     SUCCESS MODAL
+============================================================= -->
+
+<div
+    class="modal-overlay"
+    id="successModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="success-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="successModalTitle"
+    >
+
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h2 id="successModalTitle">
+            Vendor Created Successfully
+        </h2>
+
+        <p id="successModalMessage">
+            The vendor account, subscription and license
+            have been created successfully.
+        </p>
+
+
+        <!-- Generated credentials -->
+
+        <div
+            class="created-credentials"
+            id="createdCredentials"
+        >
+
+            <div>
+                <span>Username</span>
+                <strong id="createdUsername">—</strong>
+            </div>
+
+            <div>
+                <span>License</span>
+                <strong id="createdLicense">Generated</strong>
+            </div>
+
+        </div>
+
+
+        <div class="success-actions">
+
+            <a
+                href="{% url 'superadmin:vendors' %}"
+                class="btn btn-primary"
+            >
+                <i class="fa-solid fa-building"></i>
+                View Vendors
+            </a>
+
+            <button
+                type="button"
+                class="btn btn-light"
+                id="closeSuccessModal"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Create Another
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'superadmin/js/vendor_create.js' %}"></script>
+
+{% endblock %}

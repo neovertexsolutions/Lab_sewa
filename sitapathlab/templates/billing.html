@@ -1,0 +1,435 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Billing &amp; Invoicing | Sita Path Lab</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/billing.css' %}"/>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+  {% csrf_token %}
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <header class="topbar no-print">
+    <div class="topbar-left">
+      <span class="topbar-brand">Sita Path Lab</span>
+      <div class="search-box hidden md:flex">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input class="search-input" placeholder="Search patients or invoices..." type="text"/>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+        <span class="material-symbols-outlined">contrast</span>
+      </button>
+
+      <div class="avatar">
+        <img src="{% static 'images/profile.jpg' %}" alt="Profile"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== SIDENAV ===== -->
+  <nav class="sidenav no-print">
+    <a href="{% url 'dashboard' %}" class="nav-link"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+    <a href="{% url 'patients' %}" class="nav-link"><span class="material-symbols-outlined">groups</span><span>Patients</span></a>
+    <a href="{% url 'register' %}" class="nav-link"><span class="material-symbols-outlined">person_add</span><span>Register</span></a>
+    <a href="#" class="nav-link"><span class="material-symbols-outlined">biotech</span><span>Results</span></a>
+    <a href="{% url 'reports' %}" class="nav-link"><span class="material-symbols-outlined">description</span><span>Reports</span></a>
+    <a href="{% url 'billing' %}" class="nav-link active"><span class="material-symbols-outlined">payments</span><span>Billing</span></a>
+    <a href="{% url 'tests' %}" class="nav-link"><span class="material-symbols-outlined">science</span><span>Tests</span></a>
+    <a href="{% url 'appointments' %}" class="nav-link"><span class="material-symbols-outlined">event</span><span>Appointments</span></a>
+    <a href="{% url 'inventory' %}" class="nav-link"><span class="material-symbols-outlined">inventory_2</span><span>Inventory</span></a>
+    <a href="{% url 'staff' %}" class="nav-link"><span class="material-symbols-outlined">badge</span><span>Staff</span></a>
+    <a href="{% url 'settings' %}" class="nav-link"><span class="material-symbols-outlined">settings</span><span>Settings</span></a>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content no-print">
+    <!-- Header & Stats -->
+    <div class="stats-header">
+      <div class="header-left">
+        <h1 class="page-title">Billing</h1>
+        <p class="page-subtitle">Manage invoices and collections</p>
+      </div>
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-icon primary">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+          </div>
+          <div>
+            <p class="stat-label">TOTAL REVENUE (TODAY)</p>
+            <h3 class="stat-value primary" id="statRevenueToday">₹0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon error">
+            <span class="material-symbols-outlined">pending_actions</span>
+          </div>
+          <div>
+            <p class="stat-label">PENDING PAYMENTS</p>
+            <h3 class="stat-value error" id="statPendingPayments">₹0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon tertiary">
+            <span class="material-symbols-outlined">assignment_return</span>
+          </div>
+          <div>
+            <p class="stat-label">REFUND REQUESTS</p>
+            <h3 class="stat-value tertiary" id="statRefundRequests">00</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="billing-grid">
+      <!-- Left Column: Form -->
+      <div class="form-column">
+        <!-- Create Invoice -->
+        <div class="invoice-form">
+          <div class="form-header">
+            <h2 class="form-title">
+              <span class="material-symbols-outlined text-primary">receipt_long</span>
+              Create New Invoice
+            </h2>
+            <span class="invoice-id" id="invoiceIdLabel">NEW INVOICE</span>
+          </div>
+
+          <form id="invoiceForm" class="form-body">
+            <!-- Patient Selection -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label-sm">PATIENT (REGISTERED)</label>
+                <div class="select-wrapper">
+                  <select class="form-select" id="patientSelect">
+                    <option value="">Walk-in / search or select patient...</option>
+                  </select>
+                  <span class="select-icon material-symbols-outlined">arrow_drop_down</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label-sm">REFERRING DOCTOR</label>
+                <input class="form-input" id="referringDoctor" list="doctorsList" placeholder="Dr. Name (Optional)" type="text"/>
+                <datalist id="doctorsList"></datalist>
+              </div>
+            </div>
+
+            <!-- Manual patient details (auto-filled if registered patient picked, editable for walk-in) -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label-sm">PATIENT NAME</label>
+                <input class="form-input" id="patientName" placeholder="Full name" type="text" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label-sm">PATIENT PHONE</label>
+                <input class="form-input" id="patientPhone" placeholder="+91 9XXXXXXXXX" type="text"/>
+              </div>
+            </div>
+            <input type="hidden" id="patientId" value=""/>
+
+            <!-- Test Selection -->
+            <div class="form-group">
+              <label class="form-label-sm">TEST SELECTION</label>
+
+              <div class="form-row-2" style="margin-bottom:10px;">
+                <div class="select-wrapper">
+                  <select class="form-select" id="testPicker">
+                    <option value="">Loading tests...</option>
+                  </select>
+                </div>
+                <button class="btn-apply" type="button" id="addTestBtn" onclick="handleAddTest()">
+                  <span class="material-symbols-outlined">add</span> ADD TEST
+                </button>
+              </div>
+
+              <div class="test-selection" id="testTagsContainer">
+                <!-- dynamically rendered test tags go here -->
+              </div>
+            </div>
+
+            <!-- Discount & Payment -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label-sm">DISCOUNT / COUPON</label>
+                <div class="discount-group">
+                  <input class="form-input" id="discountCode" placeholder="Enter code (e.g. SAVE10)" type="text"/>
+                  <button class="btn-apply" type="button" onclick="applyDiscountCode()">APPLY</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label-sm">PAYMENT METHOD</label>
+                <div class="payment-methods">
+                  <button class="payment-btn active" type="button" data-method="upi">
+                    <span class="material-symbols-outlined">account_balance</span> eSewa
+                  </button>
+                  <button class="payment-btn" type="button" data-method="cash">
+                    <span class="material-symbols-outlined">payments</span> Cash
+                  </button>
+                  <button class="payment-btn" type="button" data-method="card">
+                    <span class="material-symbols-outlined">credit_card</span> QR / Card
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calculation -->
+            <div class="calculation">
+              <div class="calc-row">
+                <span class="calc-label">Subtotal</span>
+                <span class="calc-value" id="subtotal">₹0.00</span>
+              </div>
+              <div class="calc-row">
+                <span class="calc-label" id="discountLabel">Discount (0%)</span>
+                <span class="calc-value discount" id="discountAmount">-₹0.00</span>
+              </div>
+              <div class="calc-row">
+                <span class="calc-label">GST (12%)</span>
+                <span class="calc-value" id="gstAmount">₹0.00</span>
+              </div>
+              <div class="calc-total">
+                <span class="total-label">Total Amount</span>
+                <span class="total-value" id="netTotal">₹0.00</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">
+                GENERATE INVOICE
+              </button>
+              <button class="btn btn-print" type="button" onclick="downloadPDF()" title="Download / Print PDF">
+                <span class="material-symbols-outlined">print</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Recent Invoices -->
+        <div class="recent-invoices">
+          <div class="table-header">
+            <h2 class="table-title">Recent Invoices</h2>
+            <button class="view-all">VIEW ALL</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="invoice-table">
+              <thead>
+                <tr>
+                  <th>INVOICE ID</th>
+                  <th>PATIENT</th>
+                  <th>DATE</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="recentInvoicesBody">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding:20px; color:#737686;">
+                    Recent invoices will appear here once created.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Preview -->
+      <aside class="preview-column">
+        <!-- Live Preview -->
+        <div class="preview-card">
+          <div class="preview-header">
+            <h2 class="preview-title">LIVE PREVIEW</h2>
+            <div class="sync-status">
+              <span class="sync-dot"></span>
+              <span class="sync-text">SYNCED</span>
+            </div>
+          </div>
+
+          <div class="invoice-preview" id="invoicePreview">
+            <div class="preview-top">
+              <div>
+                <div class="preview-brand">Sita Path Lab</div>
+                <p>Health Square, Medical Rd, Mumbai</p>
+                <p>GSTIN: 27AABCS1234Z1Z5</p>
+              </div>
+              <div class="preview-invoice-number">
+                <div class="preview-invoice-label">INVOICE</div>
+                <div id="previewInvoiceNumber">#NEW</div>
+                <div id="previewInvoiceDate">Date: --</div>
+              </div>
+            </div>
+
+            <div class="preview-patient">
+              <div class="preview-patient-label">Patient Details</div>
+              <p id="previewPatientName">Name: --</p>
+              <p id="previewPatientPhone">Phone: --</p>
+            </div>
+
+            <table class="preview-items">
+              <thead>
+                <tr>
+                  <th>Test Item</th>
+                  <th class="text-right">Price</th>
+                </tr>
+              </thead>
+              <tbody id="previewItemsBody">
+                <tr>
+                  <td colspan="2" style="text-align:center; color:#737686;">No tests added yet</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="preview-totals">
+              <div class="preview-total-row">
+                <span>Subtotal:</span>
+                <span id="previewSubtotal">₹0.00</span>
+              </div>
+              <div class="preview-total-row total">
+                <span>Total:</span>
+                <span id="previewTotal">₹0.00</span>
+              </div>
+            </div>
+
+            <div class="preview-footer">
+              Thank you for choosing Sita Path Lab.
+            </div>
+          </div>
+
+          <button class="download-pdf" onclick="downloadPDF()">
+            <span class="material-symbols-outlined">download</span>
+            DOWNLOAD PDF
+          </button>
+        </div>
+
+        <!-- Payment Channels -->
+        <div class="payment-channels">
+          <h3 class="channels-title">ACCEPTED CHANNELS</h3>
+          <div class="channels-grid">
+            <div class="channel-item">
+              <span class="channel-icon upi"></span>
+              <span class="channel-name">esewa</span>
+            </div>
+            <div class="channel-item">
+              <span class="material-symbols-outlined">credit_card</span>
+              <span class="channel-name">QR</span>
+            </div>
+            <div class="channel-item">
+              <span class="material-symbols-outlined">account_balance</span>
+              <span class="channel-name">BANKING</span>
+            </div>
+            <div class="channel-item">
+              <span class="material-symbols-outlined">payments</span>
+              <span class="channel-name">CASH</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===== BOTTOM NAV (Mobile) ===== -->
+  <nav class="bottom-nav no-print">
+    <a href="{% url 'dashboard' %}" class="bottom-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="{% url 'patients' %}" class="bottom-item">
+      <span class="material-symbols-outlined">groups</span>
+      <span>Patients</span>
+    </a>
+    <a href="{% url 'billing' %}" class="bottom-item active">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+      <span>Billing</span>
+    </a>
+    <a href="{% url 'reports' %}" class="bottom-item">
+      <span class="material-symbols-outlined">description</span>
+      <span>Reports</span>
+    </a>
+    <a href="{% url 'profile' %}" class="bottom-item">
+      <span class="material-symbols-outlined">account_circle</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- ===== PRINT TEMPLATE ===== -->
+  <div class="print-template" id="printTemplate">
+    <div class="print-inner">
+      <div class="print-header">
+        <div>
+          <h1 class="print-brand">Sita Path Lab</h1>
+          <p>202, Health Square, Medical Road, Mumbai - 400001</p>
+          <p>Phone: +91 22 2456 7890 | GSTIN: 27AABCS1234Z1Z5</p>
+        </div>
+        <div class="print-invoice-number">
+          <h2 class="print-invoice-label">INVOICE</h2>
+          <p class="print-invoice-id" id="printInvoiceId">#NEW</p>
+          <p id="printInvoiceDate">Date: --</p>
+        </div>
+      </div>
+
+      <div class="print-details">
+        <div>
+          <h3 class="print-label">BILL TO</h3>
+          <p class="print-name" id="printPatientName">--</p>
+          <p id="printPatientPhone">Mobile: --</p>
+        </div>
+        <div>
+          <h3 class="print-label">REFERRED BY</h3>
+          <p class="print-name" id="printDoctorName">Self Referral</p>
+          <p>Collection Date: <span id="printCollectionDate">--</span></p>
+        </div>
+      </div>
+
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>TEST DESCRIPTION</th>
+            <th class="text-right">UNIT PRICE</th>
+            <th class="text-right">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody id="printItemsBody">
+        </tbody>
+      </table>
+
+      <div class="print-totals">
+        <div class="print-total-row">
+          <span>Subtotal</span>
+          <span id="printSubtotal">₹0.00</span>
+        </div>
+        <div class="print-total-row grand-total">
+          <span>Grand Total</span>
+          <span id="printGrandTotal">₹0.00</span>
+        </div>
+      </div>
+
+      <div class="print-footer">
+        <div>
+          <p class="print-legal">Electronic Transaction Record</p>
+        </div>
+        <div>
+          <div class="print-signature">Digital Signature</div>
+          <div class="print-signature-line"></div>
+          <p class="print-signatory">Authorized Signatory</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="{% static 'js/billing.js' %}"></script>
+</body>
+</html>

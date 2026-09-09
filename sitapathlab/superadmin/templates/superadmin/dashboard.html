@@ -1,0 +1,1075 @@
+{% extends "superadmin/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Sita Path Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'superadmin/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div
+    class="dashboard-page"
+    id="dashboardPage"
+    data-api-url="{% url 'superadmin:dashboard_api' %}"
+    data-activity-api-url="{% url 'superadmin:activity_api' %}"
+>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="dashboard-header">
+
+        <div class="dashboard-heading">
+
+            <div class="breadcrumb">
+                <span>Super Admin</span>
+                <span class="breadcrumb-separator">/</span>
+                <strong>Dashboard</strong>
+            </div>
+
+            <h1>Dashboard</h1>
+
+            <p class="dashboard-subtitle">
+                Monitor laboratory operations, revenue, vendors,
+                patients and platform activity.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-actions">
+
+            <select
+                id="dateRange"
+                class="dashboard-select"
+                aria-label="Select date range"
+            >
+                <option value="today">Today</option>
+                <option value="7d" selected>Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+                <option value="90d">Last 90 Days</option>
+                <option value="year">This Year</option>
+            </select>
+
+
+            <button
+                type="button"
+                class="dashboard-btn dashboard-btn-secondary"
+                id="refreshDashboard"
+            >
+
+                <svg
+                    class="btn-icon refresh-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path d="M20 11a8.1 8.1 0 0 0-15.5-2"/>
+                    <path d="M4 5v4h4"/>
+                    <path d="M4 13a8.1 8.1 0 0 0 15.5 2"/>
+                    <path d="M20 19v-4h-4"/>
+                </svg>
+
+                <span>Refresh</span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         ALERT
+    ====================================================== -->
+
+    <div
+        class="dashboard-alert"
+        id="dashboardAlert"
+        role="alert"
+        hidden
+    >
+
+        <div class="alert-content">
+
+            <svg
+                class="alert-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+
+            <span id="dashboardAlertMessage">
+                Unable to load dashboard data.
+            </span>
+
+        </div>
+
+        <button
+            type="button"
+            class="alert-close"
+            id="closeDashboardAlert"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ====================================================== -->
+
+    <section class="stats-grid">
+
+        <!-- Revenue -->
+
+        <article class="stat-card stat-card-revenue">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M12 1v22"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Total Revenue
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="totalRevenue"
+                >
+                    ₹0
+                </h2>
+
+                <span
+                    class="stat-trend trend-positive"
+                    id="revenueTrend"
+                >
+                    ↑ 0%
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Revenue for selected period
+            </p>
+
+        </article>
+
+
+        <!-- Vendors -->
+
+        <article class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon stat-icon-blue">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V7l7-4 7 4v14"/>
+                        <path d="M9 21v-4h6v4"/>
+                        <path d="M9 9h1"/>
+                        <path d="M14 9h1"/>
+                        <path d="M9 13h1"/>
+                        <path d="M14 13h1"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Active Vendors
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="activeVendors"
+                >
+                    0
+                </h2>
+
+                <span
+                    class="stat-trend trend-positive"
+                    id="vendorsTrend"
+                >
+                    ↑ 0%
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Registered laboratory partners
+            </p>
+
+        </article>
+
+
+        <!-- Patients -->
+
+        <article class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon stat-icon-purple">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Patients
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="totalPatients"
+                >
+                    0
+                </h2>
+
+                <span
+                    class="stat-trend trend-positive"
+                    id="patientsTrend"
+                >
+                    ↑ 0%
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Total registered patients
+            </p>
+
+        </article>
+
+
+        <!-- Appointments -->
+
+        <article class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon stat-icon-orange">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="17"
+                            rx="2"
+                        />
+
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Appointments
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="totalAppointments"
+                >
+                    0
+                </h2>
+
+                <span
+                    class="stat-trend trend-positive"
+                    id="appointmentsTrend"
+                >
+                    ↑ 0%
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Appointments in selected period
+            </p>
+
+        </article>
+
+
+        <!-- Orders -->
+
+        <article class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon stat-icon-green">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="9" cy="20" r="1"/>
+                        <circle cx="19" cy="20" r="1"/>
+                        <path d="M3 4h2l2.5 11h10L20 8H6"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Orders
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="totalOrders"
+                >
+                    0
+                </h2>
+
+                <span
+                    class="stat-trend trend-positive"
+                    id="ordersTrend"
+                >
+                    ↑ 0%
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Laboratory orders processed
+            </p>
+
+        </article>
+
+
+        <!-- Pending Reports -->
+
+        <article class="stat-card">
+
+            <div class="stat-card-top">
+
+                <div class="stat-icon stat-icon-red">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="12" cy="12" r="9"/>
+                        <polyline points="12 7 12 12 15 14"/>
+                    </svg>
+
+                </div>
+
+                <span class="stat-label">
+                    Pending Reports
+                </span>
+
+            </div>
+
+
+            <div class="stat-value-row">
+
+                <h2
+                    class="stat-value"
+                    id="pendingReports"
+                >
+                    0
+                </h2>
+
+                <span class="stat-badge warning">
+                    Attention
+                </span>
+
+            </div>
+
+
+            <p class="stat-description">
+                Reports waiting for completion
+            </p>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         ANALYTICS
+    ====================================================== -->
+
+    <section class="analytics-grid">
+
+        <!-- Revenue -->
+
+        <article class="panel chart-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Revenue Overview
+                    </h2>
+
+                    <p>
+                        Revenue performance
+                    </p>
+
+                </div>
+
+
+                <div class="panel-actions">
+
+                    <button
+                        type="button"
+                        class="chart-filter active"
+                        data-range="7d"
+                    >
+                        7D
+                    </button>
+
+                    <button
+                        type="button"
+                        class="chart-filter"
+                        data-range="30d"
+                    >
+                        30D
+                    </button>
+
+                    <button
+                        type="button"
+                        class="chart-filter"
+                        data-range="90d"
+                    >
+                        90D
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <div
+                    class="chart-loading"
+                    id="revenueChartLoading"
+                >
+                    <span class="loading-spinner"></span>
+                    <span>Loading revenue...</span>
+                </div>
+
+
+                <canvas
+                    id="revenueChart"
+                    aria-label="Revenue chart"
+                ></canvas>
+
+
+                <div
+                    class="chart-empty"
+                    id="revenueChartEmpty"
+                    hidden
+                >
+                    <strong>No revenue data</strong>
+                    <span>No revenue records available.</span>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Appointments -->
+
+        <article class="panel chart-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Appointments
+                    </h2>
+
+                    <p>
+                        Appointment activity
+                    </p>
+
+                </div>
+
+
+                <span class="panel-status">
+
+                    <span class="status-dot"></span>
+
+                    Live
+
+                </span>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <div
+                    class="chart-loading"
+                    id="appointmentChartLoading"
+                >
+                    <span class="loading-spinner"></span>
+                    <span>Loading appointments...</span>
+                </div>
+
+
+                <canvas
+                    id="appointmentChart"
+                    aria-label="Appointment chart"
+                ></canvas>
+
+
+                <div
+                    class="chart-empty"
+                    id="appointmentChartEmpty"
+                    hidden
+                >
+                    <strong>No appointment data</strong>
+                    <span>No appointment records available.</span>
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         LOWER SECTION
+    ====================================================== -->
+
+    <section class="dashboard-lower-grid">
+
+
+        <!-- Recent Activity -->
+
+        <article class="panel activity-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Activity
+                    </h2>
+
+                    <p>
+                        Latest platform activities
+                    </p>
+
+                </div>
+
+
+                <!-- IMPORTANT:
+                     audit_logs exists in your urls.py.
+                     activity_logs does NOT exist.
+                -->
+
+                <a
+                    href="{% url 'superadmin:audit_logs' %}"
+                    class="panel-link"
+                >
+                    View all
+                </a>
+
+            </div>
+
+
+            <div
+                class="activity-list"
+                id="recentActivityList"
+            >
+
+                <div class="activity-loading">
+
+                    <span class="loading-spinner"></span>
+
+                    Loading activities...
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Top Vendors -->
+
+        <article class="panel vendors-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Top Vendors
+                    </h2>
+
+                    <p>
+                        Highest performing laboratories
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{% url 'superadmin:vendors' %}"
+                    class="panel-link"
+                >
+                    View all
+                </a>
+
+            </div>
+
+
+            <div
+                class="vendors-list"
+                id="topVendorsList"
+            >
+
+                <div class="vendors-loading">
+
+                    <span class="loading-spinner"></span>
+
+                    Loading vendors...
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+    ====================================================== -->
+
+    <section class="panel quick-actions-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+                <p>
+                    Frequently used administration tools
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+
+            <!-- Vendors -->
+
+            <a
+                href="{% url 'superadmin:vendors' %}"
+                class="quick-action"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V7l7-4 7 4v14"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Manage Vendors
+                    </strong>
+
+                    <small>
+                        Add, edit and manage vendors
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- Plans -->
+
+            <a
+                href="{% url 'superadmin:plans' %}"
+                class="quick-action"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="17"
+                            rx="2"
+                        />
+
+                        <path d="M7 8h10"/>
+                        <path d="M7 12h6"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Manage Plans
+                    </strong>
+
+                    <small>
+                        Configure subscription plans
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- Payments -->
+
+            <a
+                href="{% url 'superadmin:payments' %}"
+                class="quick-action"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <rect
+                            x="2"
+                            y="5"
+                            width="20"
+                            height="14"
+                            rx="2"
+                        />
+
+                        <path d="M2 10h20"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Payments
+                    </strong>
+
+                    <small>
+                        Review transactions
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- Analytics -->
+
+            <!--
+                IMPORTANT:
+                Your current urls.py has analytics_api,
+                but it does NOT have a page URL named analytics.
+
+                Therefore we don't use:
+                {% url 'superadmin:analytics' %}
+
+                Instead this button goes to dashboard API
+                only if you need API testing.
+            -->
+
+            <a
+                href="{% url 'superadmin:analytics' %}"
+                class="quick-action"
+                target="_blank"
+                rel="noopener"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M4 19V5"/>
+                        <path d="M4 19h17"/>
+                        <path d="M8 16v-5"/>
+                        <path d="M12 16V8"/>
+                        <path d="M16 16v-8"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Analytics API
+                    </strong>
+
+                    <small>
+                        View analytics data
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- Audit Logs -->
+
+            <a
+                href="{% url 'superadmin:audit_logs' %}"
+                class="quick-action"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M8 8h8"/>
+                        <path d="M8 12h8"/>
+                        <path d="M8 16h5"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        Audit Logs
+                    </strong>
+
+                    <small>
+                        Review system activity
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- System Health -->
+
+            <a
+                href="{% url 'superadmin:system_health' %}"
+                class="quick-action"
+            >
+
+                <span class="quick-action-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M3 12h4l2-5 4 10 2-5h6"/>
+                    </svg>
+
+                </span>
+
+
+                <span>
+
+                    <strong>
+                        System Health
+                    </strong>
+
+                    <small>
+                        Monitor system status
+                    </small>
+
+                </span>
+
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="dashboard-footer">
+
+        <span>
+
+            Last updated:
+
+            <strong id="lastUpdated">
+                —
+            </strong>
+
+        </span>
+
+
+        <span class="footer-status">
+
+            <span class="status-dot"></span>
+
+            System operational
+
+        </span>
+
+    </footer>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'superadmin/js/dashboard.js' %}" defer></script>
+
+{% endblock %}

@@ -123,7 +123,7 @@ def patient_to_dict(patient):
 # FRONTEND
 # ============================================================
 def landing_view(request):
-    return render(request, "index.html")
+    return render(request, "landing.html")
 
 def home_view(request):
     return render(request, "index.html")
@@ -131,45 +131,6 @@ def home_view(request):
 
 def dashboard_view(request):
     return render(request, "index.html")
-
-def solutions_view(request):
-    return render(request, "solutions.html")
-
-
-def features_view(request):
-    return render(request, "features.html")
-
-
-def pricing_view(request):
-    return render(request, "pricing.html")
-
-
-def resources_view(request):
-    return render(request, "resources.html")
-
-
-def about_view(request):
-    return render(request, "about.html")
-
-
-def contact_view(request):
-    return render(request, "contact.html")
-
-
-def privacy_view(request):
-    return render(request, "privacy.html")
-
-
-def terms_view(request):
-    return render(request, "terms.html")
-
-
-def compliance_view(request):
-    return render(request, "compliance.html")
-
-
-def forgot_password_view(request):
-    return render(request, "forgot_password.html")
 
 
 def patients_view(request):
@@ -179,11 +140,6 @@ def patients_view(request):
 def register_view(request):
     return render(request, "register.html")
 
-def product_view(request):
-    return render(request, "product.html")
-
-def packages_view(request):
-    return render(request, "packages.html")
 
 def results_view(request):
     return render(request, "results.html")
